@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<project name="HappyBankDB" default="help" basedir=".">
+
+    <property environment="env" />
+    <property name="dir.sql"            value="sql" />
+    <property name="dir.db"             value="db" />
+    <property name="dir.build"          value="build" />
+    <property name="dir.common"         value="../common" />
+    
+    <property file="build.properties" />    
+    <property file="default.properties" />
+    <property file="${dir.common}/default.properties" />
+
+    <import file="${dir.common}/common-macros.xml" optional="false" />
+    <import file="${dir.common}/common-targets.xml" optional="false" />
+
+    <!-- define a classpath for use througout the project -->
+    <path id="project.classpath">
+        <!-- include local libraries -->
+        <fileset dir="${dir.common}/lib" />
+    </path>
+
+    <!-- overide of init target -->
+    <target name="init">
+        <mkdir dir="${dir.build}" />
+    </target>
+
+    <!-- overide of clean target -->
+    <target name="clean">
+        <delete dir="${dir.build}" />
+    </target>
+    
+    <!-- bootstrap the development database -->
+    <target name="bootstrap"
+            depends="init,dbdeploy.bootstrap,dbdeploy.gen,dbdeploy.update"
+            description="update database and load test data">
+        <sql driver="${name.db.driver}"
+             url="${name.db.connection}"
+             userid="${name.db.user}"
+             password="${name.db.password}"             
+             onerror="abort">
+            <classpath>
+                <path location="${dir.common}/lib/${name.db.jar}" />
+            </classpath>
+            <transaction src="${dir.sql}/testdata/customers.sql" />
+            <transaction src="${dir.sql}/testdata/accounts.sql" />
+            <transaction src="${dir.sql}/testdata/custaccts.sql" />
+        </sql>
+    </target>
+
+</project>
+

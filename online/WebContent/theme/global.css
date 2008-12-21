@@ -1,0 +1,298 @@
+
+.hide {
+	display: none;
+}
+
+.clr {
+	display: block;
+	clear: both;
+	height: 0px;
+	overflow: hidden;
+}
+
+body {
+	margin: 0;
+	padding: 0;
+	color: #666;
+	font: 80%/1.3em Arial, Helvetica, Geneva, sans-serif;
+	background: #666 url(bg.gif) repeat-x;
+}
+
+a img {
+	border: none;
+}
+
+a:hover, a:active {
+	color: #b31b1b;
+}
+
+#wrapper {
+	width: 700px;
+	margin: 0 auto;
+	text-align: left;
+	background: url(shadow-mid.gif) repeat-y center top;
+}
+
+#inner {
+	padding-left: 0px;
+	background: url(shadow-top.gif) no-repeat center top;
+	padding-right: 0px;
+}
+#header {
+	background: #666 url(bg.gif) repeat-x top;
+	width: 715px;
+	padding-right: 10px;
+	z-index: 1000;
+	height: 94px;
+}
+
+#banner {
+	background: url(top.jpg) no-repeat;
+	clear: both;
+	height: 35px;
+	text-indent: -999em;
+}
+
+#content {
+	border: 1px solid #000000;
+	border-bottom: none;
+	border-top-width: 1px;
+	position: relative;	
+	background: none !important;
+    padding-bottom: 2em;
+}
+
+#footer {
+	background: #666 url(shadow-bottom.gif) no-repeat center top;
+	padding-top: 17px;
+	height: 30px;
+}
+
+#logo {
+	display: block;
+	float: left;
+	width: 199px;
+	height: 59px;
+	background: url(logo.gif) no-repeat center 19px;
+	text-indent: -999em;
+	overflow: hidden;
+}
+
+.search {
+	float: right;
+	white-space: nowrap;
+	padding-top: 24px;
+	padding-right: 20px;
+}
+.search input {
+	padding: 2px 0 0 0;
+	margin: 0;
+	float: left;
+	height: 17px;
+	line-height: 17px;
+	border: 1px solid #a5acb2;
+	margin-right: -1px;
+	text-indent: 0.5em;
+	color: #666666;
+	font-size: 10px;
+	text-align: left;
+	vertical-align: top;
+	background: #fff;
+}
+
+#footer {
+	color: #999;
+	font-size: 11px;
+	padding: 17px 21px 25px 15px;
+}
+
+#footer a:link, #footer a:visited {
+	color: #999;
+}
+
+#footer a:hover, #footer a:active {
+	text-decoration: underline;
+}
+
+#footer ul {
+	list-style: none;
+	float: left;
+	margin: 0;
+	padding: 0;
+}
+
+#footer li {
+	display: inline;
+	border-left: 1px solid #999;
+}
+
+#footer li.first {
+	border: none;
+}
+
+#footer li a {
+	padding: 10px;
+}
+
+#footer p.copyright {
+	float: right;
+	margin: 0;
+	color: #999;
+}
+
+div {
+	text-align: left;
+}
+
+table {
+	font-size: 11px;
+}
+
+form {
+	margin: 0px;
+}
+
+img {
+	border: 0;
+}
+
+a {
+	color: #009AC8;
+	text-decoration: none;
+}
+a:hover {
+	color: #B31B34;
+}
+
+h1 {
+	margin: 0px;
+	font-size: 21px;
+	color: #4c4c4c;
+	padding: 7px 0px 2px 0px;
+	line-height: 1.1;
+}
+
+h2 {
+	color: #4c4c4c;
+	font-size: 16px;
+	font-weight: normal;
+	margin: 0;
+	padding: 9px 0 2px 0;
+	line-height: 18px;
+}
+h3 {
+	font-weight: bold;
+	font-size: 12px;
+	margin: 0;
+	padding: 0;
+}
+h4 {
+	font-size: 11px;
+	margin: 0;
+	padding: 0;
+}
+h5 {
+	font-size: 10px;
+	text-transform: uppercase;
+	margin: 0;
+	padding: 0;
+}
+h3, h4, h5 {
+	color: #224;
+	font-weight: bold;
+}
+p {
+	text-align: justify;
+	margin: 0;
+	padding: 0 0 16px 0;
+}
+
+td {
+	vertical-align: top;
+}
+.left {
+	float: left;
+}
+.right {
+	float: right;
+}
+textarea,
+input {
+	font-family: arial, sans-serif;
+	font-size: 11px;
+	color: #4c4c4c;
+}
+
+ul#sidebar {
+	position: absolute;
+	width: 120px;
+	padding: 10px 10px 20px 10px;
+	list-style-type: none;
+	margin: 40px 0px 0px 20px;
+	font-size: 90%;
+	background-color: #efefff;
+}
+
+ul#sidebar h3 {
+	padding: 10px 10px 10px 0px;
+	text-align: center;
+	text-color: #33d;
+	font-size: 120%;
+	border: 2px;
+	background-color: #ababcc;
+	border-bottom: solid;
+	border-bottom-width: 1px;
+	border-bottom-color: #dedeff;
+	border-top: solid;
+    border-top-width: 1px;
+    border-top-color: #dedeff;
+}
+
+ul#sidebar a:link, ul#sidebar a:visited {
+	display: block;
+	font-size: 1.1em;
+	padding: 5px 10px;
+	text-decoration: none;
+	border-bottom: solid;
+    border-bottom-width: 1px;
+    border-bottom-color: #dedeff;
+}
+
+ul#sidebar a:hover, ul#sidebar a:active {
+	text-decoration: underline;	
+}
+
+div.main {
+	margin-top: 40px;
+	margin-left: 170px;
+	width: 500px;
+	position: relative;
+}
+
+div.main .content {
+	padding-left: 10px;
+	padding-right: 20px;
+	padding-bottom: 40px;
+}
+
+.error {
+    color: #ff0000;
+}
+
+#content input.text {
+	background: #f2f2e8;
+	border: 1px solid #ddd;
+	border-bottom: none;
+	border-right: none;
+	padding: 5px;
+	margin-right: 1em;
+}
+
+#content input.submit {
+	float: right;
+	margin-bottom: 1em;
+}
+
+#content {
+	clear: both;
+}

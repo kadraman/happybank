@@ -1,0 +1,241 @@
+<?xml version="1.0"?>
+<project name="common-targets">
+
+    <!-- create output directories -->
+    <target name="init" description="create directory structure">
+        <mkdir dir="${dir.build}" />
+        <mkdir dir="${dir.dist}" />
+        <mkdir dir="${dir.doc}" />
+    </target>
+
+    <!-- remove generated files -->
+    <target name="clean" description="remove generated files">
+        <delete dir="${dir.build}" />
+        <delete dir="${dir.dist}" />
+        <delete dir="${dir.doc}" />
+    </target>
+
+    <!-- compile source code -->
+    <target name="compile"
+            depends="checkstyle"
+            description="compile source code">
+        <project-compile classpathref="project.classpath"
+                         sourcepathref="project.sourcepath"
+                         srcdir="${dir.src}"
+                         destdir="${dir.build}" />
+    </target>
+
+    <!-- create manifest file -->
+    <target name="make-manifest"
+            depends="init"
+            description="create the jar manifest file">
+        <manifest file="${dir.build}/manifest.mf">
+            <attribute name="Built-By" value="${user.name}" />
+            <attribute name="Main-Class" value="${name.main.class}" />
+        </manifest>
+    </target>
+
+    <!-- create distribution jar file -->
+    <target name="dist"
+            depends="compile,make-manifest"
+            description="create distribution jar file">
+        <jar jarfile="${dir.dist}/${ant.project.name}.jar"
+             basedir="${dir.build}"
+             manifest="${dir.build}/manifest.mf"
+             includes="**/*.class"
+             excludes="**/Test*.class" />
+    </target>
+
+    <!-- run all junit tests -->
+    <target name="junit-all" description="run all junit tests">
+        <project-junit classpathref="project.classpath"
+                       destdir="${dir.build}"
+                       packagenames="${name.pkg.dirs}">
+            <testclasses>
+                <fileset dir="${dir.src}">
+                    <patternset refid="test.sources" />
+                </fileset>
+            </testclasses>
+        </project-junit>
+    </target>
+
+    <!-- run individual junit test -->
+    <target name="junit-single" description="run single junit test">
+        <!-- you may override this with ant -Dtestcase=net/sourceforge/happybank... -->
+        <property name="testcase"
+                  value="test/net/sourceforge/happybank/model/TestCustomer" />
+        <junit fork="no">
+            <classpath refid="project.classpath" />
+            <formatter type="plain" usefile="false" />
+            <test name="${testcase}" />
+        </junit>
+    </target>
+
+    <!-- run checkstyle on code -->
+    <target name="checkstyle"
+            depends="init"
+            description="run CheckStyle on code">
+        <taskdef resource="checkstyletask.properties">
+            <classpath>
+                <path location="${dir.common}/lib/checkstyle-all-4.2.jar" />
+            </classpath>
+        </taskdef>
+        <checkstyle config="${basedir}/checkstyle.xml"
+                    failOnViolation="${value.checkstyle.fail}">
+            <formatter type="plain" />
+            <formatter type="plain"
+                       tofile="${dir.build}/checkstyleResults.txt" />
+            <fileset dir="${dir.src}" includes="**/*.java" />
+        </checkstyle>
+    </target>
+
+    <!-- target to start hsqldb -->
+    <target name="db.start" description="start hsqldb">
+        <java classpath="${dir.common}/lib/${name.db.jar}"
+              classname="org.hsqldb.Server"
+              spawn="true"
+              fork="true">
+            <arg value="-database.0" />
+            <arg value="file:${dir.db}/${name.db}" />
+            <arg value="-dbname.0" />
+            <arg value="xdb" />
+        </java>
+    </target>
+
+    <!-- target to stop hsqldb -->
+    <target name="db.stop" description="stop hsqldb">
+        <sql driver="${name.db.driver}"
+             url="${name.db.connection}"
+             userid="${name.db.user}"
+             password="${name.db.password}"
+             src="${dir.sql}/shutdown.hsql.sql"
+             onerror="continue">
+            <classpath>
+                <path location="${dir.common}/lib/${name.db.jar}" />
+            </classpath>
+        </sql>
+    </target>
+
+    <!-- target to bootstrap a dbdeploy managed database -->
+    <target name="dbdeploy.bootstrap"
+            description="bootstrap a dbdeploy managed database">
+        <sql driver="${name.db.driver}"
+             url="${name.db.connection}"
+             userid="${name.db.user}"
+             password="${name.db.password}"
+             src="${dir.sql}/${name.dbdeploy.schema}"
+             onerror="continue">
+            <classpath>
+                <path location="${dir.common}/lib/${name.db.jar}" />
+            </classpath>
+        </sql>
+    </target>
+
+    <!-- run dbdeploy to generate database update script -->
+    <target name="dbdeploy.gen" description="generate database update script">
+        <taskdef name="dbdeploy" classname="net.sf.dbdeploy.AntTarget">
+            <classpath>
+                <path location="${dir.common}/lib/dbdeploy.jar" />
+                <path location="${dir.common}/lib/${name.db.jar}" />
+            </classpath>
+        </taskdef>
+        <dbdeploy driver="${name.db.driver}"
+                  url="${name.db.connection}"
+                  userid="${name.db.user}"
+                  password="${name.db.password}"
+                  dir="${dir.sql}\deltas"
+                  outputfile="${dir.build}\all-deltas.sql"
+                  dbms="${name.dbms}"
+                  undoOutputfile="${dir.build}\undo-all-deltas.sql" />
+    </target>
+
+    <!-- update a database based on output of dbdeploy -->
+    <target name="dbdeploy.update" depends="dbdeploy.gen">
+        <sql driver="${name.db.driver}"
+             url="${name.db.connection}"
+             userid="${name.db.user}"
+             password="${name.db.password}"
+             src="${dir.build}/all-deltas.sql"
+             onerror="abort">
+            <classpath>
+                <path location="${dir.common}/lib/${name.db.jar}" />
+            </classpath>
+        </sql>
+    </target>
+
+    <!-- undo the last dbdeploy changes -->
+    <target name="dbdeploy.undo">
+        <sql driver="${name.db.driver}"
+             url="${name.db.connection}"
+             userid="${name.db.user}"
+             password="${name.db.password}"
+             src="${dir.build}/undo-all-deltas.sql"
+             onerror="abort">
+            <classpath>
+                <path location="${dir.common}/lib/${name.db.jar}" />
+            </classpath>
+        </sql>
+    </target>
+
+    <!-- run the application -->
+    <target name="run" description="run the application or test class">
+        <java classname="${name.main.class}" fork="yes">
+            <classpath refid="project.classpath" />
+            <arg value="${name.run.args}" />
+        </java>
+    </target>
+
+    <!-- generate the javadoc files -->
+    <target name="javadoc" description="generate javadoc files">
+        <project-javadoc classpathref="project.classpath"
+                         destdir="${dir.doc}"
+                         packagenames="${name.pkg.dirs}"
+                         srcdir="${dir.src}" />
+    </target>
+
+    <!-- remove the deployed application -->
+    <target name="undeploy" description="remove a deployed application">
+        <!-- define the remove task -->
+        <taskdef name="remove" classname="org.apache.catalina.ant.RemoveTask">
+            <classpath>
+                <path location="${env.TOMCAT_HOME}/lib/catalina-ant.jar" />
+            </classpath>
+        </taskdef>
+        <!-- remove the app -->
+        <remove url="${name.url.manager}"
+                username="${name.user.manager}"
+                password="${name.password.manager}"
+                path="${name.web.context}" />
+    </target>
+
+    <!-- deploy the application -->
+    <target name="deploy"
+            depends="undeploy"
+            description="deploy a new application">
+        <!-- define the install task -->
+        <taskdef name="deploy" classname="org.apache.catalina.ant.DeployTask">
+            <classpath>
+                <path location="${env.TOMCAT_HOME}/lib/catalina-ant.jar" />
+            </classpath>
+        </taskdef>
+        <!-- convert the project relative path into fully qualified path -->
+        <pathconvert dirsep="/" property="fullWarDir">
+            <path>
+                <pathelement location="${dir.dist}/${ant.project.name}.war" />
+            </path>
+        </pathconvert>
+        <!-- deploy the app -->
+        <deploy url="${name.url.manager}"
+                username="${name.user.manager}"
+                password="${name.password.manager}"
+                path="${name.web.context}"
+                war="${basedir}/${dir.dist}/${ant.project.name}.war" />
+    </target>
+
+    <!-- help -->
+    <target name="help" description="display help">
+        <echo>build file for ${ant.project.name}</echo>
+        <echo>please type ant -p for description of all targets</echo>
+    </target>
+
+</project>

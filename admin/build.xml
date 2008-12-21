@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<project name="HappyBankAdmin" default="help" basedir=".">
+
+    <property environment="env" />
+    <property name="dir.src"            value="src" />
+    <property name="dir.build"          value="build" />
+    <property name="dir.dist"           value="dist" />
+    <property name="dir.doc"            value="doc" />
+    <property name="dir.lib"            value="lib" />
+    <property name="dir.common"         value="../common" />
+
+    <property file="build.properties" />
+    <property file="default.properties" />
+    <property file="${dir.common}/default.properties" />
+
+    <import file="${dir.common}/common-macros.xml" optional="false" />
+    <import file="${dir.common}/common-targets.xml" optional="false" />
+
+    <!-- define a classpath for use througout the project -->
+    <path id="project.classpath">
+        <!-- include local libraries -->
+        <fileset dir="${dir.common}/lib" />
+        <!-- include built classes -->
+        <pathelement location="${dir.build}" />
+    </path>
+    
+    <!-- define a sourcepath for pulling in classes from other projects -->
+    <path id="project.sourcepath">
+        <!-- include HappyBankOnline source -->
+        <pathelement location="../online/src" />
+    </path>
+
+</project>
+
