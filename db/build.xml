@@ -45,7 +45,6 @@
             <transaction src="${dir.sql}/testdata/customers.sql" />
             <transaction src="${dir.sql}/testdata/accounts.sql" />
             <transaction src="${dir.sql}/testdata/custaccts.sql" />
-            <transaction src="${dir.sql}/testdata/transactions.sql" />
         </sql>
     </target>
 

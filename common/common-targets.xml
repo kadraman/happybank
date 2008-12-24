@@ -209,9 +209,7 @@
     </target>
 
     <!-- deploy the application -->
-    <target name="deploy"
-            depends="undeploy"
-            description="deploy a new application">
+    <target name="deploy" description="deploy a new application">
         <!-- define the install task -->
         <taskdef name="deploy" classname="org.apache.catalina.ant.DeployTask">
             <classpath>
