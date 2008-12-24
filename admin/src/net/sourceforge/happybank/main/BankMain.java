@@ -53,9 +53,10 @@ import net.sourceforge.happybank.tablemodel.AccountTableModel;
 
 
 /**
- * Test client for Bank.
+ * Administration client for Bank.
  * 
- * @author
+ * @author Kevin A. Lee
+ * @email kevin.lee@buildmeister.com
  */
 public class BankMain {
 

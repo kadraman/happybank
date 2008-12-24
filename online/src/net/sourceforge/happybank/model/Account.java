@@ -23,7 +23,7 @@ import java.math.BigDecimal;
 import net.sourceforge.happybank.exception.InsufficientFundsException;
 
 /**
- * The banking account model class.
+ * Java bean representing a customer's account.
  *
  * @author Kevin A. Lee
  * @email kevin.lee@buildmeister.com
@@ -52,7 +52,7 @@ public class Account implements Comparable, Serializable {
      */
     public Account() {
         super();
-    }
+    } // Account
 
     /**
      * Default constructor to create new account.
@@ -99,21 +99,21 @@ public class Account implements Comparable, Serializable {
     /**
      * Set the account id.
      *
-     * @param aid
+     * @param aId
      *            the account id
      */
-    public final void setId(final String aid) {
-        this.id = aid;
+    public final void setId(final String aId) {
+        this.id = aId;
     } // setId
 
     /**
      * Set the account type.
      *
-     * @param atype
+     * @param aType
      *            the account type
      */
-    public final void setType(final String atype) {
-        this.type = atype;
+    public final void setType(final String aType) {
+        this.type = aType;
     } // setType
 
     /**
@@ -122,8 +122,8 @@ public class Account implements Comparable, Serializable {
      * @param abalance
      *            the account balance
      */
-    public final void setBalance(final BigDecimal abalance) {
-        this.balance = abalance;
+    public final void setBalance(final BigDecimal aBalance) {
+        this.balance = aBalance;
     } // setBalance
 
     // business methods
@@ -160,7 +160,7 @@ public class Account implements Comparable, Serializable {
     } // withdraw
 
     /**
-     * Compare two Account: required to enable sorting of accounts.
+     * Compare two Accounts: required to enable sorting of accounts.
      *
      * @param anObject
      *            account to compare to

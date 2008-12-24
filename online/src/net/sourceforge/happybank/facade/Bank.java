@@ -29,7 +29,7 @@ import net.sourceforge.happybank.model.TransRecord;
 
 /**
  * Bank Interface.
- * 
+ *
  * @author Kevin A. Lee
  * @email kevin.lee@buildmeister.com
  */

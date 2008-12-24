@@ -6,7 +6,12 @@
 <%@include file="theme/header.jsp"%>
 
 <%@page import="net.sourceforge.happybank.model.*" session="false"%>
+<%@page import="java.util.Locale" session="false"%>
+<%@page import="java.util.Currency;" session="false"%>
 <%
+    Locale currentLocale = Locale.getDefault();
+    Currency currentCurrency = Currency.getInstance(currentLocale);
+    String currencySymbol = currentCurrency.getSymbol();
 	TransRecord[] transactionSet = (TransRecord[]) request
 			.getAttribute("transactionSet");
 %>
@@ -19,7 +24,7 @@
 	</li>
 	<li>&nbsp;</li>
 	<li><a href="ListAccounts">Accounts</a></li>
-	<li><a href="tbd.jsp">Query transaction</a></li>
+	<li><a href="tbd.jsp">Query</a></li>
 	<li><a href="tbd.jsp">Tutorial</a></li>
 	<li>&nbsp;</li>
     <li><a href="LogoutSession">Logout</a></li>
@@ -55,7 +60,7 @@
 					<td align="center"><a href="tbd.jsp"><%=count + 1%></a></td>
 					<td align="center"><%=transaction.getTimeStamp().getTime()%></td>
 					<td align="center"><%=transaction.getTransType()%></td>
-					<td align="right">$<%=transaction.getTransAmt()%></td>
+					<td align="right"><%=currencySymbol%><%=transaction.getTransAmt()%></td>
 				</tr>
 				<%
 					//count ++;

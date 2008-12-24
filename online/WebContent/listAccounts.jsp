@@ -10,6 +10,9 @@
 <%@page import="java.util.Locale" session="false"%>
 <%@page import="java.util.Currency;" session="false"%>
 <%
+    Locale currentLocale = Locale.getDefault();
+    Currency currentCurrency = Currency.getInstance(currentLocale);
+    String currencySymbol = currentCurrency.getSymbol();
     Account[] accounts = (Account[]) request.getAttribute("accounts");
 %>
 
@@ -49,10 +52,7 @@
 						<td align="center"><font color="white"><b>Type</b></font></td>
 						<td align="center"><font color="white"><b>Balance</b></font></td>
 					</tr>
-					<%
-					    Locale currentLocale = Locale.getDefault();
-				        Currency currentCurrency = Currency.getInstance(currentLocale);
-				        String currencySymbol = currentCurrency.getSymbol();
+					<%					
 					    String[] colors = { "#eeeeee", "#dddddd" };
 					    BigDecimal totalBalance = new BigDecimal(0.0D);
 					    for (int count = 0; count < accounts.length; count++) {

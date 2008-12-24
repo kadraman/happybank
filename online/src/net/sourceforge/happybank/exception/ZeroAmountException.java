@@ -20,30 +20,34 @@ package net.sourceforge.happybank.exception;
 /**
  * This exception is thrown when the user types in an invalid currency amount of
  * zero when performing a transaction.
- * 
- * @author
+ *
+ * @author Kevin A. Lee
+ * @email kevin.lee@buildmeister.com
  */
 public class ZeroAmountException extends BankException {
 
-	private static final long serialVersionUID = 1L;
+    /**
+     * Generated serialization identifier.
+     */
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * default constructor
-	 * 
-	 * @param s
-	 *            title of the exception
-	 */
-	public ZeroAmountException(String s) {
-		super(s);
-	}
+    /**
+     * Default constructor.
+     *
+     * @param s
+     *            title of the exception
+     */
+    public ZeroAmountException(final String s) {
+        super(s);
+    } // ZeroAmountException
 
-	/**
-	 * return the key of the exception
-	 * 
-	 * @return string containing the exception key
-	 */
-	public String getMessageKey() {
-		return "error.zeroAmountException";
-	} // getMessageKey
+    /**
+     * Return the key of the exception.
+     *
+     * @return string containing the exception key
+     */
+    public final String getMessageKey() {
+        return "error.zeroAmountException";
+    } // getMessageKey
 
 } // ZeroAmountException

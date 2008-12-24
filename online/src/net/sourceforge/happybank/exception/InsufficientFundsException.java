@@ -20,30 +20,34 @@ package net.sourceforge.happybank.exception;
 /**
  * This exception is thrown when an attempt is made to perform a transaction on
  * a banking account without the proper funds available.
- * 
- * @author 
+ *
+ * @author Kevin A. Lee
+ * @email kevin.lee@buildmeister.com
  */
 public class InsufficientFundsException extends BankException {
 
-	private static final long serialVersionUID = 1L;
+    /**
+     * Generated serialization identifier.
+     */
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * default constructor
-	 * 
-	 * @param s
-	 *            title of the exception
-	 */
-	public InsufficientFundsException(String s) {
-		super(s);
-	} // InsufficientFundsException
+    /**
+     * Default constructor.
+     *
+     * @param s
+     *            title of the exception
+     */
+    public InsufficientFundsException(final String s) {
+        super(s);
+    } // InsufficientFundsException
 
-	/**
-	 * return the key of the exception
-	 * 
-	 * @return string containing the exception key
-	 */
-	public String getMessageKey() {
-		return "error.insufficientFundsException";
-	} // getMessageKey
+    /**
+     * Return the key of the exception.
+     *
+     * @return string containing the exception key
+     */
+    public final String getMessageKey() {
+        return "error.insufficientFundsException";
+    } // getMessageKey
 
 } // InsufficientFundsException

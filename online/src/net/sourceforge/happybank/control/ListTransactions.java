@@ -25,37 +25,46 @@ import net.sourceforge.happybank.facade.BankingFacade;
 import net.sourceforge.happybank.model.Account;
 import net.sourceforge.happybank.model.TransRecord;
 
-
 /**
- * Lists the transactions for the given account
- * 
- * @author 
+ * Lists the transactions for the given account.
+ *
+ * @author Kevin A. Lee
+ * @email kevin.lee@buildmeister.com
  */
-
 public class ListTransactions implements Command {
 
-	// add logging attributes
+    /**
+     * Execute the command.
+     *
+     * @param request
+     *            the request
+     * @param response
+     *            the response
+     * @return string containing page to forward to.
+     * @throws Exception
+     *
+     */
+    public String execute(HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+        // Parameters
 
-	public String execute(HttpServletRequest request,
-			HttpServletResponse respose) throws Exception {
-		// Parameters
+        HttpSession session = request.getSession(false);
 
-		HttpSession session = request.getSession(false);
+        String accountNumber = (String) session.getAttribute("accountNumber");
 
-		String accountNumber = (String) session.getAttribute("accountNumber");
+        // Control logic
 
-		// Control logic
+        BankingFacade banking = new BankingFacade();
 
-		BankingFacade banking = new BankingFacade();
+        Account account = banking.getAccount(accountNumber);
+        TransRecord[] transactions = banking.getTransactions(accountNumber);
 
-		Account account = banking.getAccount(accountNumber);
-		TransRecord[] transactions = banking.getTransactions(accountNumber);
+        // Response
 
-		// Response
+        request.setAttribute("account", account);
+        request.setAttribute("transactionSet", transactions);
 
-		request.setAttribute("account", account);
-		request.setAttribute("transactionSet", transactions);
+        return "/listTransactions.jsp";
+    } // execute
 
-		return "/listTransactions.jsp";
-	}
-}
+} // ListTransactions

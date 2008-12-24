@@ -22,29 +22,41 @@ import java.math.BigDecimal;
 import java.util.Calendar;
 
 /**
- * The banking transaction record model class.
- * 
- * @author
+ * Java bean representing an account transaction.
+ *
+ * @author Kevin A. Lee
+ * @email kevin.lee@buildmeister.com
  */
 
 public class TransRecord implements Comparable, Serializable {
 
+    /**
+     * Generated serialization identifier.
+     */
     private static final long serialVersionUID = 1L;
-    // Business data
+    /**
+     * Timestamp of the transaction.
+     */
     private Calendar timeStamp;
+    /**
+     * The type of the transaction, e.g. credit or debit.
+     */
     private String transType;
+    /**
+     * The amount of the transaction.
+     */
     private java.math.BigDecimal transAmt;
 
     /**
-     * default no-arg constructor
+     * Default no-arg constructor.
      */
     public TransRecord() {
         super();
-    }
+    } // TransRecord
 
     /**
-     * default parameterised constructor
-     * 
+     * Default constructor to create new transaction.
+     *
      * @param type
      *            type of transaction (credit or debit)
      * @param amount
@@ -54,72 +66,68 @@ public class TransRecord implements Comparable, Serializable {
         setTimeStamp(Calendar.getInstance());
         setTransType(type);
         setTransAmt(amount);
-    }
-
-    // getters
+    } // TransRecord
 
     /**
-     * get time stamp of transaction
-     * 
+     * Get time stamp of transaction.
+     *
      * @return time stamp of transaction
      */
     public final Calendar getTimeStamp() {
         return timeStamp;
-    }
+    } // getTimeStamp
 
     /**
-     * get transaction type
-     * 
+     * Get transaction type.
+     *
      * @return transaction type (credit or debit)
      */
     public final String getTransType() {
         return transType;
-    }
+    } // getTransType
 
     /**
-     * get the amount of the transaction
-     * 
+     * Get the amount of the transaction.
+     *
      * @return amount of transaction
      */
     public final java.math.BigDecimal getTransAmt() {
         return transAmt;
-    }
-
-    // setters
+    } // getTransAmt
 
     /**
-     * set time stamp of transaction
-     * 
-     * @param timeStamp
+     * Set time stamp of transaction.
+     *
+     * @param aTimeStamp
      *            time stamp of transaction
      */
-    public final void setTimeStamp(final Calendar timeStamp) {
-        this.timeStamp = timeStamp;
-    }
+    public final void setTimeStamp(final Calendar aTimeStamp) {
+        this.timeStamp = aTimeStamp;
+    } // setTimeStamp
 
     /**
-     * set transaction type
-     * 
-     * @param transType
+     * Set transaction type.
+     *
+     * @param aTransType
      *            type of transaction (credit or debit)
      */
-    public final void setTransType(final String transType) {
-        this.transType = transType;
-    }
+    public final void setTransType(final String aTransType) {
+        this.transType = aTransType;
+    } // setTransType
 
     /**
-     * set the amount of the transaction
-     * 
-     * @param transAmt
+     * Set the amount of the transaction.
+     *
+     * @param aTransAmt
      *            amount of the transaction
      */
-    public final void setTransAmt(final java.math.BigDecimal transAmt) {
-        this.transAmt = transAmt;
-    }
+    public final void setTransAmt(final BigDecimal aTransAmt) {
+        this.transAmt = aTransAmt;
+    } // setTransAmt
 
     /**
-     * compare two TransRecord: required to enable sorting of transactions
-     * 
+     * Compare two TransRecords: required to enable sorting of transactions.
+     *
      * @param anObject
      *            transaction to compare with
      * @return 1 if transaction records are equal else -1
@@ -134,8 +142,8 @@ public class TransRecord implements Comparable, Serializable {
     } // compareTo
 
     /**
-     * formatted output of account
-     * 
+     * Formatted output of account.
+     *
      * @return formatted output
      */
     public final String toString() {
@@ -143,5 +151,3 @@ public class TransRecord implements Comparable, Serializable {
     } // toString
 
 } // TransRecord
-
-// Fake update

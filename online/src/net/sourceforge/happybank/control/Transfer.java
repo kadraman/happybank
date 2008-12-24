@@ -27,41 +27,52 @@ import net.sourceforge.happybank.exception.InvalidAmountException;
 import net.sourceforge.happybank.facade.BankingFacade;
 import net.sourceforge.happybank.model.Account;
 
-
 /**
  * Transfers the given amount of money from the source account to the
  * destination one.
- * 
- * @author 
+ *
+ * @author Kevin A. Lee
+ * @email kevin.lee@buildmeister.com
  */
-
 public class Transfer implements Command {
-	public String execute(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-		// Parameters
+    /**
+     * Execute the transfer.
+     *
+     * @param request
+     *            the request
+     * @param response
+     *            the response
+     * @return string containing page to forward to.
+     * @throws Exception
+     *
+     */
+    public String execute(HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+        // Parameters
 
-		HttpSession session = request.getSession(false);
+        HttpSession session = request.getSession(false);
 
-		String accountID1 = (String) session.getAttribute("accountNumber");
-		String accountID2 = (String) request.getParameter("destinationAccount")
-				.toString();
-		BigDecimal amount = new BigDecimal(request.getParameter("amount"));
+        String accountID1 = (String) session.getAttribute("accountNumber");
+        String accountID2 = (String) request.getParameter("destinationAccount")
+                .toString();
+        BigDecimal amount = new BigDecimal(request.getParameter("amount"));
 
-		// Control logic
+        // Control logic
 
-		if (amount.equals(new BigDecimal(0.00))) {
-			throw new InvalidAmountException("Invalid amount...");
-		}
+        if (amount.equals(new BigDecimal(0.00))) {
+            throw new InvalidAmountException("Invalid amount...");
+        }
 
-		BankingFacade banking = new BankingFacade();
+        BankingFacade banking = new BankingFacade();
 
-		banking.transfer(accountID1, accountID2, amount);
-		Account account = banking.getAccount(accountID1);
+        banking.transfer(accountID1, accountID2, amount);
+        Account account = banking.getAccount(accountID1);
 
-		// Response
+        // Response
 
-		request.setAttribute("account", account);
+        request.setAttribute("account", account);
 
-		return "/accountDetails.jsp";
-	}
-}
+        return "/accountDetails.jsp";
+    } // execute
+    
+} // Transfer

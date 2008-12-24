@@ -29,74 +29,99 @@ import net.sourceforge.happybank.facade.BankingFacade;
 import net.sourceforge.happybank.model.Account;
 import net.sourceforge.happybank.model.Customer;
 
-
 /**
- * list the customers accounts
- * 
- * @author 
+ * List the customers accounts.
+ *
+ * @author Kevin A. Lee
+ * @email kevin.lee@buildmeister.com
  */
 public class ListAccounts extends HttpServlet {
-	private static final long serialVersionUID = 2479265177904294399L;
+    private static final long serialVersionUID = 1L;
 
-	// add logging attributes
+    /**
+     * Forward to get request.
+     *
+     * @param request
+     *            the request
+     * @param response
+     *            the response
+     * @throws SevletException
+     * @throws IOException
+     *
+     */
+    public void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        performTask(request, response);
+    } // doGet
 
-	/*
-	 * @see javax.servlet.http.HttpServlet#void
-	 *      (javax.servlet.http.HttpServletRequest,
-	 *      javax.servlet.http.HttpServletResponse)
-	 */
-	public void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		performTask(req, resp);
-	}
+    /**
+     * Forward to post request.
+     *
+     * @param request
+     *            the request
+     * @param response
+     *            the response
+     * @throws SevletException
+     * @throws IOException
+     *
+     */
+    public void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        performTask(request, response);
+    } // doPost
 
-	/*
-	 * @see javax.servlet.http.HttpServlet#void
-	 *      (javax.servlet.http.HttpServletRequest,
-	 *      javax.servlet.http.HttpServletResponse)
-	 */
-	public void doPost(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		performTask(req, resp);
-	}
+    /**
+     * Gets the details of the account and places it in the current session.
+     *
+     * @param request
+     *            the request
+     * @param response
+     *            the response
+     * @throws SevletException
+     * @throws IOException
+     *
+     */
+    public void performTask(HttpServletRequest request,
+            HttpServletResponse response) throws ServletException, IOException {
+        try {
+            // Parameters
 
-	public void performTask(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		try {
-			// Parameters
-			// Get input parameter and keep it on the HTTP session
-			String customerNumber = req.getParameter("customerNumber");
-			HttpSession session = req.getSession();
+            // Get input parameter and keep it on the HTTP session
+            String customerNumber = request.getParameter("customerNumber");
+            HttpSession session = request.getSession();
 
-			if (customerNumber == null) {
-				customerNumber = (String) session
-						.getAttribute("customerNumber");
-			} else {
-				session.setAttribute("customerNumber", customerNumber);
-			}
+            if (customerNumber == null) {
+                customerNumber = (String) session
+                        .getAttribute("customerNumber");
+            } else {
+                session.setAttribute("customerNumber", customerNumber);
+            }
 
-			// Control logic
-			// Create the new banking façade
-			BankingFacade banking = new BankingFacade();
+            // Control logic
 
-			// Retrieve customer and related accounts
-			Customer customer = banking.getCustomer(customerNumber);
-			Account[] accounts = banking.getAccounts(customerNumber);
+            // Create the new banking façade
+            BankingFacade banking = new BankingFacade();
 
-			// Response
-			// Set the request attributes for future rendering
-			req.setAttribute("customer", customer);
-			req.setAttribute("accounts", accounts);
+            // Retrieve customer and related accounts
+            Customer customer = banking.getCustomer(customerNumber);
+            Account[] accounts = banking.getAccounts(customerNumber);
 
-			// Call the presentation renderer
-			getServletContext().getRequestDispatcher("/listAccounts.jsp")
-					.forward(req, resp);
+            // Response
 
-		} catch (Exception e) {
-			req.setAttribute("message", e.getMessage());
-			req.setAttribute("forward", "index.jsp");
-			getServletContext().getRequestDispatcher("/showException.jsp")
-					.forward(req, resp);
-		}
-	}
-}
+            // Set the request attributes for future rendering
+            request.setAttribute("customer", customer);
+            request.setAttribute("accounts", accounts);
+
+            // Call the presentation renderer
+            getServletContext().getRequestDispatcher("/listAccounts.jsp")
+                    .forward(request, response);
+
+        } catch (Exception e) {
+            request.setAttribute("message", e.getMessage());
+            request.setAttribute("forward", "index.jsp");
+            getServletContext().getRequestDispatcher("/showException.jsp")
+                    .forward(request, response);
+        }
+    } // performTask
+
+} // ListAccounts

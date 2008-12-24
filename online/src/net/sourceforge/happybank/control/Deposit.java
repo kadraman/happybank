@@ -27,39 +27,50 @@ import net.sourceforge.happybank.exception.InvalidAmountException;
 import net.sourceforge.happybank.facade.BankingFacade;
 import net.sourceforge.happybank.model.Account;
 
-
 /**
- * Performs a deposit on the specified account
- * 
- * @author 
+ * Performs a deposit on the specified account.
+ *
+ * @author Kevin A. Lee
+ * @email kevin.lee@buildmeister.com
  */
-
 public class Deposit implements Command {
-	public String execute(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-		// Parameters
+    /**
+     * Execute the command.
+     *
+     * @param request
+     *            the request
+     * @param response
+     *            the response
+     * @return string containing page to forward to.
+     * @throws Exception
+     *
+     */
+    public String execute(HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+        // Parameters
 
-		HttpSession session = request.getSession(false);
+        HttpSession session = request.getSession(false);
 
-		String accountNumber = (String) session.getAttribute("accountNumber");
+        String accountNumber = (String) session.getAttribute("accountNumber");
 
-		BigDecimal amount = new BigDecimal(request.getParameter("amount"));
+        BigDecimal amount = new BigDecimal(request.getParameter("amount"));
 
-		// Control logic
+        // Control logic
 
-		if (amount.equals(new BigDecimal(0.00))) {
-			throw new InvalidAmountException("Unable to create ...");
-		}
+        if (amount.equals(new BigDecimal(0.00))) {
+            throw new InvalidAmountException("Unable to create ...");
+        }
 
-		BankingFacade banking = new BankingFacade();
-		banking.deposit(accountNumber, amount);
+        BankingFacade banking = new BankingFacade();
+        banking.deposit(accountNumber, amount);
 
-		Account account = banking.getAccount(accountNumber);
+        Account account = banking.getAccount(accountNumber);
 
-		// Response
+        // Response
 
-		request.setAttribute("account", account);
+        request.setAttribute("account", account);
 
-		return "/accountDetails.jsp";
-	}
-}
+        return "/accountDetails.jsp";
+    } //execute
+    
+} // Deposit

@@ -25,40 +25,53 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Performs the selected transaction on the customer's account
+ * Performs the selected transaction on the customer's account.
  * 
- * @author 
+ * @author Kevin A. Lee
+ * @email kevin.lee@buildmeister.com
  */
-
 public class PerformTransaction extends HttpServlet {
-	private static final long serialVersionUID = 7357283110776358146L;
+    /**
+     * Generated serialization identifier.
+     */
+    private static final long serialVersionUID = 1L;
 
-	public void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		try {
-			// Create a new command object of the
-			// given type
+    /**
+     * Perform a transaction on the bank.
+     *
+     * @param request
+     *            the request
+     * @param response
+     *            the response
+     * @throws Exception
+     *
+     */
+    public void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            // Create a new command object of the given type
 
-			Command command = (Command) Class.forName(
-					"net.sourceforge.happybank.control."
-							+ request.getParameter("transaction"))
-					.newInstance();
+            Command command = (Command) Class.forName(
+                    "net.sourceforge.happybank.control."
+                            + request.getParameter("transaction"))
+                    .newInstance();
 
-			// Execute the command and find out the page
-			// responsible for the response rendering
+            // Execute the command and find out the page
+            // responsible for the response rendering
 
-			String forward = command.execute(request, response);
+            String forward = command.execute(request, response);
 
-			// Forward the request to the response renderer
+            // Forward the request to the response renderer
 
-			getServletContext().getRequestDispatcher(forward).forward(request,
-					response);
-		} catch (Exception e) {
-			request.setAttribute("message", e.getMessage());
-			request.setAttribute("forward", "AccountDetails");
+            getServletContext().getRequestDispatcher(forward).forward(request,
+                    response);
+        } catch (Exception e) {
+            request.setAttribute("message", e.getMessage());
+            request.setAttribute("forward", "AccountDetails");
 
-			getServletContext().getRequestDispatcher("/showException.jsp")
-					.forward(request, response);
-		}
-	}
-}
+            getServletContext().getRequestDispatcher("/showException.jsp")
+                    .forward(request, response);
+        }
+    } // doPost
+    
+} // PerformTransaction

@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+<project name="HappyBank" default="help" basedir=".">
+
+    <property environment="env" />
+    <property name="dir.src" value="src" />
+    <property name="dir.build" value="build" />
+    <property name="dir.dist" value="dist" />
+    <property name="dir.doc" value="doc" />
+    <property name="dir.lib" value="lib" />
+    <property name="dir.db" value="db" />
+    <property name="dir.common" value="common" />
+    <property name="dir.web" value="WebContent" />
+    <property name="dir.websrc" value="WebContent/WEB-INF/src" />
+    <property name="dir.weblib" value="${dir.web}/WEB-INF/lib" />
+    <property name="dir.stage" value="" />
+
+    <property file="build.properties" />
+    <property file="default.properties" />
+
+    <import file="${dir.common}/common-macros.xml" optional="false" />
+    <import file="${dir.common}/common-targets.xml" optional="false" />
+
+    <!-- define a classpath for use througout the project -->
+    <path id="project.classpath">
+        <!-- include local libraries -->
+        <fileset dir="${dir.common}/lib" />
+        <fileset dir="${dir.weblib}" />
+        <!-- include built classes -->
+        <pathelement location="${dir.build}" />
+        <!-- include Tomcat libraries -->
+        <fileset dir="${env.TOMCAT_HOME}/common/lib" />
+        <fileset dir="${env.TOMCAT_HOME}/shared/lib" />
+        <!-- include JDK tools -->
+        <pathelement location="${env.JAVA_HOME}/lib/tools.jar" />
+    </path>
+
+    <!-- overide of init target -->
+    <target name="init" depends="common-targets.init">
+        <mkdir dir="${dir.websrc}" />
+    </target>
+
+    <!-- overide of clean target -->
+    <target name="clean" depends="common-targets.clean">
+        <delete dir="${dir.websrc}" />
+    </target>
+
+    <!-- override of compile target -->
+    <target name="compile"
+            depends="common-targets.compile"
+            description="compile JSPs">
+        <!-- reference the jasper JSP compiler - 
+    <taskdef classname="org.apache.jasper.JspC" name="jasper2" 
+        classpathref="project.classpath"/> 
+    <!- generate Java source code for the JSP -
+    <jasper2 validateXml="false" uriroot="${dir.web}"  
+        webXmlFragment="${dir.web}/WEB-INF/generated_web.xml" 
+        outputDir="${dir.websrc}"/> 
+    <!- compile the generated source code -
+    <project-compile classpathref="project.classpath" 
+        srcdir="${dir.websrc}"
+        destdir="${dir.build}"/>
+	-->
+    </target>
+
+    <!-- create WAR file -->
+    <target name="war"
+            depends="make-manifest,compile,junit-all"
+            description="create WAR file">
+        <war warfile="${dir.dist}/${ant.project.name}.war"
+             webxml="WebContent/WEB-INF/web.xml"
+             manifest="${dir.build}/manifest.mf">
+            <fileset dir="WebContent">
+                <patternset refid="web.sources" />
+            </fileset>
+            <zipfileset dir="WebContent/theme" prefix="theme" />
+            <classes dir="${dir.build}">
+                <include name="com/bos/**/*.class" />
+                <include name="org/apache/jsp/**.class" />
+            </classes>
+            <lib dir="${dir.weblib}" />
+        </war>
+    </target>
+
+    <!-- populate database -->
+    <target name="setupdb"
+            depends="dbdeploy.gen,dbdeploy.update"
+            description="update database and load test data">
+        <sql driver="${name.db.driver}"
+             url="${name.db.connection}"
+             userid="${name.db.user}"
+             password="${name.db.password}"
+             src="${dir.build}/all-deltas.sql"
+             onerror="abort">
+            <classpath>
+                <path location="${dir.common}/lib/${name.db.jar}" />
+            </classpath>
+            <transaction src="${dir.db}/testdata/customers.sql" />
+            <transaction src="${dir.db}/testdata/accounts.sql" />
+            <transaction src="${dir.db}/testdata/custaccts.sql" />
+        </sql>
+    </target>
+
+    <!-- local dist target override - create Web Archive and deploy -->
+    <target name="dist" depends="war,deploy" description="deploy application">
+    </target>
+
+</project>
+

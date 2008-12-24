@@ -20,9 +20,10 @@ package net.sourceforge.happybank.tablemodel;
 import java.math.BigDecimal;
 
 /**
- * encapsulation of an account file for table representation
+ * Encapsulation of an account file for table representation.
  * 
- * @author
+ * @author Kevin A. Lee
+ * @email kevin.lee@buildmeister.com
  */
 public class AccountData {
 

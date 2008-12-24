@@ -18,30 +18,34 @@
 package net.sourceforge.happybank.exception;
 
 /**
- * exception thrown when an invalid account number is entered
- * 
- * @author
+ * Exception thrown when an invalid account number is entered.
+ *
+ * @author Kevin A. Lee
+ * @email kevin.lee@buildmeister.com
  */
 public class AccountDoesNotExistException extends BankException {
-	private static final long serialVersionUID = 1L;
+    /**
+     * Generated serialization identifier.
+     */
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * default constructor
-	 * 
-	 * @param s
-	 *            title of the exception
-	 */
-	public AccountDoesNotExistException(String s) {
-		super(s);
-	} // AccountDoesNotExistException
+    /**
+     * Default constructor.
+     *
+     * @param s
+     *            title of the exception
+     */
+    public AccountDoesNotExistException(final String s) {
+        super(s);
+    } // AccountDoesNotExistException
 
-	/**
-	 * return the key of the exception
-	 * 
-	 * @return string containing the exception key
-	 */
-	public String getMessageKey() {
-		return "error.accountDoesNotExistException";
-	} // getMessageKey
+    /**
+     * Return the key of the exception.
+     *
+     * @return string containing the exception key
+     */
+    public final String getMessageKey() {
+        return "error.accountDoesNotExistException";
+    } // getMessageKey
 
 } // AccountDoesNotExistException

@@ -25,9 +25,10 @@ import javax.swing.JLabel;
 import javax.swing.table.AbstractTableModel;
 
 /**
- * Table model for representing customer accounts
+ * Table model for representing customer accounts.
  * 
- * @author
+ * @author Kevin A. Lee
+ * @email kevin.lee@buildmeister.com
  */
 public class AccountTableModel extends AbstractTableModel {
 

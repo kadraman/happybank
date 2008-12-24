@@ -5,6 +5,9 @@
 <!--  include header -->
 <%@include file="theme/header.jsp"%>
 
+<%@page import="java.util.Locale" session="false"%>
+<%@page import="java.util.Currency;" session="false"%>
+
 <script language="JavaScript">
 // Set whether specific fields are editable or not
 function setFormState()
@@ -60,7 +63,12 @@ function cancel()
 <div class="main">
 <div class="content">
 <h1>Account Details</h1>
-<p><b>Current balance: <%=account.getBalance()%></b></p>
+<%
+    Locale currentLocale = Locale.getDefault();
+    Currency currentCurrency = Currency.getInstance(currentLocale);
+    String currencySymbol = currentCurrency.getSymbol();
+%>                        
+<p><b>Current balance: <%=currencySymbol%><%=account.getBalance()%></b></p>
 <p>Please, select the kind of transaction you would like to perform:</p>
 <form name="transactions" action="PerformTransaction" method="post"><input
 	type="radio" name="transaction" value="ListTransactions" checked

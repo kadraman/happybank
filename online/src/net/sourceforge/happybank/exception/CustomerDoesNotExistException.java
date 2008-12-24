@@ -19,30 +19,34 @@ package net.sourceforge.happybank.exception;
 
 /**
  * This exception is thrown when an invalid customer number is entered.
- * 
- * @author 
+ *
+ * @author Kevin A. Lee
+ * @email kevin.lee@buildmeister.com
  */
 public class CustomerDoesNotExistException extends BankException {
 
-	private static final long serialVersionUID = 1L;
+    /**
+     * Generated serialization identifier.
+     */
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * default constructor
-	 * 
-	 * @param s
-	 *            title of the exception
-	 */
-	public CustomerDoesNotExistException(String s) {
-		super(s);
-	} // CustomerDoesNotExistException
+    /**
+     * Default constructor.
+     *
+     * @param s
+     *            title of the exception
+     */
+    public CustomerDoesNotExistException(final String s) {
+        super(s);
+    } // CustomerDoesNotExistException
 
-	/**
-	 * return the key of the exception
-	 * 
-	 * @return string containing the exception key
-	 */
-	public String getMessageKey() {
-		return "error.customerDoesNotExistException";
-	} // getMessageKey
+    /**
+     * Return the key of the exception.
+     *
+     * @return string containing the exception key
+     */
+    public final String getMessageKey() {
+        return "error.customerDoesNotExistException";
+    } // getMessageKey
 
 } // CustomerDoesNotExistException

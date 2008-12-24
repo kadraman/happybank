@@ -27,27 +27,40 @@ import javax.servlet.http.HttpSession;
 
 /**
  * Invalidates the user HTTP session and restarts the application.
- * 
- * @author 
+ *
+ * @author Kevin A. Lee
+ * @email kevin.lee@buildmeister.com
  */
-
 public class LogoutSession extends HttpServlet {
-	private static final long serialVersionUID = -8913814381269641209L;
+    /**
+     * Generated serialization identifier.
+     */
+    private static final long serialVersionUID = 1L;
 
-	public void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		// Invalidate the current http session, if one
-		// exists
+    /**
+     * Invalidate the session.
+     *
+     * @param request
+     *            the request
+     * @param response
+     *            the response
+     * @throws Exception
+     *
+     */
+    public void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        // Invalidate the current http session, if one exists
 
-		HttpSession session = request.getSession(false);
+        HttpSession session = request.getSession(false);
 
-		if (session != null) {
-			session.invalidate();
-		}
+        if (session != null) {
+            session.invalidate();
+        }
 
-		// Restarts the application
+        // Restarts the application
 
-		getServletContext().getRequestDispatcher("/index.jsp").forward(
-				request, response);
-	}
-}
+        getServletContext().getRequestDispatcher("/index.jsp").forward(request,
+                response);
+    } // doGet
+
+} // LogoutSession

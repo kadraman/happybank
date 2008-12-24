@@ -29,14 +29,20 @@ import net.sourceforge.happybank.model.Customer;
 import net.sourceforge.happybank.model.TransRecord;
 
 /**
- * JavaBean Banking, implementing the banking example façade.
- * 
- * @author
+ * Java bean Banking facade.
+ *
+ * @author Kevin A. Lee
+ * @email kevin.lee@buildmeister.com
  */
 public class BankingFacade implements Serializable {
 
+    /**
+     * Generated serialization identifier
+     */
     private static final long serialVersionUID = 1L;
-    // the switches
+    /**
+     * Controls whether to use JNDI (defaults to true for web application).
+     */
     private boolean jndi = true;
 
     // the Bank
@@ -141,4 +147,4 @@ public class BankingFacade implements Serializable {
         return getBank().getTransactions(accountID);
     }
 
-} // BankingTest
+} // BankingFacade

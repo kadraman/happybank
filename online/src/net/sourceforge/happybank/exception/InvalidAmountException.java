@@ -18,29 +18,34 @@
 package net.sourceforge.happybank.exception;
 
 /**
- * exception thrown when the user types in an invalid currency amount
- * 
- * @author 
+ * Exception thrown when the user types in an invalid currency amount.
+ *
+ * @author Kevin A. Lee
+ * @email kevin.lee@buildmeister.com
  */
-public class InvalidAmountException extends BankException
-{
+public class InvalidAmountException extends BankException {
+    /**
+     * Generated serialization identifier.
+     */
+    private static final long serialVersionUID = 1L;
 
-	private static final long serialVersionUID = 1L;
+    /**
+     * Default constructor.
+     *
+     * @param s
+     *            title of the exception
+     */
+    public InvalidAmountException(final String s) {
+        super(s);
+    } // InvalidAmountException
 
-	/**
-	 * default constructor
-	 * @param s
-	 */
-	public InvalidAmountException(String s) {
-		super(s);
-	} // InvalidAmountException
+    /**
+     * Return the key of the exception.
+     *
+     * @return string containing the exception key
+     */
+    public final String getMessageKey() {
+        return "error.invalidAmountException";
+    } // getMessageKey
 
-	/**
-	 * return the key of the exception
-	 * @return string containing the exception key
-	 */
-	public String getMessageKey() {
-		return "error.invalidAmountException";
-	} // getMessageKey
-	
 } // InvalidAmountException

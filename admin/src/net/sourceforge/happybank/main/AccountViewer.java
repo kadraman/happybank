@@ -48,9 +48,10 @@ import net.sourceforge.happybank.model.Customer;
 
 
 /**
- * allow a customer account be viewed
+ * Allow a customer account be viewed.
  * 
- * @author
+ * @author Kevin A. Lee
+ * @email kevin.lee@buildmeister.com
  */
 public class AccountViewer extends JDialog {
 

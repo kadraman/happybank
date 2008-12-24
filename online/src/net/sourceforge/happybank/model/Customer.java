@@ -20,33 +20,53 @@ package net.sourceforge.happybank.model;
 import java.io.Serializable;
 
 /**
- * Simple model of a customer
+ * Java bean representing a customer.
  *
  * @author Kevin A. Lee
  * @email kevin.lee@buildmeister.com
  */
 public class Customer implements Serializable {
 
+    /**
+     * Generated serialization identifier.
+     */
     private static final long serialVersionUID = 1L;
-    // The customer business data
+    /**
+     * The id of the customer.
+     */
     private String id;
+    /**
+     * The title of the customer, e.g. Mr/Mrs.
+     */
     private String title;
+    /**
+     * The first (christian) name of the customer.
+     */
     private String firstName;
+    /**
+     * The last (surname) of the customer.
+     */
     private String lastName;
+    /**
+     * The customer's username for login.
+     */
     private String userName;
+    /**
+     * The customer's password for login.
+     */
     private String password;
 
     /**
-     * default constructor
-     * 
+     * Default no-arg constructor.
+     *
      */
     public Customer() {
         super();
     } // Customer
 
     /**
-     * constructor with id
-     * 
+     * Default constructor to create new customer.
+     *
      * @param customerid
      *            unique identifier for the customer
      */
@@ -55,8 +75,8 @@ public class Customer implements Serializable {
     } // Customer
 
     /**
-     * get the customer id
-     * 
+     * Get the customer id.
+     *
      * @return customer id
      */
     public final String getId() {
@@ -64,8 +84,8 @@ public class Customer implements Serializable {
     } // getId
 
     /**
-     * get customers first name
-     * 
+     * Get customers first name.
+     *
      * @return customers first name
      */
     public final String getFirstName() {
@@ -73,8 +93,8 @@ public class Customer implements Serializable {
     } // getFirstName
 
     /**
-     * get customers last name
-     * 
+     * Get customers last name.
+     *
      * @return customers last name
      */
     public final String getLastName() {
@@ -82,73 +102,95 @@ public class Customer implements Serializable {
     } // getLastName
 
     /**
-     * get customers title
-     * 
-     * @return customers title, i.e. Mr/Mrs
+     * Get customers title.
+     *
+     * @return customers title, e.g. Mr/Mrs
      */
     public final String getTitle() {
         return title;
     } // getTitle
 
+    /**
+     * Get customers username.
+     *
+     * @return the customers username
+     */
     public final String getUserName() {
         return userName;
-    }
-
-    public final String getPassword() {
-        return password;
-    }
+    } // getUserName
 
     /**
-     * set customers first name
-     * 
-     * @param firstName
+     * Get the customers password.
+     *
+     * @return the customers password
+     */
+    public final String getPassword() {
+        return password;
+    } // getPassword
+
+    /**
+     * Set customers first name.
+     *
+     * @param aFirstName
      *            customers first name
      */
-    public final void setFirstName(final String firstName) {
-        this.firstName = firstName;
+    public final void setFirstName(final String aFirstName) {
+        this.firstName = aFirstName;
     } // setFirstName
 
     /**
-     * set customers last name
-     * 
-     * @param lastName
+     * Set customers last name.
+     *
+     * @param aLastName
      *            customers last name
      */
-    public final void setLastName(final String lastName) {
-        this.lastName = lastName;
+    public final void setLastName(final String aLastName) {
+        this.lastName = aLastName;
     } // setLastName
 
     /**
-     * set customers title
-     * 
-     * @param title
+     * Set customers title.
+     *
+     * @param aTitle
      *            customers title, i.e. Mr/Mrs
      */
-    public final void setTitle(final String title) {
-        this.title = title;
+    public final void setTitle(final String aTitle) {
+        this.title = aTitle;
     } // setTitle
 
     /**
-     * set customers unique id
-     * 
-     * @param id
+     * Set customers unique id.
+     *
+     * @param aId
      *            customers unique id
      */
-    public final void setId(final String id) {
-        this.id = id;
+    public final void setId(final String aId) {
+        this.id = aId;
     } // setId
 
-    public final void setUserName(final String userName) {
-        this.userName = userName;
-    }
+    /**
+     * Set the customers username.
+     *
+     * @param aUserName
+     *            customer username
+     */
+    public final void setUserName(final String aUserName) {
+        this.userName = aUserName;
+    } // setUserName
 
-    public final void setPassword(final String password) {
-        this.password = password;
+    /**
+     * Set the customers password.
+     *
+     * @param aPassword
+     *            customers password
+     */
+    public final void setPassword(final String aPassword) {
+        this.password = aPassword;
     }
 
     /**
-     * produce a formated output of the customer
-     * 
+     * Produce a formated output of the customer.
+     *
      * @return formatted customer
      */
     public final String toString() {

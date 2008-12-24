@@ -30,49 +30,72 @@ import net.sourceforge.happybank.facade.BankingFacade;
 import net.sourceforge.happybank.model.Account;
 import net.sourceforge.happybank.model.Customer;
 
-
 /**
- * Validates the customers login details
- * 
- * @author
+ * Validates the customers login details.
+ *
+ * @author Kevin A. Lee
+ * @email kevin.lee@buildmeister.com
  */
 public class ValidateLogin extends HttpServlet {
 
     /**
-     * 
+     * Generated serialization identifier.
      */
     private static final long serialVersionUID = 1L;
 
-    // add logging attributes
-
-    /*
-     * @see javax.servlet.http.HttpServlet#void
-     * (javax.servlet.http.HttpServletRequest,
-     * javax.servlet.http.HttpServletResponse)
+    /**
+     * Forward to get request.
+     *
+     * @param request
+     *            the request
+     * @param response
+     *            the response
+     * @throws SevletException
+     * @throws IOException
+     *
      */
-    public void doGet(HttpServletRequest req, HttpServletResponse resp)
+    public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        performTask(req, resp);
+        performTask(request, response);
     }
 
-    /*
-     * @see javax.servlet.http.HttpServlet#void
-     * (javax.servlet.http.HttpServletRequest,
-     * javax.servlet.http.HttpServletResponse)
+    /**
+     * Forward to post request.
+     *
+     * @param request
+     *            the request
+     * @param response
+     *            the response
+     * @throws SevletException
+     * @throws IOException
+     *
      */
-    public void doPost(HttpServletRequest req, HttpServletResponse resp)
+    public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        performTask(req, resp);
+        performTask(request, response);
     }
 
-    public void performTask(HttpServletRequest req, HttpServletResponse resp)
+    /**
+     * Validate the login details.
+     *
+     * @param request
+     *            the request
+     * @param response
+     *            the response
+     * @throws ServletException
+     * @throws IOException
+     *
+     */
+    public void performTask(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
             // Parameters
+
             // Get input parameter and keep it on the HTTP session
-            String customerUsername = req.getParameter("customerUsername");
-            String customerPassword = req.getParameter("customerPassword");
-            HttpSession session = req.getSession();
+
+            String customerUsername = request.getParameter("customerUsername");
+            String customerPassword = request.getParameter("customerPassword");
+            HttpSession session = request.getSession();
 
             if (customerUsername == null) {
                 customerUsername = (String) session
@@ -97,9 +120,9 @@ public class ValidateLogin extends HttpServlet {
             try {
                 customer = banking.getCustomerByUsername(customerUsername);
             } catch (CustomerDoesNotExistException ex) {
-                req.setAttribute("message", "invalid username");
+                request.setAttribute("message", "invalid username");
                 getServletContext().getRequestDispatcher("/index.jsp").forward(
-                        req, resp);
+                        request, response);
             }
 
             if (customer != null) {
@@ -109,25 +132,26 @@ public class ValidateLogin extends HttpServlet {
 
                     // Response
                     // Set the request attributes for future rendering
-                    req.setAttribute("customer", customer);
-                    req.setAttribute("accounts", accounts);
-                    req.setAttribute("message", null);
+                    request.setAttribute("customer", customer);
+                    request.setAttribute("accounts", accounts);
+                    request.setAttribute("message", null);
                     session.setAttribute("customerNumber", customer.getId());
 
                     // Call the presentation renderer
                     getServletContext().getRequestDispatcher(
-                            "/listAccounts.jsp").forward(req, resp);
+                            "/listAccounts.jsp").forward(request, response);
                 } else {
-                    req.setAttribute("message", "invalid password");
+                    request.setAttribute("message", "invalid password");
                     getServletContext().getRequestDispatcher("/index.jsp")
-                            .forward(req, resp);
+                            .forward(request, response);
                 }
             }
         } catch (Exception e) {
-            req.setAttribute("message", e.getMessage());
-            req.setAttribute("forward", "index.jsp");
+            request.setAttribute("message", e.getMessage());
+            request.setAttribute("forward", "index.jsp");
             getServletContext().getRequestDispatcher("/showException.jsp")
-                    .forward(req, resp);
+                    .forward(request, response);
         }
-    }
-}
+    } // performTask
+
+} // ValidateLogin

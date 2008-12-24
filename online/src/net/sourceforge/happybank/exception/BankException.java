@@ -18,31 +18,34 @@
 package net.sourceforge.happybank.exception;
 
 /**
- * base class for the exception classes
- * 
- * @author 
+ * Base class for Bank Exceptions.
+ *
+ * @author Kevin A. Lee
+ * @email kevin.lee@buildmeister.com
  */
 public class BankException extends Exception {
+    /**
+     * Generated serialization identifier.
+     */
+    private static final long serialVersionUID = 1L;
 
-	private static final long serialVersionUID = 1L;
+    /**
+     * Default constructor.
+     *
+     * @param s
+     *            string representation of the exception
+     */
+    public BankException(final String s) {
+        super(s);
+    } // BankException
 
-	/**
-	 * default constructor
-	 * 
-	 * @param s
-	 *            string representation of the exception
-	 */
-	public BankException(String s) {
-		super(s);
-	} // BankException
-
-	/**
-	 * return the key of the exception
-	 * 
-	 * @return string containing the exception key
-	 */
-	public String getMessageKey() {
-		return "error.bank";
-	} // getMessageKey
+    /**
+     * Return the key of the exception.
+     *
+     * @return string containing the exception key
+     */
+    public String getMessageKey() {
+        return "error.bank";
+    } // getMessageKey
 
 } // BankException

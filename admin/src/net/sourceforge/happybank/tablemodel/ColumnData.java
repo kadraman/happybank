@@ -18,9 +18,10 @@
 package net.sourceforge.happybank.tablemodel;
 
 /**
- * encapsulation of a column for table layout
+ * Encapsulation of a column for table layout.
  * 
- * @author
+ * @author Kevin A. Lee
+ * @email kevin.lee@buildmeister.com
  */
 public class ColumnData {
 

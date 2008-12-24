@@ -21,12 +21,23 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Type comment
- * 
- * @author 
+ * Generic Command interface.
+ *
+ * @author Kevin A. Lee
+ * @email kevin.lee@buildmeister.com
  */
-
 public interface Command {
-	public String execute(HttpServletRequest request,
-			HttpServletResponse respose) throws Exception;
-}
+    /**
+     * Execute the command.
+     *
+     * @param request
+     *            the request
+     * @param response
+     *            the response
+     * @return string containing page to forward to.
+     * @throws Exception
+     *
+     */
+    String execute(HttpServletRequest request, HttpServletResponse response)
+            throws Exception;
+} // Command

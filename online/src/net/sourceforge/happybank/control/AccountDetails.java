@@ -29,66 +29,103 @@ import net.sourceforge.happybank.facade.BankingFacade;
 import net.sourceforge.happybank.model.Account;
 
 /**
- * Lists the given account's details and lets the user perform transactions
- * 
- * @author Dan Developer
+ * Lists the given account's details and lets the user perform transactions.
+ *
+ * @author Kevin A. Lee
+ * @email kevin.lee@buildmeister.com
  */
-
 public class AccountDetails extends HttpServlet {
-	private static final long serialVersionUID = 5290038588585188485L;
+    /**
+     * Generated serialization identifier.
+     */
+    private static final long serialVersionUID = 1L;
 
-	public void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		performTask(request, response);
-	}
+    /**
+     * Forward to get request.
+     *
+     * @param request
+     *            the request
+     * @param response
+     *            the response
+     * @throws SevletException
+     * @throws IOException
+     *
+     */
+    public final void doGet(HttpServletRequest request,
+            HttpServletResponse response) throws ServletException, IOException {
+        performTask(request, response);
+    } // doGet
 
-	public void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		performTask(request, response);
-	}
+    /**
+     * Forward to post request.
+     *
+     * @param request
+     *            the request
+     * @param response
+     *            the response
+     * @throws SevletException
+     * @throws IOException
+     *
+     */
+    public void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        performTask(request, response);
+    } // doPost
 
-	public void performTask(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
-		try {
-			// Parameters
+    /**
+     * Gets the details of the account and places it in the current session.
+     *
+     * @param request
+     *            the request
+     * @param response
+     *            the response
+     * @throws SevletException
+     * @throws IOException
+     *
+     */
+    public void performTask(HttpServletRequest request,
+            HttpServletResponse response) throws ServletException, IOException {
+        try {
+            // Parameters
 
-			// Get input parameter and keep it on the HTTP session
-			// If parameter was not passed, try to find it in the session
+            // Get input parameter and keep it on the HTTP session
+            // If parameter was not passed, try to find it in the session
 
-			String accountNumber = request.getParameter("accountNumber");
+            String accountNumber = request.getParameter("accountNumber");
 
-			HttpSession session = request.getSession();
+            HttpSession session = request.getSession();
 
-			if (accountNumber == null) {
-				accountNumber = (String) session.getAttribute("accountNumber");
-			} else {
-				session.setAttribute("accountNumber", accountNumber);
-			}
+            if (accountNumber == null) {
+                accountNumber = (String) session.getAttribute("accountNumber");
+            } else {
+                session.setAttribute("accountNumber", accountNumber);
+            }
 
-			// Control logic
+            // Control logic
 
-			// Create the new banking façade
+            // Create the new banking façade
 
-			BankingFacade banking = new BankingFacade();
+            BankingFacade banking = new BankingFacade();
 
-			Account account = banking.getAccount(accountNumber);
+            Account account = banking.getAccount(accountNumber);
 
-			// Response
+            // Response
 
-			// Set the request attributes for future rendering
+            // Set the request attributes for future rendering
 
-			request.setAttribute("account", account);
+            request.setAttribute("account", account);
 
-			// Call the presentation renderer
+            // Call the presentation renderer
 
-			getServletContext().getRequestDispatcher("/accountDetails.jsp")
-					.forward(request, response);
-		} catch (Exception e) {
-			request.setAttribute("message", e.getMessage());
-			request.setAttribute("forward", "ListAccounts");
+            getServletContext().getRequestDispatcher("/accountDetails.jsp")
+                    .forward(request, response);
+        } catch (Exception e) {
+            request.setAttribute("message", e.getMessage());
+            request.setAttribute("forward", "ListAccounts");
 
-			getServletContext().getRequestDispatcher("/showException.jsp")
-					.forward(request, response);
-		}
-	}
-}
+            getServletContext().getRequestDispatcher("/showException.jsp")
+                    .forward(request, response);
+        }
+    } // performTask
+
+} // AccountDetails
