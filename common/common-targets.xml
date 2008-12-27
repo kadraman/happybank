@@ -47,7 +47,8 @@
     </target>
 
     <!-- run all junit tests -->
-    <target name="junit-all" description="run all junit tests">
+    <target name="junit-all" depends="compile"
+        description="run all junit tests">
         <project-junit classpathref="project.classpath"
                        destdir="${dir.build}"
                        packagenames="${name.pkg.dirs}">
