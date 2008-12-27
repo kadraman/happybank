@@ -20,40 +20,53 @@ package test.net.sourceforge.happybank.model;
 import net.sourceforge.happybank.model.Customer;
 import junit.framework.TestCase;
 
-
 /**
- * JUnit test for customer class
- * 
- * @author
+ * JUnit test for customer class.
+ *
+ * @author Kevin A. Lee
+ * @email kevin.lee@buildmeister.com
  */
 public class TestCustomer extends TestCase {
 
-	private Customer c1;
+    /**
+     * The test customer.
+     */
+    private Customer c1;
 
-	/**
-	 * constructor for TestCustomer
-	 * 
-	 * @param arg0
-	 */
-	public TestCustomer(String arg0) {
-		super(arg0);
-	}
+    /**
+     * Default constructor for TestCustomer.
+     *
+     * @param arg0 the argument
+     */
+    public TestCustomer(final String arg0) {
+        super(arg0);
+    } // TestCustomer
 
-	protected void setUp() {
-		// create some customers
-		c1 = new Customer("101");
-		c1.setTitle("Mr");
-		c1.setFirstName("A");
-		c1.setLastName("Customer");
-	} // setUp
+    /**
+     * Setup the customer.
+     */
+    protected final void setUp() {
+        // create a customer
+        c1 = new Customer("101");
+        c1.setTitle("Mr");
+        c1.setFirstName("A");
+        c1.setLastName("Customer");
+        c1.setUserName("customer");
+        c1.setPassword("password");
+    } // setUp
 
-	public void testGetters() {
-		assertEquals(c1.getId(), "101");
-		assertEquals(c1.getTitle(), "Mr");
-		assertEquals(c1.getFirstName(), "A");
-		assertEquals(c1.getLastName(), "Customer");
-		c1.setId("102");
-		assertEquals(c1.getId(), "102");
-	} // testGetters
+    /**
+     * Test getters.
+     */
+    public final void testGetters() {
+        assertEquals(c1.getId(), "101");
+        assertEquals(c1.getTitle(), "Mr");
+        assertEquals(c1.getFirstName(), "A");
+        assertEquals(c1.getLastName(), "Customer");
+        assertEquals(c1.getUserName(), "customer");
+        assertEquals(c1.getPassword(), "password");
+        c1.setId("102");
+        assertEquals(c1.getId(), "102");
+    } // testGetters
 
 } // TestCustomer

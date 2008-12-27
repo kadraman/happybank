@@ -24,54 +24,65 @@ import net.sourceforge.happybank.model.TransRecord;
 
 import junit.framework.TestCase;
 
-
 /**
- * JUnit test for TransRecord class
- * 
+ * JUnit test for TransRecord class.
+ *
  * @author
  */
 public class TestTransRecord extends TestCase {
 
-	private TransRecord t1;
+    /**
+     * Test transrecord.
+     */
+    private TransRecord t1;
 
-	/**
-	 * constructor for TestTransRecord
-	 * 
-	 * @param arg0
-	 */
-	public TestTransRecord(String arg0) {
-		super(arg0);
-	}
+    /**
+     * Default constructor for TestTransRecord.
+     *
+     * @param arg0 the parameter
+     */
+    public TestTransRecord(final String arg0) {
+        super(arg0);
+    } // TestTransRecord
 
-	protected void setUp() {
-		// create some transaction records
-		t1 = new TransRecord("C", new BigDecimal("50.25"));
-		t1.setTimeStamp(Calendar.getInstance());
-	} // setUp
+    /**
+     * Setup the transrecord.
+     */
+    protected final void setUp() {
+        // create a transaction record
+        t1 = new TransRecord("C", new BigDecimal("50.25"));
+        t1.setTimeStamp(Calendar.getInstance());
+    } // setUp
 
-	public void testGetters() {
-		assertTrue(!t1.equals(null));
-		BigDecimal amount = new BigDecimal("50.25");
-		assertEquals(t1.getTransType(), "C");
-		assertEquals(t1.getTransAmt(), amount);
-		t1.setTransType("D");
-		assertEquals(t1.getTransType(), "D");
-		Calendar c1 = Calendar.getInstance();
-		t1.setTimeStamp(c1);
-		assertEquals(t1.getTimeStamp(), c1);
-	} // testGetters
+    /**
+     * Test getters.
+     */
+    public final void testGetters() {
+        assertTrue(!t1.equals(null));
+        BigDecimal amount = new BigDecimal("50.25");
+        assertEquals(t1.getTransType(), "C");
+        assertEquals(t1.getTransAmt(), amount);
+        t1.setTransType("D");
+        assertEquals(t1.getTransType(), "D");
+        Calendar c1 = Calendar.getInstance();
+        t1.setTimeStamp(c1);
+        assertEquals(t1.getTimeStamp(), c1);
+    } // testGetters
 
-	public void testCompare() {
-		Calendar c1 = Calendar.getInstance();
-		Calendar c2 = Calendar.getInstance();
-		c1.add(Calendar.MINUTE, +5);
-		t1.setTimeStamp(c1);
-		TransRecord t2 = new TransRecord("C", new BigDecimal("50"));
-		t2.setTimeStamp(c2);
-		TransRecord t3 = new TransRecord("D", new BigDecimal("100"));
-		t3.setTimeStamp(c2);
-		assertEquals(t2.compareTo(t1), -1);
-		assertEquals(t2.compareTo(t3), 1);
-	}
+    /**
+     * Test compare.
+     */
+    public final void testCompare() {
+        Calendar c1 = Calendar.getInstance();
+        Calendar c2 = Calendar.getInstance();
+        c1.add(Calendar.MINUTE, +5);
+        t1.setTimeStamp(c1);
+        TransRecord t2 = new TransRecord("C", new BigDecimal("50"));
+        t2.setTimeStamp(c2);
+        TransRecord t3 = new TransRecord("D", new BigDecimal("100"));
+        t3.setTimeStamp(c2);
+        assertEquals(t2.compareTo(t1), -1);
+        assertEquals(t2.compareTo(t3), 1);
+    } // testCompare
 
 } // TestTransRecord

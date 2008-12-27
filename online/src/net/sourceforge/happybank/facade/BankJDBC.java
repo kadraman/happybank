@@ -273,10 +273,10 @@ public final class BankJDBC implements Bank {
             throws AccountDoesNotExistException, BankException {
         if (accountID == null) {
             throw new AccountDoesNotExistException("Account number is null");
-        }
-        deleteTransactionsJDBC(accountID);
+        }       
         String customerID = getAccountOwnerJDBC(accountID);
         unassociateJDBC(customerID, accountID);
+        deleteTransactionsJDBC(accountID);
         deleteAccountJDBC(accountID);
         return null;
     } // deleteAccount
@@ -636,17 +636,25 @@ public final class BankJDBC implements Bank {
      * @param type
      * @throws BankException
      */
-    protected void addAccountJDBC(final String accountID, final String customerID,
+    protected void addAccountJDBC(final String accountID, 
+            final String customerID,
             final String type) throws BankException {
         Connection con = connect(true);
         PreparedStatement stmt = null;
         String insert = "INSERT INTO ACCOUNT "
-                + "(\"ACCID\", \"DISCRIMINATOR\") VALUES (?, ?)";
+                + "(\"ACCID\", \"BALANCE\", \"INTEREST\", \"ACCTYPE\","
+                + "\"DISCRIMINATOR\", \"OVERDRAFT\", \"MINAMOUNT\")"
+                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
         int result = 0;
         try {
             stmt = con.prepareStatement(insert);
             stmt.setString(1, accountID);
-            stmt.setString(2, type);
+            stmt.setBigDecimal(2, new BigDecimal(0.0));
+            stmt.setBigDecimal(3, new BigDecimal(0.0));
+            stmt.setString(4, type);
+            stmt.setString(5, type.equals("Checking") ? "C" : "S");
+            stmt.setBigDecimal(6, new BigDecimal(0.0));
+            stmt.setBigDecimal(7, new BigDecimal(0.0));
             result = stmt.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
@@ -900,7 +908,6 @@ public final class BankJDBC implements Bank {
         int result = 0;
         try {
             stmt = con.prepareStatement(delete);
-            // stmt.setString(1, customerID);
             stmt.setString(1, accountID);
             result = stmt.executeUpdate();
         } catch (Exception e) {
@@ -1031,17 +1038,14 @@ public final class BankJDBC implements Bank {
                 if (stmt != null) {
                     stmt.close();
                 }
-                if (result != 1) {
-                    throw new BankException("JDBC DELETE failed: rows= "
-                            + result);
-                }
             } catch (SQLException e) {
+                // ignore
             }
         }
     } // deleteTransactionsJDBC
 
     /**
-     * Get a connection to the database. 
+     * Get a connection to the database.
      * @param autoCommit
      * @return the connection
      */
@@ -1103,6 +1107,7 @@ public final class BankJDBC implements Bank {
         try {
             BankingFacade bf = new BankingFacade();
             bf.setJndi(false);
+            // existing accounts and customers
             Customer[] customers = bf.getCustomers();
             for (int i = 0; i < customers.length; i++) {
                 String id = customers[i].getId();
@@ -1119,6 +1124,12 @@ public final class BankJDBC implements Bank {
                     }
                 }
             }
+            // creation and deletion
+            bf.addCustomer("999", "Mr", "First", "Last");
+            bf.addAccount("999-99", "999", "Checking");
+            bf.deposit("999-99", new BigDecimal(1000.0));           
+            bf.deleteAccount("999-99");
+            bf.deleteCustomer("999");
         } catch (BankException ex) {
             ex.printStackTrace();
         }
