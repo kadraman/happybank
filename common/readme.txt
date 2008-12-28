@@ -6,4 +6,5 @@ Contents of this directory includes:
 
  - common-macros.xml           - a set of common macros for Ant
  - common-targets.xml          - a set of common targets for Ant
- - bin\
+ - default.properties          = default properties for all projects
+ - lib\			       - common project libraries
