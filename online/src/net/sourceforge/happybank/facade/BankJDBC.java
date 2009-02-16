@@ -958,7 +958,7 @@ public final class BankJDBC implements Bank {
         Connection con = connect(true);
         PreparedStatement stmt = null;
         ResultSet rs = null;
-        String select = "SELECT * FROM TRANSRECORD WHERE \"ACCID\" = ? ORDER BY \"TRANSID\"";
+        String select = "SELECT * FROM TRANSRECORD WHERE \"ACCID\" = ? ORDER BY \"TRANSID\" DESC";
         Vector v = new Vector();
         TransRecord trans = null;
         try {

@@ -97,7 +97,7 @@ function formCheck(formobj) {
 				<tbody>
 					<tr valign="top">
 						<td width="10"><span class="ask">*</span></td>
-						<td width="70"><b><label for="customerUsername">Username</label></b></td>
+						<td width="70"><b><label for="customerUsername">Username:</label></b></td>
 						<td width="350"><input maxlength="80" name="customerUsername"
 							class="iform" id="customerUsername" type="text" /> <br />
 						<br />
@@ -105,27 +105,31 @@ function formCheck(formobj) {
 					</tr>
 					<tr valign="top">
 						<td><span class="ask">*</span></td>
-						<td><b><label for="newpassword">Password</label></b></td>
+						<td><b><label for="newpassword">Password:</label></b></td>
 						<td><input maxlength="31" name="customerPassword"
 							class="iform" id="customerPassword" type="password" /> <br />
 						<br />
 						</td>
 					</tr>
-                    <%
-                        String message = (String)request.getAttribute("message");
-                        if (message != null) {
-                    %>
                     <tr valign="top">
-                        <td class="error" colspan="3"><%=message%></td>
-                    </tr>
-                    <%        
-                        }
-                    %>                    
-					<tr>
-						<td colspan="3">
-						<p><input name="dwPerm" type="checkbox" /> Remember my
-						Username.</p>
-						<br />
+                        <td></td>
+                        <td></td>
+                        <%
+                            String message = (String)request.getAttribute("message");
+                            if (message != null) {
+                        %>
+                                <td class="error"><%=message%><br/></td>
+                        <%        
+                            }
+                        %>
+                    </tr>                    
+					<tr valign="top">
+						<td></td>
+                        <td></td>
+						<td>
+                            <p><input name="remember" type="checkbox" /> Remember my
+						      Username.</p>
+                        	<br />
 						</td>
 					</tr>
 					<tr>
