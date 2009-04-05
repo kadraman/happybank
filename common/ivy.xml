@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-module version="2.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
+	<info organisation="happybank" module="HappyBankCommon"/>
+	<configurations>
+        <conf name="build" description="used for build tasks"/>
+    </configurations>
+	<dependencies>
+        <dependency org="tomcat" name="catalina-ant" rev="6.0.18"/>
+        <dependency org="checkstyle" name="checkstyle" rev="4.2"/>
+        <dependency org="dbdeploy" name="dbdeploy" rev="2.11"/>
+        <dependency org="hsqldb" name="hsqldb" rev="1.8.0.10"/>
+    </dependencies>
+</ivy-module>
