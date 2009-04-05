@@ -342,6 +342,6 @@ public class BankMain {
     /*
      * constants
      */
-    static final private String APP_NAME = "Happy Bank Admin Client";
+    static final private String APP_NAME = "HappyBank Admin Client";
 
 } // BankAdminMain
