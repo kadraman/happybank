@@ -16,12 +16,12 @@
     <import file="${dir.common}/common-macros.xml" optional="false" />
     <import file="${dir.common}/common-targets.xml" optional="false" />
 
-    <!-- define a classpath for use througout the project -->
+    <!-- define a classpath for use throughout the project, including ivy -->
     <path id="project.classpath">
-        <!-- include local libraries -->
-        <fileset dir="${dir.common}/lib" />
         <!-- include built classes -->
         <pathelement location="${dir.build}" />
+        <!-- include ivy classpath -->
+        <path refid="ivy.project.classpath" />
     </path>
     
     <!-- define a sourcepath for pulling in classes from other projects -->
