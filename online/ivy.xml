@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-module version="2.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
+	<info organisation="happybank" module="HappyBankOnline" status="integration" />
+	<dependencies>
+		<dependency org="tomcat" name="servlet-api" rev="6.0.18" />
+		<dependency org="junit" name="junit" rev="3.8.1" />
+		<!-- uncomment to pull in latest database scripts -->
+		<!-- dependency org="happybank" name="HappyBankDB" rev="latest.integration" /-->
+	</dependencies>
+</ivy-module>

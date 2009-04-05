@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
-<project name="HappyBankOnline" default="help" basedir=".">
+<project name="HappyBankOnline"
+         default="help"
+         basedir="."
+         xmlns:ivy="antlib:org.apache.ivy.ant">
 
     <property environment="env" />
     <property name="dir.src" value="src" />
-    <property name="dir.build" value="build" />
-    <property name="dir.dist" value="dist" />
-    <property name="dir.doc" value="doc" />
     <property name="dir.lib" value="lib" />
     <property name="dir.common" value="../common" />
     <property name="dir.web" value="WebContent" />
@@ -19,17 +19,15 @@
     <import file="${dir.common}/common-macros.xml" optional="false" />
     <import file="${dir.common}/common-targets.xml" optional="false" />
 
-    <!-- define a classpath for use througout the project -->
+    <!-- define a classpath for use throughout the project, including ivy -->
     <path id="project.classpath">
-        <!-- include local libraries -->
-        <fileset dir="${dir.common}/lib" />
         <fileset dir="${dir.weblib}" />
         <!-- include built classes -->
         <pathelement location="${dir.build}" />
-        <!-- include Tomcat libraries -->
-        <fileset dir="${env.TOMCAT_HOME}/lib" />
+        <!-- include ivy classpath -->
+        <path refid="ivy.project.classpath" />
     </path>
-    
+
     <!-- define any additional source directories -->
     <path id="project.sourcepath">
         <!-- none -->
@@ -45,20 +43,11 @@
         <delete dir="${dir.websrc}" />
     </target>
 
-    <condition property="is.tomcat.home.set">
-        <isset property="env.TOMCAT_HOME"/>
-    </condition>
-
-    <!-- check if TOMCAT_HOME has been set -->
-    <target name="check-tomcat" unless="is.tomcat.home.set">
-        <echo>${env.TOMCAT_HOME}</echo>
-        <fail message="The environment variable TOMCAT_HOME has not been set." />
-    </target>
-
     <!-- override of compile target -->
     <target name="compile"
-            depends="check-tomcat,common-targets.compile"
+            depends="common-targets.compile"
             description="compile JSPs">
+        <!-- uncomment for jsp pre-compilation -->
         <!-- reference the jasper JSP compiler - 
         <taskdef classname="org.apache.jasper.JspC" name="jasper2" 
             classpathref="project.classpath"/> 
@@ -95,7 +84,13 @@
         </war>
     </target>
 
-    <!-- overide dist target - create Web Archive and deploy -->
+    <!-- override ivy.publish target -->
+    <target name="publish"
+            depends="common-targets.dist,ivy.publish"
+            description="publish this project in the ivy repository">
+    </target>
+    
+    <!-- overide dist target - create Web Archive -->
     <target name="dist" depends="war">
     </target>
 
