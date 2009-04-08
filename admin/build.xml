@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="HappyBankAdmin" default="help" basedir=".">
+<project name="happybank-admin" default="help" basedir=".">
 
     <property environment="env" />
     <property name="dir.src"            value="src" />
