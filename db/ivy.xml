@@ -2,7 +2,7 @@
 <ivy-module version="2.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
-	<info organisation="happybank" module="HappyBankDB" status="integration" />
+	<info organisation="happybank" module="happybank-db" status="integration" />
 	<dependencies>
 		<dependency org="dbdeploy" name="dbdeploy" rev="2.11" />
 		<dependency org="hsqldb" name="hsqldb" rev="1.8.0.10" />
