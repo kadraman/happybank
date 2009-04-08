@@ -1,11 +1,6 @@
 <?xml version="1.0"?>
 <project name="common-targets" xmlns:ivy="antlib:org.apache.ivy.ant">
 
-    <!-- common properties -->
-    <property name="dir.build" value="build" />
-    <property name="dir.dist" value="dist" />
-    <property name="dir.doc" value="doc" />
-
     <!-- reference Ivy Ant tasks library -->
     <path id="ivy.lib.path">
         <fileset dir="${dir.common}/lib" includes="ivy*.jar" />
@@ -193,8 +188,7 @@
     <target name="dbdeploy.gen" description="generate database update script">
         <taskdef name="dbdeploy" classname="net.sf.dbdeploy.AntTarget">
             <classpath>
-                <path refid="ivy.internal.classpath" />
-                <path location="${dir.common}/lib/${name.db.jar}" />
+                <path refid="ivy.internal.classpath" />                
             </classpath>
         </taskdef>
         <dbdeploy driver="${name.db.driver}"

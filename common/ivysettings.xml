@@ -3,7 +3,7 @@
   <resolvers>
     <chain name="happybank">
       <filesystem name="happybank.local">
-        <artifact pattern="${ivy.settings.dir}/repository/[artifact]-[revision].[ext]" />
+        <artifact pattern="${ivy.settings.dir}/repository/[module]/[artifact]-[revision].[ext]" />
       </filesystem>
       <url name="buildmeister.com" m2compatible="true">
         <artifact pattern="http://m2.buildmeister.com/[module]/[revision]/[artifact]-[revision].[ext]" />

@@ -47,9 +47,10 @@
          debug="${value.compile.debug}" 
          fork="${value.compile.fork}"
          compiler="${name.compile.compiler}">
+            <compilerarg line="-Xlint -Xlint:-unchecked"/>
             <src path="@{srcdir}"/>
             <classpath refid="@{classpathref}"/>
-            <sourcepath refid="@{sourcepathref}"/>
+            <sourcepath refid="@{sourcepathref}"/>            
         </javac>
     </sequential>
 </macrodef>
