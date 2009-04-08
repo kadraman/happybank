@@ -42,7 +42,7 @@ public class Withdraw implements Command {
      * @param response
      *            the response
      * @return string containing page to forward to.
-     * @throws Exception
+     * @throws Exception on failure
      *
      */
     public String execute(HttpServletRequest request,

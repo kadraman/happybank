@@ -119,7 +119,7 @@ public class Account implements Comparable, Serializable {
     /**
      * Set the account balance.
      *
-     * @param abalance
+     * @param aBalance
      *            the account balance
      */
     public final void setBalance(final BigDecimal aBalance) {

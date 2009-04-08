@@ -50,8 +50,8 @@ public class ValidateLogin extends HttpServlet {
      *            the request
      * @param response
      *            the response
-     * @throws SevletException
-     * @throws IOException
+     * @throws ServletException on servlet failure
+     * @throws IOException on IO failure
      *
      */
     public void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -66,8 +66,8 @@ public class ValidateLogin extends HttpServlet {
      *            the request
      * @param response
      *            the response
-     * @throws SevletException
-     * @throws IOException
+     * @throws ServletException on servlet failure
+     * @throws IOException on IO failure
      *
      */
     public void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -82,11 +82,12 @@ public class ValidateLogin extends HttpServlet {
      *            the request
      * @param response
      *            the response
-     * @throws ServletException
-     * @throws IOException
+     * @throws ServletException on servlet failure
+     * @throws IOException on IO failure
      *
      */
-    public void performTask(HttpServletRequest request, HttpServletResponse response)
+    public void performTask(HttpServletRequest request, 
+            HttpServletResponse response)
             throws ServletException, IOException {
         try {
             // Parameters

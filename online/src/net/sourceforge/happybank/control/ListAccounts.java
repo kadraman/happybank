@@ -36,6 +36,9 @@ import net.sourceforge.happybank.model.Customer;
  * @email kevin.lee@buildmeister.com
  */
 public class ListAccounts extends HttpServlet {
+    /**
+     * Generated serialization identifier.
+     */
     private static final long serialVersionUID = 1L;
 
     /**
@@ -45,8 +48,8 @@ public class ListAccounts extends HttpServlet {
      *            the request
      * @param response
      *            the response
-     * @throws SevletException
-     * @throws IOException
+     * @throws ServletException on servlet failure
+     * @throws IOException on IO failure
      *
      */
     public void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -61,8 +64,8 @@ public class ListAccounts extends HttpServlet {
      *            the request
      * @param response
      *            the response
-     * @throws SevletException
-     * @throws IOException
+     * @throws ServletException on servlet failure
+     * @throws IOException on IO failure
      *
      */
     public void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -77,8 +80,8 @@ public class ListAccounts extends HttpServlet {
      *            the request
      * @param response
      *            the response
-     * @throws SevletException
-     * @throws IOException
+     * @throws ServletException on servlet failure
+     * @throws IOException on IO failure
      *
      */
     public void performTask(HttpServletRequest request,

@@ -163,9 +163,9 @@ public class TestBank extends TestCase {
             TransRecord[] transactions = bank.getTransactions("120-2002");
             // assertEquals(transactions.length, 6); // could be a problem here
             assertEquals(transactions[0].getTransAmt(),
-                    new BigDecimal("100.00"));
-            assertEquals(transactions[1].getTransAmt(),
                     new BigDecimal("50.00"));
+            assertEquals(transactions[1].getTransAmt(),
+                    new BigDecimal("100.00"));
         } catch (BankException e) {
             e.printStackTrace();
         }

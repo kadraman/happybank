@@ -43,7 +43,8 @@ public class PerformTransaction extends HttpServlet {
      *            the request
      * @param response
      *            the response
-     * @throws Exception
+     * @throws ServletException on servlet failure
+     * @throws IOException on IO failure
      *
      */
     public void doPost(HttpServletRequest request, HttpServletResponse response)

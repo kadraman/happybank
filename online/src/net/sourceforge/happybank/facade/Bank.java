@@ -35,55 +35,185 @@ import net.sourceforge.happybank.model.TransRecord;
  */
 public interface Bank {
 
-    // Customers:
-    public Customer addCustomer(String customerID, String title, String first,
+    /**
+     * Add a new customer to the bank.
+     * 
+     * @param customerID the id of the customer
+     * @param title the title of the customer, i.e. Mr/Mrs
+     * @param first the firstname of the customer
+     * @param last the lastname of the customer
+     * @return Customer the customer
+     * @throws BankException id customer cannot be added
+     */
+    Customer addCustomer(String customerID, String title, String first,
             String last) throws BankException;
+    
+    /**
+     * Delete the specified customer from the bank.
+     * 
+     * @param customerID the id of the customer
+     * @return Customer the customer
+     * @throws CustomerDoesNotExistException if customer does not exist
+     * @throws BankException otherwise
+     */
+    Customer deleteCustomer(final String customerID)
+            throws BankException, CustomerDoesNotExistException;
 
-    public Customer deleteCustomer(String customerID) throws BankException,
-            CustomerDoesNotExistException;
-
-    public Customer getCustomer(String customerID)
+    /**
+     * Get a specific customer.
+     * 
+     * @param customerID the id of the customer
+     * @return Customer the customer
+     * @throws CustomerDoesNotExistException if the customer does not exist or
+     *         cannot be found
+     */
+    Customer getCustomer(String customerID)
             throws CustomerDoesNotExistException;
 
-    public Customer getCustomerByUsername(String username)
+    /**
+     * Get a specific customer by their username.
+     * 
+     * @param username the username of the customer
+     * @return Customer the customer
+     * @throws CustomerDoesNotExistException if the customer does not exist or
+     *         cannot be found
+     */
+    Customer getCustomerByUsername(String username)
             throws CustomerDoesNotExistException;
 
-    public Customer[] getCustomers() throws BankException;
+    /**
+     * Get the customers of the bank.
+     * 
+     * @return array of customers
+     * @throws BankException if customers cannot be located
+     */
+    Customer[] getCustomers() throws BankException;
 
-    public void associate(String customerID, String accountID)
+    /**
+     * Associate a customer and bank account.
+     * 
+     * @param customerID id of the customer
+     * @param accountID id of the account
+     * @throws AccountDoesNotExistException if account does not exist
+     * @throws CustomerDoesNotExistException if the customer does not exist
+     * @throws BankException on other failure
+     */
+    void associate(String customerID, String accountID)
             throws BankException, CustomerDoesNotExistException,
             AccountDoesNotExistException;
 
-    // Accounts:
-    public Account addAccount(String accountID, String customerID, String type)
+    /**
+     * Add an account to the bank.
+     * 
+     * @param accountID the id of the account
+     * @param customerID the id of the customer
+     * @param type the type of the account
+     * @throws CustomerDoesNotExistException if customer does not exist
+     * @throws BankException on other failure
+     * @return Account the new account object
+     */
+    Account addAccount(String accountID, String customerID, String type)
             throws CustomerDoesNotExistException, BankException;
 
-    public Account deleteAccount(String accountID)
+    /**
+     * Delete an account in the bank.
+     * 
+     * @param accountID the id of the account
+     * @return Account an account object
+     * @throws AccountDoesNotExistException if the account does not exist
+     * @throws BankException on other failure
+     */
+    Account deleteAccount(String accountID)
             throws AccountDoesNotExistException, BankException;
 
-    public Account getAccount(String accountID)
+    /**
+     * Get the account with a specific id.
+     * 
+     * @param accountID account to get
+     * @return the account
+     * @throws AccountDoesNotExistException if account does not exist
+     * @throws BankException on other failure
+     */
+    Account getAccount(String accountID)
             throws AccountDoesNotExistException, BankException;
 
-    public Account[] getAccounts(String customerID)
+    /**
+     * Get the accounts of a specific customer.
+     * 
+     * @param customerID the id of the customer to get accounts of
+     * @return array of accounts
+     * @throws CustomerDoesNotExistException if the customer does not exist
+     * @throws BankException on other failure
+     */
+    Account[] getAccounts(String customerID)
             throws CustomerDoesNotExistException, BankException;
 
-    public String accountOwner(String accountID)
+    /**
+     * Get the customer of a bank account.
+     * 
+     * @param accountID id of the account
+     * @return the id of the customer
+     * @throws AccountDoesNotExistException if the account does not exist
+     * @throws CustomerDoesNotExistException if the customer does not exist
+     * @throws BankException on other failure
+     */
+    String accountOwner(String accountID)
             throws AccountDoesNotExistException, CustomerDoesNotExistException,
             BankException;
 
-    public BigDecimal deposit(String accountID, BigDecimal amount)
+    /**
+     * Deposit funds into a specific account.
+     * 
+     * @param accountID the id of the account
+     * @param amount the amount to deposit
+     * @return the balance of the account
+     * @throws AccountDoesNotExistException if the account does not exist
+     * @throws BankException on other failure
+     */
+    BigDecimal deposit(String accountID, BigDecimal amount)
             throws AccountDoesNotExistException, BankException;
 
-    public BigDecimal withdraw(String accountID, BigDecimal amount)
+    /**
+     * Withdraw funds from a specific account.
+     * 
+     * @param accountID the id of the account
+     * @param amount the amount to withdraw
+     * @return the balance of the account
+     * @throws AccountDoesNotExistException if account does not exist
+     * @throws InsufficientFundsException if there are not enough funds in the
+     *         account
+     * @throws BankException on other failure
+     */
+    BigDecimal withdraw(String accountID, BigDecimal amount)
             throws InsufficientFundsException, AccountDoesNotExistException,
             BankException;
 
-    public BigDecimal transfer(String account1, String account2,
-            BigDecimal amount) throws InsufficientFundsException,
-            AccountDoesNotExistException, BankException;
+    /**
+     * Transfer funds from one account to another.
+     * 
+     * @param accountID1 id of the first account
+     * @param accountID2 id of the second account
+     * @param amount the amount to transfer
+     * @return the balance of the first account
+     * @throws AccountDoesNotExistException if account does not exist
+     * @throws InsufficientFundsException if there are insufficient funds in the
+     *         account
+     * @throws BankException on other failure
+     */
+    BigDecimal transfer(final String accountID1,
+            final String accountID2, final BigDecimal amount)
+            throws AccountDoesNotExistException, InsufficientFundsException,
+            BankException;
 
-    // Transactions:
-    public TransRecord[] getTransactions(String accountID)
+    /**
+     * Get the transaction records for a specific account.
+     * 
+     * @param accountID the id of the account
+     * @return array of transactions
+     * @throws AccountDoesNotExistException if account does not exist
+     * @throws BankException on other failure
+     */
+    TransRecord[] getTransactions(String accountID)
             throws AccountDoesNotExistException, BankException;
 
 } // Bank

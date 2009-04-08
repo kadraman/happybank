@@ -35,7 +35,7 @@ public interface Command {
      * @param response
      *            the response
      * @return string containing page to forward to.
-     * @throws Exception
+     * @throws Exception on failure
      *
      */
     String execute(HttpServletRequest request, HttpServletResponse response)

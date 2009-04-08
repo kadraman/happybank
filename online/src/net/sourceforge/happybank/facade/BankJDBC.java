@@ -1,18 +1,12 @@
 /*
- * Copyright 2005-2008 Kevin A. Lee
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
+ * Copyright 2005-2008 Kevin A. Lee Licensed under the Apache License, Version
+ * 2.0 (the "License"); you may not use this file except in compliance with the
+ * License. You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
+ * or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
  */
 
 package net.sourceforge.happybank.facade;
@@ -47,59 +41,56 @@ import org.hsqldb.jdbc.jdbcDataSource;
  * @email kevin.lee@buildmeister.com
  */
 public final class BankJDBC implements Bank {
-
+    
     /**
      * Controls whether to use JNDI (defaults to true for web application).
      */
-    private boolean jndi = true;
+    private boolean          jndi     = true;
     /**
      * Random number generator for timestamps.
      */
-    private java.util.Random random = new java.util.Random();
+    private java.util.Random random   = new java.util.Random();
     /**
      * The bank singleton instance.
      */
-    private static BankJDBC instance = new BankJDBC();
-
+    private static BankJDBC  instance = new BankJDBC();
+    
     /**
      * Gets the Bank instance.
-     *
-     * @param jndi
-     *            whether to use jndi or not
+     * 
+     * @param jndi whether to use jndi or not
      * @return the bank instance
      */
     public static BankJDBC getInstance(final boolean jndi) {
         instance.setJndi(jndi);
         return instance;
     }
-
+    
     /**
      * Are we using JNDI?
-     *
+     * 
      * @return true if using JNDI, else false.
      */
     public boolean isJndi() {
         return jndi;
     }
-
+    
     /**
      * Set whether we are using JNDI.
-     *
-     * @param j
-     *            true to set jndi, else false.
+     * 
+     * @param j true to set jndi, else false.
      */
     public void setJndi(final boolean j) {
         this.jndi = j;
     }
-
+    
     /**
      * Get a specific customer.
-     *
-     * @param customerID
-     *            the id of the customer
+     * 
+     * @param customerID the id of the customer
      * @return Customer the customer
-     * @throws CustomerDoesNotExistException
-     *             if the customer does not exist or cannot be found
+     * @throws CustomerDoesNotExistException if the customer does not exist or
+     *         cannot be found
      */
     public Customer getCustomer(final String customerID)
             throws CustomerDoesNotExistException {
@@ -113,20 +104,20 @@ public final class BankJDBC implements Bank {
         }
         return customer;
     } // getCustomer
-
+    
     /**
      * Get a specific customer by their username.
-     *
-     * @param username
-     *            the username of the customer
+     * 
+     * @param username the username of the customer
      * @return Customer the customer
-     * @throws CustomerDoesNotExistException
-     *             if the customer does not exist or cannot be found
+     * @throws CustomerDoesNotExistException if the customer does not exist or
+     *         cannot be found
      */
     public Customer getCustomerByUsername(final String username)
             throws CustomerDoesNotExistException {
         if (username == null) {
-            throw new CustomerDoesNotExistException("Customer username is null");
+            throw new 
+            CustomerDoesNotExistException("Customer username is null");
         }
         Customer customer = getCustomerByUsernameJDBC(username);
         if (customer == null) {
@@ -135,31 +126,26 @@ public final class BankJDBC implements Bank {
         }
         return customer;
     } // getCustomer
-
+    
     /**
      * Get the customers of the bank.
-     *
+     * 
      * @return array of customers
-     * @throws BankException
+     * @throws BankException if customers cannot be located
      */
     public Customer[] getCustomers() throws BankException {
         return getCustomersJDBC();
     } // getCustomers
-
+    
     /**
      * Add a new customer to the bank.
-     *
-     * @param customerID
-     *            the id of the customer
-     * @param title
-     *            the title of the customer, i.e. Mr/Mrs
-     * @param first
-     *            the firstname of the customer
-     * @param last
-     *            the lastname of the customer
+     * 
+     * @param customerID the id of the customer
+     * @param title the title of the customer, i.e. Mr/Mrs
+     * @param first the firstname of the customer
+     * @param last the lastname of the customer
      * @return Customer the customer
-     * @throws BankException
-     * @throws CustomerDoesNotExistException
+     * @throws BankException id customer cannot be added
      */
     public Customer addCustomer(final String customerID, final String title,
             final String first, final String last) throws BankException {
@@ -173,41 +159,48 @@ public final class BankJDBC implements Bank {
         }
         return customer;
     } // addCustomer
-
+    
     /**
-     * delete the specified customer from the bank
-     *
-     * @param customerID
-     *            the id of the customer
-     * @throws CustomerDoesNotExistException
-     *             , BankException
+     * Delete the specified customer from the bank.
+     * 
+     * @param customerID the id of the customer
+     * @return Customer the customer
+     * @throws CustomerDoesNotExistException if customer does not exist
+     * 
      */
     public Customer deleteCustomer(final String customerID)
-            throws CustomerDoesNotExistException, BankException {
+            throws BankException, CustomerDoesNotExistException {
         if (customerID == null) {
             throw new CustomerDoesNotExistException("Customer number is null");
         }
         deleteCustomerJDBC(customerID);
         return null;
     } // deleteCustomer
-
+    
     /**
-     * get the account with a specific id
-     *
-     * @param accountID
-     *            account to get
+     * Get the account with a specific id.
+     * 
+     * @param accountID account to get
      * @return the account
-     * @throws AccountDoesNotExistException
-     *             , BankException
+     * @throws AccountDoesNotExistException if account does not exist
+     * @throws BankException on other failure
      */
     public Account getAccount(final String accountID)
             throws AccountDoesNotExistException, BankException {
         Connection con = connect(true);
         return getAccount(con, accountID);
     } // getAccount
-
-    // internal get Account
-    protected Account getAccount(final Connection con, final String accountID)
+    
+    /**
+     * Get a specific customer account.
+     * 
+     * @param con the database connection
+     * @param accountID the account id
+     * @return an Account object
+     * @throws AccountDoesNotExistException if account does not exist
+     * @throws BankException on other failure
+     */
+    public Account getAccount(final Connection con, final String accountID)
             throws AccountDoesNotExistException, BankException {
         if (accountID == null) {
             throw new AccountDoesNotExistException("Account number is null");
@@ -219,15 +212,14 @@ public final class BankJDBC implements Bank {
         }
         return account;
     } // getAccount
-
+    
     /**
-     * get the accounts of a specific customer
-     *
-     * @param customerID
-     *            the id of the customer to get accounts of
+     * Get the accounts of a specific customer.
+     * 
+     * @param customerID the id of the customer to get accounts of
      * @return array of accounts
-     * @throws CustomerDoesNotExistException
-     *             , BankException
+     * @throws CustomerDoesNotExistException if the customer does not exist
+     * @throws BankException on other failure
      */
     public Account[] getAccounts(final String customerID)
             throws CustomerDoesNotExistException, BankException {
@@ -236,18 +228,16 @@ public final class BankJDBC implements Bank {
         }
         return getAccountsJDBC(customerID);
     } // getAccounts
-
+    
     /**
-     * add an account to the bank
-     *
-     * @param accountID
-     *            the id of the account
-     * @param customerID
-     *            the id of the customer
-     * @param type
-     *            the type of the account
-     * @throws CustomerDoesNotExistException
-     *             , BankException
+     * Add an account to the bank.
+     * 
+     * @param accountID the id of the account
+     * @param customerID the id of the customer
+     * @param type the type of the account
+     * @throws CustomerDoesNotExistException if customer does not exist
+     * @throws BankException on other failure
+     * @return Account the new account object
      */
     public Account addAccount(final String accountID, final String customerID,
             final String type) throws CustomerDoesNotExistException,
@@ -261,14 +251,14 @@ public final class BankJDBC implements Bank {
         // account.setType(type);
         return account;
     } // addAccount
-
+    
     /**
-     * delete an account in the bank
-     *
-     * @param accountID
-     *            the id of the account
-     * @throws AccountDoesNotExistException
-     *             , BankException
+     * Delete an account in the bank.
+     * 
+     * @param accountID the id of the account
+     * @return Account an account object
+     * @throws AccountDoesNotExistException if the account does not exist
+     * @throws BankException on other failure
      */
     public Account deleteAccount(final String accountID)
             throws AccountDoesNotExistException, BankException {
@@ -281,29 +271,30 @@ public final class BankJDBC implements Bank {
         deleteAccountJDBC(accountID);
         return null;
     } // deleteAccount
-
+    
     /**
-     * associate a customer and bank account
-     *
-     * @param customerID
-     *            id of the customer
-     * @param accountID
-     *            id of the account
+     * Associate a customer and bank account.
+     * 
+     * @param customerID id of the customer
+     * @param accountID id of the account
+     * @throws AccountDoesNotExistException if account does not exist
+     * @throws CustomerDoesNotExistException if the customer does not exist
+     * @throws BankException on other failure
      */
     public void associate(final String customerID, final String accountID)
             throws CustomerDoesNotExistException, AccountDoesNotExistException,
             BankException {
         // TODO Auto-generated method stub
     } // associate
-
+    
     /**
-     * get the customer of a bank account
-     *
-     * @param accountID
-     *            id of the account
+     * Get the customer of a bank account.
+     * 
+     * @param accountID id of the account
      * @return the id of the customer
-     * @throws AccountDoesNotExistException
-     *             , CustomerDoesNotExistException
+     * @throws AccountDoesNotExistException if the account does not exist
+     * @throws CustomerDoesNotExistException if the customer does not exist
+     * @throws BankException on other failure
      */
     public String accountOwner(final String accountID)
             throws AccountDoesNotExistException, CustomerDoesNotExistException,
@@ -318,14 +309,14 @@ public final class BankJDBC implements Bank {
         }
         return customerID;
     } // accountOwner
-
+    
     /**
-     * get the transaction records for a specific account
-     *
-     * @param accountID
-     *            the id of the account
+     * Get the transaction records for a specific account.
+     * 
+     * @param accountID the id of the account
      * @return array of transactions
-     * @throws BankException
+     * @throws AccountDoesNotExistException if account does not exist
+     * @throws BankException on other failure
      */
     public TransRecord[] getTransactions(final String accountID)
             throws AccountDoesNotExistException, BankException {
@@ -334,17 +325,15 @@ public final class BankJDBC implements Bank {
         }
         return getTransactionsJDBC(accountID);
     } // getTransactionsJDBC
-
+    
     /**
-     * deposit funds into a specific account
-     *
-     * @param accountID
-     *            the id of the account
-     * @param amount
-     *            the amount to deposit
+     * Deposit funds into a specific account.
+     * 
+     * @param accountID the id of the account
+     * @param amount the amount to deposit
      * @return the balance of the account
-     * @throws AccountDoesNotExistException
-     *             , BankException
+     * @throws AccountDoesNotExistException if the account does not exist
+     * @throws BankException on other failure
      */
     public BigDecimal deposit(final String accountID, final BigDecimal amount)
             throws AccountDoesNotExistException, BankException {
@@ -357,18 +346,17 @@ public final class BankJDBC implements Bank {
         commit(con);
         return account.getBalance();
     } // deposit
-
+    
     /**
-     * withdraw funds from a specific account
-     *
-     * @param accountID
-     *            the id of the account
-     * @param amount
-     *            the amount to withdraw
+     * Withdraw funds from a specific account.
+     * 
+     * @param accountID the id of the account
+     * @param amount the amount to withdraw
      * @return the balance of the account
-     * @throws AccountDoesNotExistException
-     * @throws InsufficientFundsException
-     * @throws BankException
+     * @throws AccountDoesNotExistException if account does not exist
+     * @throws InsufficientFundsException if there are not enough funds in the
+     *         account
+     * @throws BankException on other failure
      */
     public BigDecimal withdraw(final String accountID, final BigDecimal amount)
             throws AccountDoesNotExistException, InsufficientFundsException,
@@ -382,20 +370,18 @@ public final class BankJDBC implements Bank {
         commit(con);
         return account.getBalance();
     } // withdraw
-
+    
     /**
-     * transfer funds from one account to another
-     *
-     * @param accountID1
-     *            id of the first account
-     * @param accountID2
-     *            id of the second account
-     * @param amount
-     *            the amount to transfer
+     * Transfer funds from one account to another.
+     * 
+     * @param accountID1 id of the first account
+     * @param accountID2 id of the second account
+     * @param amount the amount to transfer
      * @return the balance of the first account
-     * @throws AccountDoesNotExistException
-     * @throws InsufficientFundsException
-     * @throws BankException
+     * @throws AccountDoesNotExistException if account does not exist
+     * @throws InsufficientFundsException if there are insufficient funds in the
+     *         account
+     * @throws BankException on other failure
      */
     public BigDecimal transfer(final String accountID1,
             final String accountID2, final BigDecimal amount)
@@ -417,16 +403,16 @@ public final class BankJDBC implements Bank {
         commit(con);
         return account1.getBalance();
     } // transfer
-
+    
     /*
      * internal JDBC methods
      */
 
     /**
-     * Get specific customer via JDBC
-     *
-     * @param customerID
-     * @return Customer
+     * Get specific customer via JDBC.
+     * 
+     * @param customerID the customer's id
+     * @return Customer customer class
      */
     protected Customer getCustomerJDBC(final String customerID) {
         Connection con = connect(true);
@@ -460,16 +446,17 @@ public final class BankJDBC implements Bank {
                     con.close();
                 }
             } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
         return cust;
     } // getCustomerJDBC
-
+    
     /**
      * Get a specific customer via JDBC.
-     *
-     * @param username
-     * @return Customer
+     * 
+     * @param username the customer's username
+     * @return Customer customer object
      */
     protected Customer getCustomerByUsernameJDBC(final String username) {
         Connection con = connect(true);
@@ -505,23 +492,25 @@ public final class BankJDBC implements Bank {
                     con.close();
                 }
             } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
         return cust;
     } // getCustomerJDBC
-
+    
     /**
      * Get all the customers via JDBC.
-     *
+     * 
      * @return array of Customers
      */
     protected Customer[] getCustomersJDBC() {
         Connection con = connect(true);
         PreparedStatement stmt = null;
         ResultSet rs = null;
-        String select = "SELECT C.\"CUSTOMERID\", C.\"TITLE\", C.\"FIRSTNAME\", "
-                + " C.\"LASTNAME\" FROM CUSTOMER C "
-                + "ORDER BY C.\"CUSTOMERID\"";
+        String select = "SELECT C.\"CUSTOMERID\", C.\"TITLE\", "
+            + "C.\"FIRSTNAME\", "
+            + " C.\"LASTNAME\" FROM CUSTOMER C "
+            + "ORDER BY C.\"CUSTOMERID\"";
         Vector v = new Vector();
         Customer ctmp = null;
         try {
@@ -549,20 +538,21 @@ public final class BankJDBC implements Bank {
                     con.close();
                 }
             } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
         return (Customer[]) v.toArray(new Customer[v.size()]);
     } // getCustomersJDBC
-
+    
     /**
      * Add a new customer via JDBC.
-     *
-     * @param customerID
-     * @param title
-     * @param first
-     * @param last
+     * 
+     * @param customerID the customer's id
+     * @param title the customer's title (Mr, Mrs etc)
+     * @param first the customer's firstname
+     * @param last the customer's lastname
      * @return the new Customer
-     * @throws BankException
+     * @throws BankException on add failure
      */
     protected Customer addCustomerJDBC(final String customerID,
             final String title, final String first, final String last)
@@ -595,6 +585,7 @@ public final class BankJDBC implements Bank {
                             + result);
                 }
             } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
         Customer ctmp = new Customer(customerID);
@@ -604,12 +595,12 @@ public final class BankJDBC implements Bank {
         ctmp.setId("cust" + customerID);
         return ctmp;
     } // addCustomerJDBC
-
+    
     /**
      * Delete a customer via JDBC.
-     *
-     * @param customerID
-     * @throws BankException
+     * 
+     * @param customerID the customer's id
+     * @throws BankException on delete failure
      */
     protected void deleteCustomerJDBC(final String customerID)
             throws BankException {
@@ -634,17 +625,18 @@ public final class BankJDBC implements Bank {
                             + result);
                 }
             } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
     } // deleteCustomerJDBC
-
+    
     /**
      * Add an account via JDBC.
-     *
-     * @param accountID
-     * @param customerID
-     * @param type
-     * @throws BankException
+     * 
+     * @param accountID the customers account
+     * @param customerID the customers id
+     * @param type the account type, C (checking) or S (saving)
+     * @throws BankException on failure
      */
     protected void addAccountJDBC(final String accountID,
             final String customerID, final String type) throws BankException {
@@ -661,7 +653,11 @@ public final class BankJDBC implements Bank {
             stmt.setBigDecimal(2, new BigDecimal(0.0));
             stmt.setBigDecimal(3, new BigDecimal(0.0));
             stmt.setString(4, type);
-            stmt.setString(5, type.equals("Checking") ? "C" : "S");
+            if (type.equals("Checking")) {
+                stmt.setString(5, "C");
+            } else {
+                stmt.setString(5, "S");
+            }
             stmt.setBigDecimal(6, new BigDecimal(0.0));
             stmt.setBigDecimal(7, new BigDecimal(0.0));
             result = stmt.executeUpdate();
@@ -678,15 +674,16 @@ public final class BankJDBC implements Bank {
                             + result);
                 }
             } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
     } // addAccountJDBC
-
+    
     /**
      * Delete an account via JDBC.
-     *
-     * @param accountID
-     * @throws BankException
+     * 
+     * @param accountID the account id
+     * @throws BankException on delete failure
      */
     protected void deleteAccountJDBC(final String accountID)
             throws BankException {
@@ -711,15 +708,16 @@ public final class BankJDBC implements Bank {
                             + result);
                 }
             } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
     } // deleteAccountJDBC
-
+    
     /**
      * Get an account via JDBC.
-     *
-     * @param con
-     * @param accountID
+     * 
+     * @param con the database connection
+     * @param accountID the account id
      * @return the account
      */
     protected Account getAccountJDBC(final Connection con,
@@ -750,15 +748,16 @@ public final class BankJDBC implements Bank {
                     stmt.close();
                 }
             } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
         return account;
     } // getAccountJDBC
-
+    
     /**
      * Get all of a customers accounts via JDBC.
-     *
-     * @param customerID
+     * 
+     * @param customerID the customer's id
      * @return array of accounts
      */
     protected Account[] getAccountsJDBC(final String customerID) {
@@ -797,23 +796,25 @@ public final class BankJDBC implements Bank {
                     con.close();
                 }
             } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
         return (Account[]) v.toArray(new Account[v.size()]);
     } // getAccountsJDBC
-
+    
     /**
-     * Get the owner of an account
-     *
-     * @param accountID
+     * Get the owner of an account.
+     * 
+     * @param accountID the account id
      * @return id of the customer
-     * @throws BankException
+     * @throws BankException on failure
      */
     protected String getAccountOwnerJDBC(final String accountID)
             throws BankException {
         Connection con = connect(true);
         PreparedStatement stmt = null;
-        String select = "SELECT \"CUSTOMERID\" FROM CUSTACCT WHERE \"ACCID\" = ?";
+        String select = "SELECT \"CUSTOMERID\" FROM CUSTACCT WHERE"
+                + " \"ACCID\" = ?";
         ResultSet rs = null;
         String customerID = null;
         try {
@@ -838,22 +839,25 @@ public final class BankJDBC implements Bank {
                     con.close();
                 }
             } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
         return customerID;
     } // associateJDBC
-
+    
     /**
      * Update an account via JDBC.
-     *
-     * @param con
-     * @param account
-     * @throws BankException
+     * 
+     * @param con the database connection
+     * @param account the account
+     * @throws BankException on failure
      */
-    protected void updateAccountJDBC(final Connection con, final Account account)
+    protected void updateAccountJDBC(final Connection con, 
+            final Account account)
             throws BankException {
         PreparedStatement stmt = null;
-        String update = "UPDATE ACCOUNT SET \"BALANCE\" = ? WHERE \"ACCID\" = ?";
+        String update = "UPDATE ACCOUNT SET \"BALANCE\" = ? WHERE"
+                + " \"ACCID\" = ?";
         int result = 0;
         try {
             stmt = con.prepareStatement(update);
@@ -873,22 +877,25 @@ public final class BankJDBC implements Bank {
                             + result);
                 }
             } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
     } // updateAccountJDBC
-
+    
     /**
      * Associate a customer to an account via JDBC.
-     *
-     * @param customerID
-     * @param accountID
-     * @throws BankException
+     * 
+     * @param customerID the customer's id
+     * @param accountID the account id
+     * @throws BankException on associate failure
      */
-    protected void associateJDBC(final String customerID, final String accountID)
+    protected void associateJDBC(final String customerID, 
+            final String accountID)
             throws BankException {
         Connection con = connect(true);
         PreparedStatement stmt = null;
-        String insert = "INSERT INTO CUSTACCT (\"CUSTOMERID\", \"ACCID\") VALUES (?, ?)";
+        String insert = "INSERT INTO CUSTACCT (\"CUSTOMERID\", \"ACCID\") "
+                + "VALUES (?, ?)";
         int result = 0;
         try {
             stmt = con.prepareStatement(insert);
@@ -908,16 +915,17 @@ public final class BankJDBC implements Bank {
                             + result);
                 }
             } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
     } // associateJDBC
-
+    
     /**
      * Unassociate a customer from an account via JDBC.
-     *
-     * @param customerID
-     * @param accountID
-     * @throws BankException
+     * 
+     * @param customerID the customer's id
+     * @param accountID the account id
+     * @throws BankException on delete failure
      */
     protected void unassociateJDBC(final String customerID,
             final String accountID) throws BankException {
@@ -942,23 +950,25 @@ public final class BankJDBC implements Bank {
                             + result);
                 }
             } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
     } // unassociateJDBC
-
+    
     /**
      * Get all the transactions on an account via JDBC.
-     *
-     * @param accountID
-     * @return array of transactions.
-     * @throws BankException
+     * 
+     * @param accountID the account id
+     * @return array of transactions
+     * @throws BankException on failure
      */
     protected TransRecord[] getTransactionsJDBC(final String accountID)
             throws BankException {
         Connection con = connect(true);
         PreparedStatement stmt = null;
         ResultSet rs = null;
-        String select = "SELECT * FROM TRANSRECORD WHERE \"ACCID\" = ? ORDER BY \"TRANSID\" DESC";
+        String select = "SELECT * FROM TRANSRECORD WHERE \"ACCID\" = ? "
+                + "ORDER BY \"TRANSID\" DESC";
         Vector v = new Vector();
         TransRecord trans = null;
         try {
@@ -989,18 +999,19 @@ public final class BankJDBC implements Bank {
                     con.close();
                 }
             } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
         return (TransRecord[]) v.toArray(new TransRecord[v.size()]);
     } // getTransactionsJDBC
-
+    
     /**
      * Add a transaction via JDBC.
-     *
-     * @param con
-     * @param accountID
-     * @param transaction
-     * @throws BankException
+     * 
+     * @param con the database connection
+     * @param accountID the account id
+     * @param transaction the transaction record
+     * @throws BankException on add failure
      */
     protected void addTransactionJDBC(final Connection con,
             final String accountID, final TransRecord transaction)
@@ -1033,26 +1044,26 @@ public final class BankJDBC implements Bank {
                             + result);
                 }
             } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
     } // addTransactionJDBC
-
+    
     /**
      * Delete a transaction via JDBC.
-     *
-     * @param accountID
-     * @throws BankException
+     * 
+     * @param accountID the account id
+     * @throws BankException on delete failure
      */
     protected void deleteTransactionsJDBC(final String accountID)
             throws BankException {
         Connection con = connect(true);
         PreparedStatement stmt = null;
         String delete = "DELETE FROM TRANSRECORD WHERE (\"ACCID\") = (?)";
-        int result = 0;
         try {
             stmt = con.prepareStatement(delete);
             stmt.setString(1, accountID);
-            result = stmt.executeUpdate();
+            stmt.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
             throw new BankException("JDBC DELETE failed: " + e.getMessage());
@@ -1060,17 +1071,17 @@ public final class BankJDBC implements Bank {
             try {
                 if (stmt != null) {
                     stmt.close();
-                }
+                }               
             } catch (SQLException e) {
-                // ignore
-            }
+                e.printStackTrace();
+            }           
         }
     } // deleteTransactionsJDBC
-
+    
     /**
      * Get a connection to the database.
-     *
-     * @param autoCommit
+     * 
+     * @param autoCommit true if autocommit is to be enabled else false
      * @return the connection
      */
     protected Connection connect(final boolean autoCommit) {
@@ -1101,12 +1112,12 @@ public final class BankJDBC implements Bank {
         }
         return conn;
     } // connect
-
+    
     /**
      * Commit a transaction to the database.
-     *
-     * @param con
-     * @throws BankException
+     * 
+     * @param con the database connection
+     * @throws BankException on failure
      */
     protected void commit(final Connection con) throws BankException {
         try {
@@ -1120,15 +1131,18 @@ public final class BankJDBC implements Bank {
                     con.close();
                 }
             } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
     } // commit
-
+    
     /**
      * Test method.
+     * 
+     * @param args command line arguments
      */
     public static void main(final String[] args) {
-
+        
         try {
             BankingFacade bf = new BankingFacade();
             bf.setJndi(false);
@@ -1159,6 +1173,6 @@ public final class BankJDBC implements Bank {
             ex.printStackTrace();
         }
     } // main
-
+    
 } // BankJDBC
 
