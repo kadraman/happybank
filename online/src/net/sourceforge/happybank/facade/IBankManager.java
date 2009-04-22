@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2008 Kevin A. Lee
+ * Copyright 2005-2009 Kevin A. Lee
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
 package net.sourceforge.happybank.facade;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import net.sourceforge.happybank.exception.AccountDoesNotExistException;
 import net.sourceforge.happybank.exception.BankException;
@@ -33,7 +34,7 @@ import net.sourceforge.happybank.model.TransRecord;
  * @author Kevin A. Lee
  * @email kevin.lee@buildmeister.com
  */
-public interface Bank {
+public interface IBankManager {
 
     /**
      * Add a new customer to the bank.
@@ -87,7 +88,7 @@ public interface Bank {
      * @return array of customers
      * @throws BankException if customers cannot be located
      */
-    Customer[] getCustomers() throws BankException;
+    List<Customer> getCustomers() throws BankException;
 
     /**
      * Associate a customer and bank account.
@@ -145,7 +146,7 @@ public interface Bank {
      * @throws CustomerDoesNotExistException if the customer does not exist
      * @throws BankException on other failure
      */
-    Account[] getAccounts(String customerID)
+    List<Account> getAccounts(String customerID)
             throws CustomerDoesNotExistException, BankException;
 
     /**
@@ -213,7 +214,7 @@ public interface Bank {
      * @throws AccountDoesNotExistException if account does not exist
      * @throws BankException on other failure
      */
-    TransRecord[] getTransactions(String accountID)
+    List<TransRecord> getTransactions(String accountID)
             throws AccountDoesNotExistException, BankException;
 
 } // Bank

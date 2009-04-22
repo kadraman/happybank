@@ -8,12 +8,13 @@
 <%@page import="net.sourceforge.happybank.model.*" session="false"%>
 <%@page import="java.math.BigDecimal" session="false"%>
 <%@page import="java.util.Locale" session="false"%>
-<%@page import="java.util.Currency;" session="false"%>
+<%@page import="java.util.Currency" session="false"%>
+<%@page import="java.util.ArrayList" session="false"%>
 <%
     Locale currentLocale = Locale.getDefault();
     Currency currentCurrency = Currency.getInstance(currentLocale);
     String currencySymbol = currentCurrency.getSymbol();
-    Account[] accounts = (Account[]) request.getAttribute("accounts");
+    ArrayList accounts = (ArrayList) request.getAttribute("accounts");
 %>
 
 <!-- begin content -->
@@ -32,8 +33,8 @@
 <div class="main">
 <div class="content">
 <h1><jsp:useBean id="customer" scope="request"
-	class="net.sourceforge.happybank.model.Customer" /> <jsp:getProperty name="customer"
-	property="title" /> <jsp:getProperty name="customer"
+	class="net.sourceforge.happybank.model.Customer" /> <jsp:getProperty
+	name="customer" property="title" /> <jsp:getProperty name="customer"
 	property="firstName" /> <jsp:getProperty name="customer"
 	property="lastName" />'s accounts</h1>
 <table border="0" cellpadding="1" cellspacing="0" width="100%">
@@ -52,11 +53,11 @@
 						<td align="center"><font color="white"><b>Type</b></font></td>
 						<td align="center"><font color="white"><b>Balance</b></font></td>
 					</tr>
-					<%					
+					<%
 					    String[] colors = { "#eeeeee", "#dddddd" };
 					    BigDecimal totalBalance = new BigDecimal(0.0D);
-					    for (int count = 0; count < accounts.length; count++) {
-					        Account account = accounts[count];
+					    for (int count = 0; count < accounts.size(); count++) {
+					        Account account = (Account) accounts.get(count);
 					        totalBalance = totalBalance.add(account.getBalance());
 					%>
 					<tr bgcolor=<%=colors[count % 2]%>>

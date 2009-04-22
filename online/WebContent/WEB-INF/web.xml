@@ -5,6 +5,27 @@
 	<display-name>HappyBank</display-name>
 	<distributable />
 
+	<!--
+		Location of the XML file that defines the root application context -
+		Applied by ContextLoaderListener.
+	-->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>/WEB-INF/applicationContext.xml</param-value>
+	</context-param>
+
+	<!--
+		Loads the root application context of this web app at startup. - Use
+		WebApplicationContextUtils.getWebApplicationContext(servletContext) -
+		to access it anywhere in the web application, outside of the
+		framework.
+	-->
+	<servlet>
+		<servlet-name>SpringContextServlet</servlet-name>
+		<servlet-class>org.springframework.web.context.ContextLoaderServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
 	<servlet>
 		<servlet-name>AccountDetails</servlet-name>
 		<servlet-class>net.sourceforge.happybank.control.AccountDetails</servlet-class>
@@ -23,9 +44,17 @@
 		<servlet-class>net.sourceforge.happybank.control.ListAccounts</servlet-class>
 	</servlet>
 	<servlet>
+        <servlet-name>ListTransactions</servlet-name>
+        <servlet-class>net.sourceforge.happybank.control.ListTransactions</servlet-class>
+    </servlet>
+	<servlet>
 		<servlet-name>ValidateLogin</servlet-name>
 		<servlet-class>net.sourceforge.happybank.control.ValidateLogin</servlet-class>
 	</servlet>
+	<servlet>
+        <servlet-name>TransferFunds</servlet-name>
+        <servlet-class>net.sourceforge.happybank.control.TransferFunds</servlet-class>
+    </servlet>
 
 	<servlet-mapping>
 		<servlet-name>AccountDetails</servlet-name>
@@ -43,10 +72,18 @@
 		<servlet-name>ListAccounts</servlet-name>
 		<url-pattern>/ListAccounts</url-pattern>
 	</servlet-mapping>
+	   <servlet-mapping>
+        <servlet-name>ListTransactions</servlet-name>
+        <url-pattern>/ListTransactions</url-pattern>
+    </servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>ValidateLogin</servlet-name>
 		<url-pattern>/ValidateLogin</url-pattern>
 	</servlet-mapping>
+	<servlet-mapping>
+        <servlet-name>TransferFunds</servlet-name>
+        <url-pattern>/TransferFunds</url-pattern>
+    </servlet-mapping>
 
 	<resource-ref>
 		<description>HappyBank data source</description>

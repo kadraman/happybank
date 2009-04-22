@@ -18,74 +18,67 @@
 package net.sourceforge.happybank.control;
 
 import java.io.IOException;
-import java.util.List;
+import java.math.BigDecimal;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import net.sourceforge.happybank.exception.InvalidAmountException;
 import net.sourceforge.happybank.model.Account;
-import net.sourceforge.happybank.model.Customer;
 
 /**
- * List the customers accounts.
- *
+ * Transfers the given amount of money from the source account to the
+ * destination one.
+ * 
  * @author Kevin A. Lee
  * @email kevin.lee@buildmeister.com
  */
-public class ListAccounts extends BaseServlet {
+public class TransferFunds extends BaseServlet {
+    
     /**
      * Generated serialization identifier.
      */
-    private static final long serialVersionUID = 1L;
-  
+    private static final long serialVersionUID = 1L;   
+    
     /**
-     * Gets the details of the account and places it in the current session.
-     *
-     * @param request
-     *            the request
-     * @param response
-     *            the response
+     * Transfer the funds.
+     * 
+     * @param request the request
+     * @param response the response
      * @throws ServletException on servlet failure
      * @throws IOException on IO failure
-     *
      */
     protected void performTask(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
         try {
             // parameters:
-
-            // get input parameter and keep it on the HTTP session
             
-            String customerNumber = request.getParameter("customerNumber");
-            HttpSession session = request.getSession();
-
-            if (customerNumber == null) {
-                customerNumber = (String) session
-                        .getAttribute("customerNumber");
-            } else {
-                session.setAttribute("customerNumber", customerNumber);
-            }
-
+            HttpSession session = request.getSession(false);
+            String accountID1 = (String) session.getAttribute("accountNumber");
+            String accountID2 = (String) request.getParameter(
+                    "destinationAccount").toString();
+            BigDecimal amount = new BigDecimal(request.getParameter("amount"));
+            
             // control logic:
-
-            // retrieve customer and related accounts
-            Customer customer = getBank().getCustomer(customerNumber);
-            List<Account> accounts = getBank().getAccounts(customerNumber);
-
-            // response:
-
-            // set the request attributes for future rendering
             
-            request.setAttribute("customer", customer);
-            request.setAttribute("accounts", accounts);
-
+            if (amount.equals(new BigDecimal(0.00))) {
+                throw new InvalidAmountException("Invalid amount...");
+            }
+            
+            getBank().transfer(accountID1, accountID2, amount);
+            Account account = getBank().getAccount(accountID1);
+            
+            // response:
+            
+            request.setAttribute("account", account);
+            
             // call the presentation renderer
             
-            getServletContext().getRequestDispatcher("/listAccounts.jsp")
+            getServletContext().getRequestDispatcher("/accountDetails.jsp")
                     .forward(request, response);
-
+            
         } catch (Exception ex) {
             request.setAttribute("message", ex.getMessage());
             request.setAttribute("forward", "index.jsp");
@@ -93,5 +86,5 @@ public class ListAccounts extends BaseServlet {
                     .forward(request, response);
         }
     } // performTask
-
-} // ListAccounts
+    
+} // TransferFunds

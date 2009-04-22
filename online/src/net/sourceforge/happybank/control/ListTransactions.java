@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2008 Kevin A. Lee
+ * Copyright 2005-2009 Kevin A. Lee
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,54 +17,81 @@
 
 package net.sourceforge.happybank.control;
 
+import java.io.IOException;
+import java.util.List;
+
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import net.sourceforge.happybank.facade.BankingFacade;
 import net.sourceforge.happybank.model.Account;
 import net.sourceforge.happybank.model.TransRecord;
 
 /**
  * Lists the transactions for the given account.
- *
+ * 
  * @author Kevin A. Lee
  * @email kevin.lee@buildmeister.com
  */
-public class ListTransactions implements Command {
-
+public class ListTransactions extends BaseServlet {
+    
     /**
-     * Execute the command.
-     *
-     * @param request
-     *            the request
-     * @param response
-     *            the response
-     * @return string containing page to forward to.
-     * @throws Exception on failure
-     *
+     * Generated serialization identifier.
      */
-    public String execute(HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
-        // Parameters
-
-        HttpSession session = request.getSession(false);
-
-        String accountNumber = (String) session.getAttribute("accountNumber");
-
-        // Control logic
-
-        BankingFacade banking = new BankingFacade();
-
-        Account account = banking.getAccount(accountNumber);
-        TransRecord[] transactions = banking.getTransactions(accountNumber);
-
-        // Response
-
-        request.setAttribute("account", account);
-        request.setAttribute("transactionSet", transactions);
-
-        return "/listTransactions.jsp";
-    } // execute
-
+    private static final long serialVersionUID = 1L;
+    
+    /**
+     * Gets the transactions of the account and places it in the current
+     * session.
+     * 
+     * @param request the request
+     * @param response the response
+     * @throws ServletException on servlet failure
+     * @throws IOException on IO failure
+     */
+    protected void performTask(HttpServletRequest request,
+            HttpServletResponse response) throws ServletException, IOException {
+        
+        try {
+            // parameters:
+            
+            HttpSession session = request.getSession(false);
+            String accountNumber = (String) session
+                    .getAttribute("accountNumber");
+            
+            if (accountNumber == null) {
+                accountNumber = (String) session.getAttribute("accountNumber");
+            } else {
+                session.setAttribute("accountNumber", accountNumber);
+            }
+            
+            // control logic:
+            
+            // retrieve account and related transactions
+            
+            Account account = getBank().getAccount(accountNumber);
+            List<TransRecord> transactions = getBank().getTransactions(
+                    accountNumber);
+            
+            // response:
+            
+            // set the request attributes for future rendering
+            
+            request.setAttribute("account", account);
+            request.setAttribute("transactionSet", transactions);
+            
+            // call the presentation renderer
+            
+            getServletContext().getRequestDispatcher("/listTransactions.jsp")
+                    .forward(request, response);
+            
+        } catch (Exception ex) {
+            request.setAttribute("message", ex.getMessage());
+            request.setAttribute("forward", "index.jsp");
+            getServletContext().getRequestDispatcher("/showException.jsp")
+                    .forward(request, response);
+        }
+    } // performTask
+    
 } // ListTransactions

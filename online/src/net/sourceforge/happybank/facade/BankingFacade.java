@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2008 Kevin A. Lee
+ * Copyright 2005-2009 Kevin A. Lee
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,8 @@
 
 package net.sourceforge.happybank.facade;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 
 import net.sourceforge.happybank.exception.AccountDoesNotExistException;
 import net.sourceforge.happybank.exception.BankException;
@@ -34,48 +34,41 @@ import net.sourceforge.happybank.model.TransRecord;
  * @author Kevin A. Lee
  * @email kevin.lee@buildmeister.com
  */
-public class BankingFacade implements Serializable {
+public class BankingFacade implements IBankManager {
 
     /**
      * Generated serialization identifier.
      */
-    private static final long serialVersionUID = 1L;
-    /**
-     * Controls whether to use JNDI (defaults to true for web application).
-     */
-    private boolean jndi = true;
+    private static final long serialVersionUID = 1L;   
 
     /**
      * The Bank singleton.
      */
-    private transient Bank bank;
+    private BankDAO bankDao = null;
 
     /**
-     * Get the bank instance.
-     * @return the bank
+     * Default constructor to create Data Access Object.
+     * @param dao the Data Access Object
      */
-    private Bank getBank() {
-        if (bank == null) {
-            bank = (Bank) BankJDBC.getInstance(jndi);
-        }
-        return bank;
-    }
-
+    public BankingFacade(BankDAO dao) { 
+        this.bankDao = dao;
+    } // BankingFacade
+    
     /**
-     * Are we using Jndi to access the database.
-     * @return true if using jndi else false
+     * Set the Bank Data Access Object.
+     * @param dao the Data Access Object
      */
-    public boolean isJndi() {
-        return jndi;
-    }
-
+    public void setBankDao(BankDAO dao) {
+        this.bankDao = dao;
+    } // setBankDao
+    
     /**
-     * Set whether to use jndi.
-     * @param bjndi set to true if jndi is to be used else false
+     * Get the Bank Data Access Object.
+     * @return the Data Access Object
      */
-    public void setJndi(boolean bjndi) {
-        this.jndi = bjndi;
-    }
+    public BankDAO getBankDao() {
+        return this.bankDao;
+    } // getBankDao   
 
     // business methods
 
@@ -93,7 +86,7 @@ public class BankingFacade implements Serializable {
      */
     public Customer addCustomer(String customerID, String title, String first,
             String last) throws BankException {
-        return getBank().addCustomer(customerID, title, first, last);
+        return this.bankDao.addCustomer(customerID, title, first, last);
     }
 
     /**
@@ -106,7 +99,7 @@ public class BankingFacade implements Serializable {
      */
     public Customer deleteCustomer(String customerID)
             throws CustomerDoesNotExistException, BankException {
-        return getBank().deleteCustomer(customerID);
+        return this.bankDao.deleteCustomer(customerID);
     }
 
     /**
@@ -119,7 +112,7 @@ public class BankingFacade implements Serializable {
      */
     public Customer getCustomer(String customerID)
             throws CustomerDoesNotExistException {
-        return getBank().getCustomer(customerID);
+        return this.bankDao.getCustomer(customerID);
     }
 
     /**
@@ -132,7 +125,7 @@ public class BankingFacade implements Serializable {
      */
     public Customer getCustomerByUsername(String username)
             throws CustomerDoesNotExistException {
-        return getBank().getCustomerByUsername(username);
+        return this.bankDao.getCustomerByUsername(username);
     }
 
     /**
@@ -141,8 +134,8 @@ public class BankingFacade implements Serializable {
      * @return array of customers
      * @throws BankException if customers cannot be located
      */
-    public Customer[] getCustomers() throws BankException {
-        return getBank().getCustomers();
+    public List<Customer> getCustomers() throws BankException {
+        return this.bankDao.getCustomers();
     }
 
     /**
@@ -157,7 +150,7 @@ public class BankingFacade implements Serializable {
     public void associate(String customerID, String accountID)
             throws CustomerDoesNotExistException, AccountDoesNotExistException,
             BankException {
-        getBank().associate(customerID, accountID);
+        this.bankDao.associate(customerID, accountID);
     }
 
     // Accounts:
@@ -174,7 +167,7 @@ public class BankingFacade implements Serializable {
      */
     public Account addAccount(String accountID, String customerID, String type)
             throws CustomerDoesNotExistException, BankException {
-        return getBank().addAccount(accountID, customerID, type);
+        return this.bankDao.addAccount(accountID, customerID, type);
     }
 
     /**
@@ -187,7 +180,7 @@ public class BankingFacade implements Serializable {
      */
     public Account deleteAccount(String accountID)
             throws AccountDoesNotExistException, BankException {
-        return getBank().deleteAccount(accountID);
+        return this.bankDao.deleteAccount(accountID);
     }
 
     /**
@@ -200,7 +193,7 @@ public class BankingFacade implements Serializable {
      */
     public Account getAccount(String accountID)
             throws AccountDoesNotExistException, BankException {
-        return getBank().getAccount(accountID);
+        return this.bankDao.getAccount(accountID);
     }
 
     /**
@@ -211,9 +204,9 @@ public class BankingFacade implements Serializable {
      * @throws CustomerDoesNotExistException if the customer does not exist
      * @throws BankException on other failure
      */
-    public Account[] getAccounts(String customerID)
+    public List<Account> getAccounts(String customerID)
             throws CustomerDoesNotExistException, BankException {
-        return getBank().getAccounts(customerID);
+        return this.bankDao.getAccounts(customerID);
     }
 
     /**
@@ -228,7 +221,7 @@ public class BankingFacade implements Serializable {
     public String accountOwner(String accountID)
             throws AccountDoesNotExistException, CustomerDoesNotExistException,
             BankException {
-        return getBank().accountOwner(accountID);
+        return this.bankDao.accountOwner(accountID);
     }
 
     /**
@@ -242,7 +235,7 @@ public class BankingFacade implements Serializable {
      */
     public BigDecimal deposit(String accountID, BigDecimal amount)
             throws AccountDoesNotExistException, BankException {
-        return getBank().deposit(accountID, amount);
+        return this.bankDao.deposit(accountID, amount);
     }
 
     /**
@@ -259,7 +252,7 @@ public class BankingFacade implements Serializable {
     public BigDecimal withdraw(String accountID, BigDecimal amount)
             throws InsufficientFundsException, AccountDoesNotExistException,
             BankException {
-        return getBank().withdraw(accountID, amount);
+        return this.bankDao.withdraw(accountID, amount);
     }
 
     /**
@@ -277,7 +270,7 @@ public class BankingFacade implements Serializable {
     public BigDecimal transfer(String accountID1, String accountID2,
             BigDecimal amount) throws InsufficientFundsException,
             AccountDoesNotExistException, BankException {
-        return getBank().transfer(accountID1, accountID2, amount);
+        return this.bankDao.transfer(accountID1, accountID2, amount);
     }
 
     // Transactions:
@@ -290,9 +283,9 @@ public class BankingFacade implements Serializable {
      * @throws AccountDoesNotExistException if account does not exist
      * @throws BankException on other failure
      */
-    public TransRecord[] getTransactions(String accountID)
+    public List<TransRecord> getTransactions(String accountID)
             throws AccountDoesNotExistException, BankException {
-        return getBank().getTransactions(accountID);
+        return this.bankDao.getTransactions(accountID);
     }
 
 } // BankingFacade

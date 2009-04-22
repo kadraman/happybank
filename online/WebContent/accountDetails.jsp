@@ -9,38 +9,30 @@
 <%@page import="java.util.Currency;" session="false"%>
 
 <script language="JavaScript">
-// Set whether specific fields are editable or not
-function setFormState()
-{
-	// The amount input state maintenance
-	if (document.forms.transactions.elements.transaction[0].checked == false)
-	{
-		document.forms.transactions.elements.amount.disabled = false;
-		document.forms.transactions.elements.amount.value = "";
-	}
-	else
-	{
-		document.forms.transactions.elements.amount.disabled = true;
-		document.forms.transactions.elements.amount.value = "N/A";
-	}
+    // Set whether specific fields are editable or not
+    function setFormState() {
+        // The amount input state maintenance
+        if (document.forms.transactions.elements.transaction[0].checked == false) {
+            document.forms.transactions.elements.amount.disabled = false;
+            document.forms.transactions.elements.amount.value = "";
+        } else {
+            document.forms.transactions.elements.amount.disabled = true;
+            document.forms.transactions.elements.amount.value = "N/A";
+        }
 
-	// The destination account input state maintenance
-	if (document.forms.transactions.elements.transaction[3].checked == true)
-	{
-		document.forms.transactions.elements.destinationAccount.disabled = false;
-		document.forms.transactions.elements.destinationAccount.value = "";
-	}
-	else
-	{
-		document.forms.transactions.elements.destinationAccount.disabled = true;
-		document.forms.transactions.elements.destinationAccount.value = "N/A";
-	}
-}
+        // The destination account input state maintenance
+        if (document.forms.transactions.elements.transaction[3].checked == true) {
+            document.forms.transactions.elements.destinationAccount.disabled = false;
+            document.forms.transactions.elements.destinationAccount.value = "";
+        } else {
+            document.forms.transactions.elements.destinationAccount.disabled = true;
+            document.forms.transactions.elements.destinationAccount.value = "N/A";
+        }
+    }
 
-function cancel()
-{
-	window.navigate("ListAccounts");
-}
+    function cancel() {
+        window.navigate("ListAccounts");
+    }
 </script>
 
 <jsp:useBean id="account" type="net.sourceforge.happybank.model.Account"
@@ -57,7 +49,7 @@ function cancel()
 	<li><a href="tbd.jsp">Open account</a></li>
 	<li><a href="tbd.jsp">Tutorial</a></li>
 	<li>&nbsp;</li>
-    <li><a href="LogoutSession">Logout</a></li>
+	<li><a href="LogoutSession">Logout</a></li>
 </ul>
 
 <div class="main">
@@ -67,30 +59,24 @@ function cancel()
     Locale currentLocale = Locale.getDefault();
     Currency currentCurrency = Currency.getInstance(currentLocale);
     String currencySymbol = currentCurrency.getSymbol();
-%>                        
+%>
 <p><b>Current balance: <%=currencySymbol%><%=account.getBalance()%></b></p>
-<p>Please, select the kind of transaction you would like to perform:</p>
-<form name="transactions" action="PerformTransaction" method="post"><input
-	type="radio" name="transaction" value="ListTransactions" checked
-	onclick="setFormState()"> List logged transactions<br/>
-<input type="radio" name="transaction" value="Deposit"
-	onclick="setFormState()"> Deposit<br/>
-<input type="radio" name="transaction" value="Withdraw"
-	onclick="setFormState()"> Withdraw<br/>
-<input type="radio" name="transaction" value="Transfer"
-	onclick="setFormState()"> Transfer<br/>
-<br/>
+<p><a href="ListTransactions?accountNumber=<%=account.getId()%>">Display
+Transactions</a></p>
+<p>Transfer Funds:</p>
+<form name="transactions" action="TransferFunds" method="post">
+	
 <table border="0">
 	<tbody>
 		<tr>
 			<td>Amount:</td>
-			<td><input type="text" name="amount" size="20" value="N/A"
-				disabled></td>
+			<td><input type="text" name="amount" size="20" 
+				></td>
 		</tr>
 		<tr>
 			<td>Destination account:</td>
 			<td><input type="text" name="destinationAccount" size="20"
-				disabled value="N/A"></td>
+				></td>
 		</tr>
 	</tbody>
 </table>
@@ -99,8 +85,7 @@ function cancel()
 </form>
 </div>
 </div>
-<!-- end midcol --> 
-<br class="clr">
+<!-- end midcol --> <br class="clr">
 </div>
 <!-- end content -->
 

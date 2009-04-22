@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2008 Kevin A. Lee
+ * Copyright 2005-2009 Kevin A. Lee
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,11 +18,11 @@
 package test.net.sourceforge.happybank.model;
 
 import java.math.BigDecimal;
-import java.util.Calendar;
-
-import net.sourceforge.happybank.model.TransRecord;
 
 import junit.framework.TestCase;
+import net.sourceforge.happybank.model.TransRecord;
+
+import org.joda.time.DateTime;
 
 /**
  * JUnit test for TransRecord class.
@@ -51,7 +51,7 @@ public class TestTransRecord extends TestCase {
     protected final void setUp() {
         // create a transaction record
         t1 = new TransRecord("C", new BigDecimal("50.25"));
-        t1.setTimeStamp(Calendar.getInstance());
+        t1.setTimeStamp(new DateTime());
     } // setUp
 
     /**
@@ -64,24 +64,24 @@ public class TestTransRecord extends TestCase {
         assertEquals(t1.getTransAmt(), amount);
         t1.setTransType("D");
         assertEquals(t1.getTransType(), "D");
-        Calendar c1 = Calendar.getInstance();
-        t1.setTimeStamp(c1);
-        assertEquals(t1.getTimeStamp(), c1);
+        DateTime d1 = new DateTime();
+        t1.setTimeStamp(d1);
+        assertEquals(t1.getTimeStamp(), d1);
     } // testGetters
 
     /**
      * Test compare.
      */
     public final void testCompare() {
-        Calendar c1 = Calendar.getInstance();
-        Calendar c2 = Calendar.getInstance();
-        c1.add(Calendar.MINUTE, +5);
-        t1.setTimeStamp(c1);
+        DateTime d1 = new DateTime();
+        DateTime d2 = new DateTime();
+        d2.plusMinutes(5);
+        t1.setTimeStamp(d1);
         TransRecord t2 = new TransRecord("C", new BigDecimal("50"));
-        t2.setTimeStamp(c2);
+        t2.setTimeStamp(d2);
         TransRecord t3 = new TransRecord("D", new BigDecimal("100"));
-        t3.setTimeStamp(c2);
-        assertEquals(t2.compareTo(t1), -1);
+        t3.setTimeStamp(d2);
+        assertEquals(t2.compareTo(t1), 1);
         assertEquals(t2.compareTo(t3), 1);
     } // testCompare
 

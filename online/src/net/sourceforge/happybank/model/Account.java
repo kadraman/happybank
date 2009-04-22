@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2008 Kevin A. Lee
+ * Copyright 2005-2009 Kevin A. Lee
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,6 +42,10 @@ public class Account implements Comparable, Serializable {
      * The type of the account: checking or savings.
      */
     private String type;
+    /**
+     * The discriminator of the account: "C" or "S".
+     */
+    private String discriminator;
     /**
      * The balance of the account.
      */
@@ -86,6 +90,14 @@ public class Account implements Comparable, Serializable {
     } // GetType
 
     /**
+     * Get the discrimator for the account.
+     * @return "C" or "S"
+     */
+    public String getDiscriminator() {
+        return discriminator;
+    } // getDiscriminator
+
+    /**
      * Get the account balance.
      *
      * @return account balance
@@ -116,6 +128,14 @@ public class Account implements Comparable, Serializable {
         this.type = aType;
     } // setType
 
+    /**
+     * Set the discriminator for the account.
+     * @param disc "C" or "S"
+     */
+    public void setDiscriminator(String disc) {
+        this.discriminator = disc;
+    } // setDiscriminator
+    
     /**
      * Set the account balance.
      *

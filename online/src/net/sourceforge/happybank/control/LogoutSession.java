@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2008 Kevin A. Lee
+ * Copyright 2005-2009 Kevin A. Lee
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,7 +50,7 @@ public class LogoutSession extends HttpServlet {
      */
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Invalidate the current http session, if one exists
+        // invalidate the current http session, if one exists
 
         HttpSession session = request.getSession(false);
 
@@ -58,7 +58,7 @@ public class LogoutSession extends HttpServlet {
             session.invalidate();
         }
 
-        // Restarts the application
+        // restarts the application
 
         getServletContext().getRequestDispatcher("/index.jsp").forward(request,
                 response);

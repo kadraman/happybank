@@ -7,13 +7,14 @@
 
 <%@page import="net.sourceforge.happybank.model.*" session="false"%>
 <%@page import="java.util.Locale" session="false"%>
-<%@page import="java.util.Currency;" session="false"%>
+<%@page import="java.util.Currency" session="false"%>
+<%@page import="java.util.ArrayList" session="false"%>
 <%
     Locale currentLocale = Locale.getDefault();
     Currency currentCurrency = Currency.getInstance(currentLocale);
     String currencySymbol = currentCurrency.getSymbol();
-	TransRecord[] transactionSet = (TransRecord[]) request
-			.getAttribute("transactionSet");
+    ArrayList transactionSet = (ArrayList) request
+            .getAttribute("transactionSet");
 %>
 
 <!-- begin content -->
@@ -27,7 +28,7 @@
 	<li><a href="tbd.jsp">Query</a></li>
 	<li><a href="tbd.jsp">Tutorial</a></li>
 	<li>&nbsp;</li>
-    <li><a href="LogoutSession">Logout</a></li>
+	<li><a href="LogoutSession">Logout</a></li>
 </ul>
 
 <div class="main">
@@ -51,20 +52,21 @@
 					<td align="right"><font color="white"><b>Amount</b></font></td>
 				</tr>
 				<%
-					String[] colors = { "#eeeeee", "#dddddd" };
-
-					for (int count = 0; count < transactionSet.length; count++) {
-						TransRecord transaction = transactionSet[count];
+				    String[] colors = { "#eeeeee", "#dddddd" };
+				    
+				    for (int count = 0; count < transactionSet.size(); count++) {
+				        TransRecord transaction = (TransRecord) transactionSet
+				                .get(count);
 				%>
-				<tr bgcolor=<%=colors[count%2]%>>
+				<tr bgcolor=<%=colors[count % 2]%>>
 					<td align="center"><a href="tbd.jsp"><%=count + 1%></a></td>
-					<td align="center"><%=transaction.getTimeStamp().getTime()%></td>
+					<td align="center"><%=transaction.getTimeStamp().toString()%></td>
 					<td align="center"><%=transaction.getTransType()%></td>
 					<td align="right"><%=currencySymbol%><%=transaction.getTransAmt()%></td>
 				</tr>
 				<%
-					//count ++;
-					}
+				    //count ++;
+				    }
 				%>
 			</table>
 			</td>
@@ -72,8 +74,7 @@
 		<tr>
 			<td colspan="3"><br />
 			<br />
-			<input alt="Continue" type="submit" name="continue"
-				value="Back"></td>
+			<input alt="Continue" type="submit" name="continue" value="Back"></td>
 		</tr>
 	</tbody>
 </table>
