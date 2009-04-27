@@ -6,7 +6,7 @@
 				<artifact
 					pattern="${ivy.settings.dir}/repository/[module]/[artifact]-[revision].[ext]" />
 			</filesystem>
-			<url name="buildmeister.com" m2compatible="true">
+			<!-- url name="buildmeister.com" m2compatible="true">
 				<artifact
 					pattern="http://m2.buildmeister.com/[module]/[revision]/[artifact]-[revision].[ext]" />
 			</url>
@@ -22,7 +22,7 @@
 				<artifact
 					pattern="http://repository.springsource.com/ivy/bundles/external/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
 			</url>
-			<ibiblio name="maven2" m2compatible="true" />
+			<ibiblio name="maven2" m2compatible="true" /-->
 		</chain>
 	</resolvers>
 </ivysettings>

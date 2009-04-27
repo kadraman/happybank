@@ -8,7 +8,7 @@
     </configurations>
 	<dependencies>
         <dependency org="tomcat" name="catalina-ant" rev="6.0.18"/>
-        <dependency org="checkstyle" name="checkstyle" rev="4.2"/>
+        <dependency org="checkstyle" name="checkstyle" rev="4.4"/>
         <dependency org="dbdeploy" name="dbdeploy" rev="2.11"/>
         <dependency org="hsqldb" name="hsqldb" rev="1.8.0.10"/>
     </dependencies>
