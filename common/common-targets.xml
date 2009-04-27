@@ -307,6 +307,7 @@
             description="initialise classpath for project">
         <ivy:resolve file="ivy.xml" settingsRef="happybank.common.ivy" />
         <ivy:cachepath pathid="ivy.project.classpath"
+                       type="jar"
                        settingsRef="happybank.common.ivy" />
     </target>
 

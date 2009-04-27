@@ -1,14 +1,28 @@
 <ivysettings>
-  <settings defaultResolver="happybank"/>
-  <resolvers>
-    <chain name="happybank">
-      <filesystem name="happybank.local">
-        <artifact pattern="${ivy.settings.dir}/repository/[module]/[artifact]-[revision].[ext]" />
-      </filesystem>
-      <url name="buildmeister.com" m2compatible="true">
-        <artifact pattern="http://m2.buildmeister.com/[module]/[revision]/[artifact]-[revision].[ext]" />
-      </url>
-      <ibiblio name="maven2" m2compatible="true" />
-    </chain>
-  </resolvers>
+	<settings defaultResolver="happybank" />
+	<resolvers>
+		<chain name="happybank">
+			<filesystem name="happybank.local">
+				<artifact
+					pattern="${ivy.settings.dir}/repository/[module]/[artifact]-[revision].[ext]" />
+			</filesystem>
+			<url name="buildmeister.com" m2compatible="true">
+				<artifact
+					pattern="http://m2.buildmeister.com/[module]/[revision]/[artifact]-[revision].[ext]" />
+			</url>
+			<url name="com.springsource.repository.bundles.release">
+				<ivy
+					pattern="http://repository.springsource.com/ivy/bundles/release/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
+				<artifact
+					pattern="http://repository.springsource.com/ivy/bundles/release/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
+			</url>
+			<url name="com.springsource.repository.bundles.external">
+				<ivy
+					pattern="http://repository.springsource.com/ivy/bundles/external/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
+				<artifact
+					pattern="http://repository.springsource.com/ivy/bundles/external/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
+			</url>
+			<ibiblio name="maven2" m2compatible="true" />
+		</chain>
+	</resolvers>
 </ivysettings>
