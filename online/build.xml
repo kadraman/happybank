@@ -25,7 +25,7 @@
         <!-- include built classes -->
         <pathelement location="${dir.build}" />
         <!-- include ivy classpath -->
-        <path refid="ivy.project.classpath" />
+        <path refid="ivy.project.classpath"/>
     </path>
 
     <!-- define any additional source directories -->
@@ -66,6 +66,9 @@
     <target name="war"
             depends="make-manifest,compile"
             description="create WAR file">
+        <copy todir="${dir.weblib}" flatten="true">
+            <path refid="ivy.project.classpath"/>
+        </copy>
         <war warfile="${dir.dist}/${ant.project.name}.war"
              webxml="WebContent/WEB-INF/web.xml"
              manifest="${dir.build}/manifest.mf">

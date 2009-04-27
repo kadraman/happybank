@@ -7,8 +7,17 @@
         <artifact name="happybank-online" type="jar" />
     </publications>
 	<dependencies>
-		<dependency org="tomcat" name="servlet-api" rev="6.0.18" />
+	<dependency name="jsf-api" rev="1.1"/>
+	    <dependency org="hsqldb" name="hsqldb" rev="1.8.0.10"/>
 		<dependency org="junit" name="junit" rev="3.8.1" />
+		<dependency org="org.springframework" name="org.springframework.core" rev="2.5.6.SEC01" />
+		<dependency org="org.springframework" name="org.springframework.orm" rev="2.5.6.SEC01" />
+		<dependency org="org.springframework" name="org.springframework.web" rev="2.5.6.SEC01" />
+		<dependency org="com.thoughtworks.qdox" name="com.springsource.com.thoughtworks.qdox" rev="1.5.0" />
+		<!-- dependency org="org.springframework" name="spring-web" rev="2.5.6" /-->
+		<!-- dependency org="org.apache.ibatis" name="ibatis-sqlmap" rev="2.3.4.726" />
+		<dependency org="com.ibatis" name="ibatis2-common" rev="2.1.0.565" /-->
+		<dependency org="joda-time" name="joda-time" rev="1.6" />
 		<!-- uncomment to pull in latest database scripts -->
 		<!-- dependency org="happybank" name="happybank-db" rev="latest.integration" /-->
 	</dependencies>
