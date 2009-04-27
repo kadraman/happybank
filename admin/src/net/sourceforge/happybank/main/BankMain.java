@@ -43,6 +43,9 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.FileSystemXmlApplicationContext;
+
 import net.sourceforge.happybank.exception.AccountDoesNotExistException;
 import net.sourceforge.happybank.exception.BankException;
 import net.sourceforge.happybank.facade.BankingFacade;
@@ -61,9 +64,18 @@ import net.sourceforge.happybank.tablemodel.AccountTableModel;
 public class BankMain {
 
     /**
+     * The banking facade.
+     */
+    private BankingFacade bank = null;
+    
+    /**
      * default constructor
      */
     public BankMain() {
+        // get context and facade
+        ApplicationContext ctx = new FileSystemXmlApplicationContext(
+                "build/applicationContext.xml");
+        bank = (BankingFacade) ctx.getBean("bankManager");
         initComponents();
         frame.pack();
     } // BankAdminMain
@@ -74,14 +86,12 @@ public class BankMain {
      * @return success (positive) or failure (negative)
      */
     protected int loadAccounts() {
-        try {
-            BankingFacade bankingTest = new BankingFacade();
-            bankingTest.setJndi(false);
-            Customer[] customers = bankingTest.getCustomers();
+        try {            
+            Customer[] customers = bank.getCustomers();
             for (int i = 0; i < customers.length; i++) {
                 String id = customers[i].getId();
-                Customer customer = bankingTest.getCustomer(id);
-                Account[] accounts = bankingTest.getAccounts(id);
+                Customer customer = bank.getCustomer(id);
+                Account[] accounts = bank.getAccounts(id);
                 for (int j = 0; j < accounts.length; j++) {
                     int row = accountEntries.getSelectedRow();
                     if (accounts[j] == null)
@@ -113,11 +123,9 @@ public class BankMain {
      */
     private void onViewAccount() {
 
-        BankingFacade bankingTest = new BankingFacade();
-        bankingTest.setJndi(false);
         Customer[] customers = null;
         try {
-            customers = bankingTest.getCustomers();
+            customers = bank.getCustomers();
         } catch (BankException e1) {
             // TODO Auto-generated catch block
             e1.printStackTrace();
@@ -135,7 +143,7 @@ public class BankMain {
         try {
             currentCustomerId.append(accountEntries.getValueAt(rowSelected, 5)
                     .toString());
-            account = bankingTest.getAccount(accountEntries.getValueAt(
+            account = bank.getAccount(accountEntries.getValueAt(
                     rowSelected, 0).toString());
         } catch (AccountDoesNotExistException e) {
             e.printStackTrace();
