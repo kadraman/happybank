@@ -9,7 +9,7 @@
     <property name="dir.lib" value="lib" />
     <property name="dir.common" value="../common" />
     <property name="dir.web" value="WebContent" />
-    <property name="dir.websrc" value="WebContent/WEB-INF/src" />
+    <property name="dir.websrc" value="${dir.web}/WEB-INF/src" />
     <property name="dir.weblib" value="${dir.web}/WEB-INF/lib" />
 
     <property file="build.properties" />
@@ -24,6 +24,8 @@
         <fileset dir="${dir.weblib}" />
         <!-- include built classes -->
         <pathelement location="${dir.build}" />
+        <!-- include Tomcat libraries -->
+        <fileset dir="${env.TOMCAT_HOME}/lib" />
         <!-- include ivy classpath -->
         <path refid="ivy.project.classpath"/>
     </path>
@@ -35,17 +37,17 @@
 
     <!-- overide of init target -->
     <target name="init" depends="common-targets.init">
-        <mkdir dir="${dir.websrc}" />
+        <mkdir dir="${dir.weblib}" />
     </target>
 
     <!-- overide of clean target -->
     <target name="clean" depends="common-targets.clean">
-        <delete dir="${dir.websrc}" />
+        <delete dir="${dir.weblib}" />
     </target>
 
     <!-- override of compile target -->
     <target name="compile"
-            depends="common-targets.compile"
+            depends="tomcat.checkenv,common-targets.compile"
             description="compile JSPs">
         <!-- uncomment for jsp pre-compilation -->
         <!-- reference the jasper JSP compiler - 
@@ -66,8 +68,13 @@
     <target name="war"
             depends="make-manifest,compile"
             description="create WAR file">
+        <!-- copy ivy dependencies to WEB-INF\lib -->
         <copy todir="${dir.weblib}" flatten="true">
-            <path refid="ivy.project.classpath"/>
+            <path refid="ivy.project.classpath" />
+        </copy>
+        <copy todir="${dir.build}">
+            <fileset dir="${dir.src}" includes="maps/*.xml">
+            </fileset>
         </copy>
         <war warfile="${dir.dist}/${ant.project.name}.war"
              webxml="WebContent/WEB-INF/web.xml"
@@ -76,12 +83,18 @@
                 <patternset refid="web.sources" />
             </fileset>
             <zipfileset dir="WebContent/theme" prefix="theme" />
+            <!-- jndi context -->
             <zipfileset dir="WebContent/META-INF"
                         includes="**/context.xml"
                         prefix="META-INF" />
+            <!-- spring/ibatis configuration files -->
+            <zipfileset dir="WebContent/WEB-INF"
+                        includes="applicationContext.xml,sqlMapConfig.xml"
+                        prefix="WEB-INF" />
             <classes dir="${dir.build}">
                 <include name="net/sourceforge/happybank/**/*.class" />
                 <include name="org/apache/jsp/**.class" />
+                <include name="maps/**.xml" />
             </classes>
             <lib dir="${dir.weblib}" />
         </war>
@@ -92,7 +105,7 @@
             depends="common-targets.dist,ivy.publish"
             description="publish this project in the ivy repository">
     </target>
-    
+
     <!-- overide dist target - create Web Archive -->
     <target name="dist" depends="war">
     </target>
