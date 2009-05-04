@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<project name="happybank-common"
+         default="help"
+         basedir="."
+         xmlns:ivy="antlib:org.apache.ivy.ant">
+
+    <property environment="env" />
+    <property name="dir.src" value="src" />
+    <property name="dir.lib" value="lib" />
+    <property name="dir.common" value="." />
+
+    <property file="build.properties" />
+    <property file="default.properties" />
+
+    <import file="common-macros.xml" optional="false" />
+    <import file="common-targets.xml" optional="false" />
+
+    <!-- define a classpath for use throughout the project, including ivy -->
+    <path id="project.classpath">
+        <!-- include built classes -->
+        <pathelement location="${dir.build}" />
+        <!-- include ivy compile classpath -->
+        <path refid="ivy.compile.classpath" />
+    </path>
+
+    <!-- define a test classpath for use throughout the project, including ivy -->
+    <path id="project.test.classpath">
+        <!-- include built classes -->
+        <pathelement location="${dir.build}" />
+        <!-- include ivy test classpath -->
+        <path refid="ivy.test.classpath" />
+    </path>
+
+    <!-- define any additional source directories -->
+    <path id="project.sourcepath">
+        <!-- none -->
+    </path>
+
+    <!-- copy spring and ibatis config files to build directory for testing -->
+    <target name="copy-config-files"
+            description="copy spring and ibatis config files to build directory">
+        <copy todir="${dir.build}">
+            <fileset dir="${dir.src}">
+                <include name="*.xml" />
+                <include name="maps/*.xml" />
+            </fileset>
+        </copy>
+
+    </target>
+
+    <!-- project override for junit -->
+    <target name="junit.all"
+            depends="copy-config-files,common-targets.junit.all"
+            description="project override for junit">
+    </target>
+
+    <!-- override ivy.publish target -->
+    <target name="publish"
+            depends="common-targets.dist,ivy.publish"
+            description="publish this project in the ivy repository">
+    </target>
+
+</project>
+

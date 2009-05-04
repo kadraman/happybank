@@ -13,19 +13,6 @@
     <ivy:settings file="${dir.common}/ivysettings.xml"
                   id="happybank.common.ivy" />
 
-    <!-- define and resolve internal (build) library dependencies -->
-    <ivy:resolve file="${dir.common}/ivy.xml"
-                 settingsRef="happybank.common.ivy" />
-    <ivy:cachepath pathid="ivy.internal.classpath"
-                   conf="build"
-                   settingsRef="happybank.common.ivy" />
-    <!-- setup taskdef for Tomcat Ant tasks, saves re-calling -->
-    <taskdef file="${dir.common}/tomcatTasks.properties">
-        <classpath>
-            <path refid="ivy.internal.classpath" />
-        </classpath>
-    </taskdef>
-
     <!-- create output directories -->
     <target name="init"
             depends="ivy.project.init"
@@ -36,16 +23,10 @@
     </target>
 
     <!-- remove generated files, project only -->
-    <target name="project.clean" description="remove generated project files">
+    <target name="clean" description="remove generated project files">
         <delete dir="${dir.build}" />
         <delete dir="${dir.dist}" />
         <delete dir="${dir.doc}" />
-    </target>
-
-    <!-- remove all generated files, project and library dependencies -->
-    <target name="clean"
-            depends="project.clean, ivy.clean"
-            description="remove all generated files and libraries">
     </target>
 
     <!-- compile source code -->
@@ -59,9 +40,7 @@
     </target>
 
     <!-- create manifest file -->
-    <target name="make-manifest"
-            depends="init"
-            description="create the jar manifest file">
+    <target name="make-manifest" description="create the jar manifest file">
         <manifest file="${dir.build}/manifest.mf">
             <attribute name="Built-By" value="${user.name}" />
             <attribute name="Main-Class" value="${name.main.class}" />
@@ -101,7 +80,7 @@
     <target name="junit.all"
             depends="compile"
             description="run all junit tests">
-        <project-junit classpathref="project.classpath"
+        <project-junit classpathref="project.test.classpath"
                        destdir="${dir.build}"
                        packagenames="${name.pkg.dirs}">
             <testclasses>
@@ -126,7 +105,7 @@
 
     <!-- run checkstyle on code -->
     <target name="checkstyle"
-            depends="init"
+            depends="-ivy.init,init"
             description="run CheckStyle on code">
         <taskdef resource="checkstyletask.properties">
             <classpath>
@@ -143,7 +122,7 @@
     </target>
 
     <!-- target to start hsqldb -->
-    <target name="hsqldb.start" description="start hsqldb">
+    <target name="hsqldb.start" depends="-ivy.init" description="start hsqldb">
         <java classpathref="ivy.internal.classpath"
               classname="org.hsqldb.Server"
               spawn="true"
@@ -156,7 +135,7 @@
     </target>
 
     <!-- target to stop hsqldb -->
-    <target name="hsqldb.stop" description="stop hsqldb">
+    <target name="hsqldb.stop" depends="-ivy.init" description="stop hsqldb">
         <sql driver="${name.db.driver}"
              url="${name.db.connection}"
              userid="${name.db.user}"
@@ -171,6 +150,7 @@
 
     <!-- target to bootstrap a dbdeploy managed database -->
     <target name="dbdeploy.bootstrap"
+            depends="-ivy.init"
             description="bootstrap a dbdeploy managed database">
         <sql driver="${name.db.driver}"
              url="${name.db.connection}"
@@ -185,10 +165,12 @@
     </target>
 
     <!-- run dbdeploy to generate database update script -->
-    <target name="dbdeploy.gen" description="generate database update script">
+    <target name="dbdeploy.gen"
+            depends="-ivy.init"
+            description="generate database update script">
         <taskdef name="dbdeploy" classname="net.sf.dbdeploy.AntTarget">
             <classpath>
-                <path refid="ivy.internal.classpath" />                
+                <path refid="ivy.internal.classpath" />
             </classpath>
         </taskdef>
         <dbdeploy driver="${name.db.driver}"
@@ -216,7 +198,7 @@
     </target>
 
     <!-- undo the last dbdeploy changes -->
-    <target name="dbdeploy.undo">
+    <target name="dbdeploy.undo" depends="-ivy.init">
         <sql driver="${name.db.driver}"
              url="${name.db.connection}"
              userid="${name.db.user}"
@@ -229,8 +211,28 @@
         </sql>
     </target>
 
+    <!-- initialise tomcat - internal target -->
+    <target name="-tomcat.init"
+            depends="-ivy.init"
+            description="initialise tomcat">
+        <!-- setup taskdef for Tomcat Ant tasks, saves re-calling -->
+        <taskdef file="${dir.common}/tomcatTasks.properties">
+            <classpath>
+                <path refid="ivy.internal.classpath" />
+            </classpath>
+        </taskdef>
+    </target>
+
+    <!-- check if tomcat environment exists -->
+    <target name="tomcat.checkenv" description="check tomcat environment">
+        <fail message="The environment variable TOMCAT_HOME has not been set"
+              unless="env.TOMCAT_HOME" />
+    </target>
+
     <!-- deploy the application -->
-    <target name="tomcat.deploy" description="deploy a new application">
+    <target name="tomcat.deploy"
+            depends="-tomcat.init"
+            description="deploy a new application">
         <!-- convert the project relative path into fully qualified path -->
         <pathconvert dirsep="/" property="fullWarDir">
             <path>
@@ -247,7 +249,7 @@
 
     <!-- remove the deployed application -->
     <target name="tomcat.undeploy"
-            depends="init"
+            depends="-tomcat.init"
             description="remove a deployed application">
         <!-- remove the app -->
         <remove url="${name.url.manager}"
@@ -258,7 +260,7 @@
 
     <!-- reload the application -->
     <target name="tomcat.reload"
-            depends="init"
+            depends="-tomcat.init"
             description="reload the application">
         <reload url="${name.url.manager}"
                 username="${name.user.manager}"
@@ -268,7 +270,7 @@
 
     <!-- start the application -->
     <target name="tomcat.start"
-            depends="init"
+            depends="-tomcat.init"
             description="start the application">
         <start url="${name.url.manager}"
                username="${name.user.manager}"
@@ -278,7 +280,7 @@
 
     <!-- stop the application -->
     <target name="tomcat.stop"
-            depends="init"
+            depends="-tomcat.init"
             description="stop the application">
         <stop url="${name.url.manager}"
               username="${name.user.manager}"
@@ -288,63 +290,72 @@
 
     <!-- list the applications -->
     <target name="tomcat.list"
-            depends="init"
+            depends="-tomcat.init"
             description="list the applications">
         <list url="${name.url.manager}"
               username="${name.user.manager}"
               password="${name.password.manager}" />
     </target>
 
+    <!-- initialise ivy - internal target -->
+    <target name="-ivy.init" description="initialise ivy">
+        <!-- define and resolve internal (build) library dependencies -->
+        <ivy:resolve file="${dir.common}/ivy.xml"
+                     conf="common"
+                     settingsRef="happybank.common.ivy" />
+        <ivy:cachepath pathid="ivy.internal.classpath"
+                       conf="common"
+                       settingsRef="happybank.common.ivy" />
+    </target>
+
     <!-- cleanup local ivy repository -->
     <target name="ivy.repo.clean" description="cleanup local ivy repository">
-        <delete dir="${dir.common}/repository"/>
+        <delete dir="${dir.common}/repository" />
     </target>
-            
+
     <!-- define and resolve project library dependencies, override this target 
     if you want to setup project libraries differently; assumes ivy.xml exists
     in project's root directory -->
     <target name="ivy.project.init"
             description="initialise classpath for project">
         <ivy:resolve file="ivy.xml" settingsRef="happybank.common.ivy" />
-        <ivy:cachepath pathid="ivy.project.classpath"
+        <ivy:cachepath pathid="ivy.compile.classpath"
+                       conf="compile"
+                       type="jar"
+                       settingsRef="happybank.common.ivy" />
+        <ivy:cachepath pathid="ivy.test.classpath"
+                       conf="test"
+                       type="jar"
+                       settingsRef="happybank.common.ivy" />        
+        <ivy:cachepath pathid="ivy.runtime.classpath"
+                       conf="runtime"
                        type="jar"
                        settingsRef="happybank.common.ivy" />
     </target>
 
     <!-- remove files from ivy cache -->
-    <target name="ivy.clean" description="remove cached library files">
+    <target name="ivy.clean"
+            depends="-ivy.init"
+            description="remove cached library files">
         <ivy:cleancache settingsRef="happybank.common.ivy" />
     </target>
 
     <!-- publish a project to the ivy repository -->
     <target name="ivy.publish"
-            depends="init"
+            depends="-ivy.init,ivy.project.init"
             description="publish this project in the ivy repository">
         <delete file="${dir.dist}/ivy.xml" />
         <ivy:publish artifactspattern="${dir.dist}/[artifact].[ext]"
                      resolver="happybank.local"
-                     status="release"
                      settingsRef="happybank.common.ivy"
                      overwrite="true" />
     </target>
 
     <!-- create a report on the project's dependencies -->
     <target name="ivy.report"
-            depends="init"
+            depends="-ivy.init,ivy.project.init"
             description="generates a report of dependencies">
         <ivy:report todir="${dir.build}" settingsRef="happybank.common.ivy" />
-    </target>
-
-    <!-- install a library from the maven2 repository at ibiblio.org to the
-    local ivy repository -->
-    <target name="ivy.install" depends="init">
-        <ivy:install settingsRef="happybank.common.ivy"
-                     overwrite="true"
-                     organisation="${ivy.org}"
-                     module="${ivy.module}"
-                     revision="${ivy.ver}"
-                     from="maven2"
-                     to="happybank.local" />
     </target>
 
     <!-- help -->
