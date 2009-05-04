@@ -73,7 +73,7 @@
         </copy>
         <!-- copy ibatis maps to src directory, hack because ibatis 
         does not work well with maps in .jar files -->
-        <copy todir="${dir.src}">
+        <copy todir="${dir.build}">
             <fileset dir="${dir.common.src}" includes="maps/*.xml" />
         </copy>
         <war warfile="${dir.dist}/${ant.project.name}.war"
