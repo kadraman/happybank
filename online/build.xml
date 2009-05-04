@@ -8,6 +8,7 @@
     <property name="dir.src" value="src" />
     <property name="dir.lib" value="lib" />
     <property name="dir.common" value="../common" />
+    <property name="dir.common.src" value="../common/src" />
     <property name="dir.web" value="WebContent" />
     <property name="dir.websrc" value="${dir.web}/WEB-INF/src" />
     <property name="dir.weblib" value="${dir.web}/WEB-INF/lib" />
@@ -24,10 +25,8 @@
         <fileset dir="${dir.weblib}" />
         <!-- include built classes -->
         <pathelement location="${dir.build}" />
-        <!-- include Tomcat libraries -->
-        <fileset dir="${env.TOMCAT_HOME}/lib" />
         <!-- include ivy classpath -->
-        <path refid="ivy.project.classpath"/>
+        <path refid="ivy.compile.classpath" />
     </path>
 
     <!-- define any additional source directories -->
@@ -47,7 +46,7 @@
 
     <!-- override of compile target -->
     <target name="compile"
-            depends="tomcat.checkenv,common-targets.compile"
+            depends="common-targets.compile"
             description="compile JSPs">
         <!-- uncomment for jsp pre-compilation -->
         <!-- reference the jasper JSP compiler - 
@@ -66,15 +65,16 @@
 
     <!-- create WAR file -->
     <target name="war"
-            depends="make-manifest,compile"
+            depends="compile,make-manifest"
             description="create WAR file">
         <!-- copy ivy dependencies to WEB-INF\lib -->
         <copy todir="${dir.weblib}" flatten="true">
-            <path refid="ivy.project.classpath" />
+            <path refid="ivy.runtime.classpath" />
         </copy>
-        <copy todir="${dir.build}">
-            <fileset dir="${dir.src}" includes="maps/*.xml">
-            </fileset>
+        <!-- copy ibatis maps to src directory, hack because ibatis 
+        does not work well with maps in .jar files -->
+        <copy todir="${dir.src}">
+            <fileset dir="${dir.common.src}" includes="maps/*.xml" />
         </copy>
         <war warfile="${dir.dist}/${ant.project.name}.war"
              webxml="WebContent/WEB-INF/web.xml"
@@ -92,8 +92,8 @@
                         includes="applicationContext.xml,sqlMapConfig.xml"
                         prefix="WEB-INF" />
             <classes dir="${dir.build}">
-                <include name="net/sourceforge/happybank/**/*.class" />
-                <include name="org/apache/jsp/**.class" />
+                <include name="net/sourceforge/happybank/control/*.class" />
+                <!--include name="org/apache/jsp/**.class" /-->
                 <include name="maps/**.xml" />
             </classes>
             <lib dir="${dir.weblib}" />
