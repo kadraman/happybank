@@ -1,10 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ivy-module version="2.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
-	<info organisation="happybank" module="happybank-db" status="integration" />
-	<dependencies>
-		<dependency org="dbdeploy" name="dbdeploy" rev="2.11" />
-		<dependency org="hsqldb" name="hsqldb" rev="1.8.0.10" />
-	</dependencies>
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
+    <info organisation="happybank" module="happybank-db" />
+    <configurations>
+        <conf name="common" visibility="private" description="used for common build tasks" />
+        <conf name="compile" description="used for building this project" />
+        <conf name="test" extends="compile" description="used for testing this project" />
+        <conf name="runtime" description="used for running this project" />
+        <conf name="master" description="used for publishing artifacts" />
+        <conf name="default" extends="master, runtime" />
+    </configurations>
+    <dependencies>
+        <dependency org="dbdeploy" name="dbdeploy" rev="2.11"
+            conf="common->default" />
+        <dependency org="hsqldb" name="hsqldb" rev="1.8.0.10"
+            conf="common->default;compile->default;runtime->default" />
+    </dependencies>
 </ivy-module>
