@@ -18,13 +18,7 @@
 package net.sourceforge.happybank.facade;
 
 import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
-
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.sql.DataSource;
 
 import net.sourceforge.happybank.exception.AccountDoesNotExistException;
 import net.sourceforge.happybank.exception.BankException;
@@ -35,9 +29,6 @@ import net.sourceforge.happybank.model.Customer;
 import net.sourceforge.happybank.model.CustomerAccount;
 import net.sourceforge.happybank.model.TransRecord;
 
-import org.hsqldb.jdbc.jdbcDataSource;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.orm.ibatis.support.SqlMapClientDaoSupport;
 
 /**

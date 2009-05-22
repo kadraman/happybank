@@ -49,10 +49,10 @@
 
     <!-- run the application -->
     <target name="run"
-            depends="init"
+            depends="dist"
             description="run the application or test class">
-        <java classname="${name.main.class}" fork="yes">
-            <classpath refid="project.classpath" />
+        <java classname="${name.main.class}" dir="${dir.build}" fork="yes">
+            <classpath refid="project.run.classpath" />
             <arg value="${name.run.args}" />
         </java>
     </target>
