@@ -17,6 +17,9 @@
 
 package net.sourceforge.happybank.main;
 
+import java.util.Iterator;
+import java.util.List;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -44,6 +47,7 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
 
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 import net.sourceforge.happybank.exception.AccountDoesNotExistException;
@@ -73,8 +77,8 @@ public class BankMain {
      */
     public BankMain() {
         // get context and facade
-        ApplicationContext ctx = new FileSystemXmlApplicationContext(
-                "build/applicationContext.xml");
+        ApplicationContext ctx = new ClassPathXmlApplicationContext(
+                "applicationContext.xml");
         bank = (BankingFacade) ctx.getBean("bankManager");
         initComponents();
         frame.pack();
@@ -87,20 +91,28 @@ public class BankMain {
      */
     protected int loadAccounts() {
         try {            
-            Customer[] customers = bank.getCustomers();
-            for (int i = 0; i < customers.length; i++) {
-                String id = customers[i].getId();
-                Customer customer = bank.getCustomer(id);
-                Account[] accounts = bank.getAccounts(id);
-                for (int j = 0; j < accounts.length; j++) {
+            List<Customer> customers = bank.getCustomers();
+            Iterator<Customer> custIter = customers.iterator();
+            Customer cust = null;
+            while (custIter.hasNext()) {
+                cust = custIter.next();
+                String cid = cust.getId();
+                Customer customer = bank.getCustomer(cid);
+                List<Account> accounts = bank.getAccounts(cid);
+                Iterator<Account> accIter = accounts.iterator();
+                Account acc = null;
+                while (accIter.hasNext()) {
+                    acc = accIter.next();
+                    String aid = acc.getId();
+                    acc = bank.getAccount(aid);
                     int row = accountEntries.getSelectedRow();
-                    if (accounts[j] == null)
+                    if (acc == null)
                         break;
                     accountModel.insert(
-                            new AccountData(accounts[j].getId(), accounts[j]
-                                    .getType(), accounts[j].getBalance(),
-                                    customer.getFirstName(), customer
-                                            .getLastName(), id), row + 1);
+                            new AccountData(aid, acc.getType(), 
+				    acc.getBalance(),
+                                    cust.getFirstName(), 
+				    cust.getLastName(), cid), row + 1);
                 }
             }
 
@@ -123,7 +135,7 @@ public class BankMain {
      */
     private void onViewAccount() {
 
-        Customer[] customers = null;
+        List<Customer> customers = null;
         try {
             customers = bank.getCustomers();
         } catch (BankException e1) {

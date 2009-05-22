@@ -30,6 +30,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -40,6 +42,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 import net.sourceforge.happybank.exception.BankException;
 import net.sourceforge.happybank.facade.BankingFacade;
@@ -65,7 +70,7 @@ public class AccountViewer extends JDialog {
 	private JComboBox custIdComboBx;
 
 	private Account account;
-	private Customer[] customers;
+	private List<Customer> customers;
 	private StringBuffer currentCustomerId;
 	private boolean readOnly;
 
@@ -82,7 +87,7 @@ public class AccountViewer extends JDialog {
 	 *            whether the account is editable or not
 	 */
 	public AccountViewer(Frame parent, boolean modal, Account account,
-			Customer[] customers, StringBuffer currentCustomerID,
+			List<Customer> customers, StringBuffer currentCustomerID,
 			boolean readOnly) {
 		super(parent, modal);
 		this.account = account;
@@ -157,13 +162,17 @@ public class AccountViewer extends JDialog {
 		String custName = null;
 		JLabel ownerIdLabel = new JLabel("Owner ID:");
 		labelPanel.add(ownerIdLabel);
-		String[] custIds = new String[customers.length];
-		for (int i = 0; i < customers.length; i++) {
-			custIds[i] = customers[i].getId();
+		String[] custIds = new String[customers.size()];
+		Iterator<Customer> custIter = customers.iterator();
+        Customer cust = null;
+        int i = 0;
+        while (custIter.hasNext()) {
+            cust = custIter.next();
+			custIds[i++] = cust.getId();
 			if (custIds[i].equals(currentCustomerId.toString())) {
-				custName = customers[i].getTitle() + " "
-						+ customers[i].getFirstName() + " "
-						+ customers[i].getLastName();
+				custName = cust.getTitle() + " "
+						+ cust.getFirstName() + " "
+						+ cust.getLastName();
 				selItem = i;
 			}
 		}
@@ -237,68 +246,5 @@ public class AccountViewer extends JDialog {
 		setVisible(false);
 		dispose();
 	} // dialogDone()
-
-	/**
-	 * This main() is provided for debugging purposes, to display a sample
-	 * dialog.
-	 */
-	public static void main(String[] args) {
-		JFrame frame = new JFrame() {
-
-			private static final long serialVersionUID = 1L;
-
-			public Dimension getPreferredSize() {
-				return new Dimension(200, 100);
-			}
-		};
-		frame.setTitle("Debugging frame");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.pack();
-		frame.setVisible(false);
-
-		StringBuffer mcurrentCustomerId = new StringBuffer("101");
-		String mcurrentAccountId = "101-1001";
-		Account maccount = null;
-		BankingFacade mbank = new BankingFacade();
-		Customer[] mcustomers = null;
-		try {
-			mcustomers = mbank.getCustomers();
-		} catch (BankException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		try {
-			Account[] accounts = mbank.getAccounts("101");
-			for (int i = 0; i < accounts.length; i++) {
-				if (accounts[i].getId().equals(mcurrentAccountId)) {
-					maccount = accounts[i];
-					break;
-				}
-			}
-		} catch (Exception e) {
-		}
-
-		AccountViewer dialog = new AccountViewer(frame, true, maccount,
-				mcustomers, mcurrentCustomerId, false);
-		dialog.addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent event) {
-				System.exit(0);
-			}
-
-			public void windowClosed(WindowEvent event) {
-				System.exit(0);
-			}
-		});
-		dialog.pack();
-		dialog.setVisible(true);
-
-		try {
-			mbank.associate(mcurrentCustomerId.toString(), maccount.getId());
-		} catch (BankException e) {
-		}
-		System.out.println("Account is: " + maccount.getId() + " "
-				+ maccount.getType() + " " + maccount.getBalance()
-				+ " owned by " + mcurrentCustomerId);
-	} // main()
 
 } // AccountViewer
