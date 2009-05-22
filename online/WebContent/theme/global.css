@@ -1,4 +1,3 @@
-
 .hide {
 	display: none;
 }
@@ -14,7 +13,7 @@ body {
 	margin: 0;
 	padding: 0;
 	color: #666;
-	font: 80%/1.3em Arial, Helvetica, Geneva, sans-serif;
+	font: 80%/ 1.3em Arial, Helvetica, Geneva, sans-serif;
 	background: #666 url(bg.gif) repeat-x;
 }
 
@@ -22,7 +21,7 @@ a img {
 	border: none;
 }
 
-a:hover, a:active {
+a:hover,a:active {
 	color: #b31b1b;
 }
 
@@ -38,6 +37,7 @@ a:hover, a:active {
 	background: url(shadow-top.gif) no-repeat center top;
 	padding-right: 0px;
 }
+
 #header {
 	background: #666 url(bg.gif) repeat-x top;
 	width: 715px;
@@ -57,9 +57,9 @@ a:hover, a:active {
 	border: 1px solid #000000;
 	border-bottom: none;
 	border-top-width: 1px;
-	position: relative;	
+	position: relative;
 	background: none !important;
-    padding-bottom: 2em;
+	padding-bottom: 2em;
 }
 
 #footer {
@@ -84,6 +84,7 @@ a:hover, a:active {
 	padding-top: 24px;
 	padding-right: 20px;
 }
+
 .search input {
 	padding: 2px 0 0 0;
 	margin: 0;
@@ -106,11 +107,11 @@ a:hover, a:active {
 	padding: 17px 21px 25px 15px;
 }
 
-#footer a:link, #footer a:visited {
+#footer a:link,#footer a:visited {
 	color: #999;
 }
 
-#footer a:hover, #footer a:active {
+#footer a:hover,#footer a:active {
 	text-decoration: underline;
 }
 
@@ -160,6 +161,7 @@ a {
 	color: #009AC8;
 	text-decoration: none;
 }
+
 a:hover {
 	color: #B31B34;
 }
@@ -180,27 +182,32 @@ h2 {
 	padding: 9px 0 2px 0;
 	line-height: 18px;
 }
+
 h3 {
 	font-weight: bold;
 	font-size: 12px;
 	margin: 0;
 	padding: 0;
 }
+
 h4 {
 	font-size: 11px;
 	margin: 0;
 	padding: 0;
 }
+
 h5 {
 	font-size: 10px;
 	text-transform: uppercase;
 	margin: 0;
 	padding: 0;
 }
-h3, h4, h5 {
+
+h3,h4,h5 {
 	color: #224;
 	font-weight: bold;
 }
+
 p {
 	text-align: justify;
 	margin: 0;
@@ -210,14 +217,16 @@ p {
 td {
 	vertical-align: top;
 }
+
 .left {
 	float: left;
 }
+
 .right {
 	float: right;
 }
-textarea,
-input {
+
+textarea,input {
 	font-family: arial, sans-serif;
 	font-size: 11px;
 	color: #4c4c4c;
@@ -244,22 +253,22 @@ ul#sidebar h3 {
 	border-bottom-width: 1px;
 	border-bottom-color: #dedeff;
 	border-top: solid;
-    border-top-width: 1px;
-    border-top-color: #dedeff;
+	border-top-width: 1px;
+	border-top-color: #dedeff;
 }
 
-ul#sidebar a:link, ul#sidebar a:visited {
+ul#sidebar a:link,ul#sidebar a:visited {
 	display: block;
 	font-size: 1.1em;
 	padding: 5px 10px;
 	text-decoration: none;
 	border-bottom: solid;
-    border-bottom-width: 1px;
-    border-bottom-color: #dedeff;
+	border-bottom-width: 1px;
+	border-bottom-color: #dedeff;
 }
 
-ul#sidebar a:hover, ul#sidebar a:active {
-	text-decoration: underline;	
+ul#sidebar a:hover,ul#sidebar a:active {
+	text-decoration: underline;
 }
 
 div.main {
@@ -276,7 +285,13 @@ div.main .content {
 }
 
 .error {
-    color: #ff0000;
+	font-size: 11px;
+	color: #ff0000;
+}
+
+.success {
+	font-size: 11px;
+	color: #228822;
 }
 
 #content input.text {

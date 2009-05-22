@@ -1,66 +1,112 @@
+<!-- 
+  Copyright 2005-2009 Kevin A. Lee Licensed under the Apache License, Version
+  2.0 (the "License"); you may not use this file except in compliance with the
+  License. You may obtain a copy of the License at
+  http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
+  or agreed to in writing, software distributed under the License is
+  distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied. See the License for the specific language
+  governing permissions and limitations under the License.
+-->
+
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <!--  include header -->
 <%@include file="theme/header.jsp"%>
 
 <script language="JavaScript">
 <!--
-// Script to check if user has entered values into fields 
-function formCheck(formobj) {
-	// Enter name of mandatory fields
-	var fieldRequired = Array("customerUsername", "customerPassword");
-	// Enter field description to appear in the dialog box
-	var fieldDescription = Array("Username", "Password");
-	// dialog message
-	var alertMsg = "Please complete the following fields:\n";
-	
-	var l_Msg = alertMsg.length;
-	
-	for (var i = 0; i < fieldRequired.length; i++) {
-		var obj = formobj.elements[fieldRequired[i]];
-		if (obj){
-			switch(obj.type){
-			case "select-one":
-				if (obj.selectedIndex == -1 || obj.options[obj.selectedIndex].text == "") {
-					alertMsg += " - " + fieldDescription[i] + "\n";
-				}
-				break;
-			case "select-multiple":
-				if (obj.selectedIndex == -1){
-					alertMsg += " - " + fieldDescription[i] + "\n";
-				}
-				break;
-			case "text":
-			case "textarea":
-				if (obj.value == "" || obj.value == null) {
-					alertMsg += " - " + fieldDescription[i] + "\n";
-				}
-				break;
-			default:
-			}
-			if (obj.type == undefined) {
-				var blnchecked = false;
-				for (var j = 0; j < obj.length; j++){
-					if (obj[j].checked) {
-						blnchecked = true;
-					}
-				}
-				if (!blnchecked){
-					alertMsg += " - " + fieldDescription[i] + "\n";
-				}
-			}
-		}
-	}
+window.addEvent('domready', function() {
+    
+    $('loginForm').addEvent('submit', function(e) {
+        // prevents the default submit event from loading a new page
+        new Event(e).stop();
+        
+        // where we will place the response
+        var responseDiv = $('loginForm').getElement('#response');
+        
+        // where we will redirect to on login
+        var redirectURL = "listAccounts.jsp"
+        
+        // remove error style from fields
+        this.getElements('.error').each(function(input) {
+            if (input.hasClass('error')) { 
+                input.removeClass('error').morph({ 'border-color': '#ccc', 'background-color': '#fff' }); 
+            }
+        });
+        
+        // validate fields  
+        if ($('user').get('value') == "") {
+            responseDiv.set('html', 
+                "<span class='error'>A <b>username</b> is required.</span>");
+            responseDiv.setStyles({ 'opacity': '0', 'display': 'block' });
+            responseDiv.morph({ 'opacity': '1' });
+            $("user").addClass('error').morph({ 'border-color': '#f00', 'background-color': '#ffebe8' });
+            $("user").focus();
+        } else if ($('pass').get('value') == "") {
+            responseDiv.set('html', 
+                "<span class='error'>A <b>password</b> is required.</span>");
+            responseDiv.setStyles({ 'opacity': '0', 'display': 'block' });
+            responseDiv.morph({ 'opacity': '1' });
+            $("pass").addClass('error').morph({ 'border-color': '#f00', 'background-color': '#ffebe8' });
+            $("pass").focus();
+        } else {
+        
+            // show the waiter when pressing the submit button...
+            $('waiting').setStyle('visibility', 'visible');
 
-	if (alertMsg.length == l_Msg) {
-		return true;
-	}else{
-		alert(alertMsg);
-		return false;
-	}
-}
+            // disable the submit button while processing...
+            $('submit').set('disabled', true);
+
+            // set the options of the form's Request handler.
+            this.set('send', { onComplete: function(response) {
+                $('waiting').setStyle('visibility', 'hidden');
+
+                // decode the JSON response
+                var status = JSON.decode(response);
+                
+                // act on the response
+                if (status.code) {
+                    // successful login
+                    
+                    // enable the submit button
+                    $('submit').set('disabled', false);
+                
+                    $('status').set('html', "<span class='success'><b>You are now logged in!</b><br />" +
+                        "<img align='absmiddle' src='theme/loader-bar.gif'>" +
+                        "'<br>Please wait while we redirect you to your account page...</span></div>");
+
+                    // go to home page
+                    setTimeout(function() { 
+                        window.location = redirectURL + "?customerNumber=" + status.cid;
+                    }, 3000);   
+                } else {
+                    // failed login
+                    
+                    // enable the submit button
+                    $('submit').set('disabled', false);
+                    
+                    responseDiv.set('html',
+                        "<span class='error'>" + status.message + "</span>");
+                    responseDiv.setStyles({ 'opacity': '0', 'display': 'block' });
+                    responseDiv.morph({ 'opacity': '1' });
+                    if ($(status.field)) {
+                        $(status.field).addClass('error').morph({ 'border-color': '#f00', 'background-color': '#ffebe8' });
+                        $(status.field).focus();
+                    }
+                }
+            }});
+
+            // send the form.
+            this.send();
+        }
+    });
+
+    // set focus to username
+    $("user").focus();
+
+});
 // -->
 </script>
 
@@ -71,24 +117,32 @@ function formCheck(formobj) {
 	<h3>Sign in</h3>
 	</li>
 	<li>&nbsp;</li>
-	<li><a href="tbd.jsp">FAQ</a></li>
+	<li><a href="tbd.jsp">Register</a></li>
 	<li><a href="tbd.jsp">Tutorial</a></li>
 </ul>
 
+<!-- begin main -->
 <div class="main">
+
+<!--  begin page content -->
 <div class="content">
 <h1>Welcome to HappyBank <i>Online</i></h1>
 
-<form action="ValidateLogin" method="post"
-	onsubmit="return formCheck(this);">
+<p>You will need a username and password to continue using our
+offerings and services. If you are an existing customer and have not yet
+registered with HappyBank, then please <a href="tbd.jsp">Register
+Now</a>.</p>
+
+<!-- named div so content can be replaced on successfull login -->
+<div id="status" style="width: 400px; margin: 0px auto">
+
+<form id="loginForm" action="ValidateLogin" method="post">
 <table border="0" cellpadding="1" cellspacing="0" width="100%">
 	<tbody>
 		<tr>
-			<td width="100%">
-			<p>You will need a username and password to continue using our offerings
-			and services. If you have not yet registered with HappyBank, we
-			apologize for the inconvenience and ask that you please <a
-				href="tbd.jsp">Register Now</a>.</p>
+			<td width="100%"><!-- ajax login response -->
+			<div id="response">All fields in <b>bold</b> are required.</div>
+			<br />
 			</td>
 		</tr>
 		<tr>
@@ -97,44 +151,25 @@ function formCheck(formobj) {
 				<tbody>
 					<tr valign="top">
 						<td width="10"><span class="ask">*</span></td>
-						<td width="70"><b><label for="customerUsername">Username:</label></b></td>
-						<td width="350"><input maxlength="80" name="customerUsername"
-							class="iform" id="customerUsername" type="text" /> <br />
+						<td width="70"><b><label for="user">Username:</label></b></td>
+						<td width="350"><input maxlength="80" name="user"
+							class="iform" id="user" type="text" /> <br />
 						<br />
 						</td>
 					</tr>
 					<tr valign="top">
 						<td><span class="ask">*</span></td>
-						<td><b><label for="newpassword">Password:</label></b></td>
-						<td><input maxlength="31" name="customerPassword"
-							class="iform" id="customerPassword" type="password" /> <br />
+						<td><b><label for="pass">Password:</label></b></td>
+						<td><input maxlength="31" name="pass" class="iform" id="pass"
+							type="password" /> <br />
 						<br />
 						</td>
 					</tr>
-                    <tr valign="top">
-                        <td></td>
-                        <td></td>
-                        <%
-                            String message = (String)request.getAttribute("message");
-                            if (message != null) {
-                        %>
-                                <td class="error"><%=message%><br/></td>
-                        <%        
-                            }
-                        %>
-                    </tr>                    
 					<tr valign="top">
-						<td></td>
-                        <td></td>
-						<td>
-                            <p><input name="remember" type="checkbox" /> Remember my
-						      Username.</p>
-                        	<br />
+						<td colspan="3">
+						<p><input name="remember" type="checkbox" /> Remember my
+						Username.</p>
 						</td>
-					</tr>
-					<tr>
-						<td colspan="3"><input alt="Submit" type="submit"
-							value="Submit" /></td>
 					</tr>
 				</tbody>
 			</table>
@@ -142,11 +177,16 @@ function formCheck(formobj) {
 		</tr>
 	</tbody>
 </table>
+<!-- buttons and ajax processing -->
+<div><input type="submit" value="Login" id="submit" class="btn" />
+&nbsp; <span id="waiting" style="visibility: hidden"> <img
+	align="absmiddle" src="theme/spinner.gif" /> &nbsp;<strong>Processing...<strong></span>
+</div>
 </form>
+</div>
 
 </div>
 </div>
-<br class="clr">
 </div>
 <!-- end content -->
 

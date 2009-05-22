@@ -11,6 +11,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="/HappyBankCommon/src/maps"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/HappyBankCommon"/>
+	<classpathentry kind="con" path="org.apache.ivyde.eclipse.cpcontainer.IVYDE_CONTAINER/ivy.xml/*"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>

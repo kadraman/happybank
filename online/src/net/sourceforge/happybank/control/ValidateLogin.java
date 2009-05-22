@@ -15,15 +15,19 @@
  *
  */
 
+
 package net.sourceforge.happybank.control;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import org.json.simple.JSONObject;
 
 import net.sourceforge.happybank.exception.CustomerDoesNotExistException;
 import net.sourceforge.happybank.model.Account;
@@ -50,74 +54,79 @@ public class ValidateLogin extends BaseServlet {
      * @throws ServletException on servlet failure
      * @throws IOException on IO failure
      */
+    @SuppressWarnings("unchecked")
     protected void performTask(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
         try {
             // parameters:
             
-            // get input parameter and keep it on the HTTP session
-            
-            String customerUsername = request.getParameter("customerUsername");
-            String customerPassword = request.getParameter("customerPassword");
+            // get input parameters and keep them on the HTTP session
+            String customerUsername = request.getParameter("user");
+            String customerPassword = request.getParameter("pass");
             HttpSession session = request.getSession();
-                       
+            
             if (customerUsername == null) {
-                customerUsername = (String) session
-                        .getAttribute("customerUsername");
+                customerUsername = (String) session.getAttribute("user");
             } else {
-                session.setAttribute("customerUsername", customerUsername);
+                session.setAttribute("user", customerUsername);
             }
             
             if (customerPassword == null) {
-                customerPassword = (String) session
-                        .getAttribute("customerPassword");
+                customerPassword = (String) session.getAttribute("pass");
             } else {
-                session.setAttribute("customerPassword", customerUsername);
+                session.setAttribute("pass", customerUsername);
             }
+            
+            // set response type and create JSON object
+            response.setContentType("application/json");
+            PrintWriter rOut = response.getWriter();
+            JSONObject jObj = new JSONObject();
+            jObj.put("code", new Integer(0)); // assume failure
             
             // control logic:
             
             // check customer login details
-            
             Customer customer = null;
             try {
                 customer = getBank().getCustomerByUsername(customerUsername);
             } catch (CustomerDoesNotExistException ex) {
-                request.setAttribute("message", "invalid username");
-                getServletContext().getRequestDispatcher("/index.jsp").forward(
-                        request, response);
+                jObj.put("message", "The <b>username</b> is not recognized.");
+                jObj.put("field", "user");
+                rOut.println(jObj);
+                rOut.close();                
             }
             
             if (customer != null) {
                 if (customerPassword.equals(customer.getPassword())) {
-                    // retrieve customer accounts
+                    // valid login, retrieve customer accounts
                     List<Account> accounts = getBank().getAccounts(
-                            customer.getId());
+                            customer.getId());                   
                     
-                    // response:
-                    
-                    // set the request attributes for future rendering
-                    
-                    request.setAttribute("customer", customer);
-                    request.setAttribute("accounts", accounts);
-                    request.setAttribute("message", null);
+                    // set session attributes for future rendering
+                    session.setAttribute("customer", customer);
+                    session.setAttribute("accounts", accounts);
                     session.setAttribute("customerNumber", customer.getId());
                     
-                    // call the presentation renderer
-                    
-                    getServletContext().getRequestDispatcher(
-                            "/listAccounts.jsp").forward(request, response);
+                    jObj.put("code", new Integer(1)); // success
+                    jObj.put("cid", customer.getId());
+                    rOut.println(jObj);
+                    rOut.close();                    
                 } else {
-                    request.setAttribute("message", "invalid password");
-                    getServletContext().getRequestDispatcher("/index.jsp")
-                            .forward(request, response);
+                    jObj.put("message",
+                    "The <b>password</b> is incorrect for the specified user.");
+                    jObj.put("field", "pass");
+                    rOut.println(jObj);
+                    rOut.close();
                 }
             }
         } catch (Exception ex) {
-            request.setAttribute("message", ex.getMessage());
-            request.setAttribute("forward", "index.jsp");
-            getServletContext().getRequestDispatcher("/showException.jsp")
-                    .forward(request, response);
+            response.setContentType("application/json");
+            PrintWriter rOut = response.getWriter();
+            JSONObject jObj = new JSONObject();
+            jObj.put("code", new Integer(0));
+            jObj.put("message", ex.getMessage());
+            rOut.println(jObj);
+            rOut.close();
         }
     } // performTask
     

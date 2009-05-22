@@ -18,12 +18,16 @@
 package net.sourceforge.happybank.control;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.math.BigDecimal;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import org.json.simple.JSONObject;
 
 import net.sourceforge.happybank.exception.InvalidAmountException;
 import net.sourceforge.happybank.model.Account;
@@ -50,6 +54,7 @@ public class TransferFunds extends BaseServlet {
      * @throws ServletException on servlet failure
      * @throws IOException on IO failure
      */
+    @SuppressWarnings("unchecked")
     protected void performTask(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
         try {
@@ -59,31 +64,42 @@ public class TransferFunds extends BaseServlet {
             String accountID1 = (String) session.getAttribute("accountNumber");
             String accountID2 = (String) request.getParameter(
                     "destinationAccount").toString();
+            
+            // get all of the customers accounts
+            String customerId = (String) session.getAttribute("customerNumber");
+            List<Account> accounts = getBank().getAccounts(customerId);
+            
+            // get the amount to transfer
             BigDecimal amount = new BigDecimal(request.getParameter("amount"));
+            
+            // set response type and create JSON object
+            response.setContentType("application/json");
+            PrintWriter rOut = response.getWriter();
+            JSONObject jObj = new JSONObject();
+            jObj.put("code", new Integer(0)); // assume failure
             
             // control logic:
             
             if (amount.equals(new BigDecimal(0.00))) {
-                throw new InvalidAmountException("Invalid amount...");
+                jObj.put("message", "A valid <b>amount</b> is required.");
+                jObj.put("field", "amount");
+                rOut.println(jObj);
+                rOut.close();
             }
             
             getBank().transfer(accountID1, accountID2, amount);
-            Account account = getBank().getAccount(accountID1);
             
-            // response:
-            
-            request.setAttribute("account", account);
-            
-            // call the presentation renderer
-            
-            getServletContext().getRequestDispatcher("/accountDetails.jsp")
-                    .forward(request, response);
-            
+            jObj.put("code", new Integer(1)); // success
+            rOut.println(jObj);
+            rOut.close();            
         } catch (Exception ex) {
-            request.setAttribute("message", ex.getMessage());
-            request.setAttribute("forward", "index.jsp");
-            getServletContext().getRequestDispatcher("/showException.jsp")
-                    .forward(request, response);
+            response.setContentType("application/json");
+            PrintWriter rOut = response.getWriter();
+            JSONObject jObj = new JSONObject();
+            jObj.put("code", new Integer(0));
+            jObj.put("message", ex.getMessage());
+            rOut.println(jObj);
+            rOut.close();
         }
     } // performTask
     

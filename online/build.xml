@@ -100,12 +100,6 @@
         </war>
     </target>
 
-    <!-- override ivy.publish target -->
-    <target name="publish"
-            depends="common-targets.dist,ivy.publish"
-            description="publish this project in the ivy repository">
-    </target>
-
     <!-- overide dist target - create Web Archive -->
     <target name="dist" depends="war">
     </target>

@@ -5,16 +5,16 @@
 <!--  include header -->
 <%@include file="theme/header.jsp"%>
 
-<%@page import="net.sourceforge.happybank.model.*" session="false"%>
-<%@page import="java.math.BigDecimal" session="false"%>
-<%@page import="java.util.Locale" session="false"%>
-<%@page import="java.util.Currency" session="false"%>
-<%@page import="java.util.ArrayList" session="false"%>
+<%@page import="net.sourceforge.happybank.model.*" session="true"%>
+<%@page import="java.math.BigDecimal"%>
+<%@page import="java.util.Locale"%>
+<%@page import="java.util.Currency"%>
+<%@page import="java.util.ArrayList"%>
 <%
     Locale currentLocale = Locale.getDefault();
     Currency currentCurrency = Currency.getInstance(currentLocale);
     String currencySymbol = currentCurrency.getSymbol();
-    ArrayList accounts = (ArrayList) request.getAttribute("accounts");
+    ArrayList accounts = (ArrayList) session.getAttribute("accounts");
 %>
 
 <!-- begin content -->
@@ -32,7 +32,7 @@
 
 <div class="main">
 <div class="content">
-<h1><jsp:useBean id="customer" scope="request"
+<h1><jsp:useBean id="customer" scope="session"
 	class="net.sourceforge.happybank.model.Customer" /> <jsp:getProperty
 	name="customer" property="title" /> <jsp:getProperty name="customer"
 	property="firstName" /> <jsp:getProperty name="customer"

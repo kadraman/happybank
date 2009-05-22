@@ -8,15 +8,23 @@
 <%@page import="net.sourceforge.happybank.model.*" session="false"%>
 <%@page import="java.util.Locale" session="false"%>
 <%@page import="java.util.Currency" session="false"%>
+<%@page import="java.math.BigDecimal" session="false"%>
 <%@page import="java.util.ArrayList" session="false"%>
+<%@page import="org.joda.time.format.DateTimeFormat" session="false"%>
+<%@page import="org.joda.time.format.DateTimeFormatter" session="false"%>
 <%
     Locale currentLocale = Locale.getDefault();
     Currency currentCurrency = Currency.getInstance(currentLocale);
     String currencySymbol = currentCurrency.getSymbol();
-    ArrayList transactionSet = (ArrayList) request
+    @SuppressWarnings("unchecked")
+    ArrayList<TransRecord> transactionSet = (ArrayList<TransRecord>) request
             .getAttribute("transactionSet");
+    DateTimeFormatter fmt = DateTimeFormat.forPattern("E MMMM-dd, yyyy HH:mm:ss a");
 %>
 
+<jsp:useBean id="account" type="net.sourceforge.happybank.model.Account"
+    scope="request"></jsp:useBean>
+    
 <!-- begin content -->
 <div id="content">
 <ul id="sidebar">
@@ -33,47 +41,71 @@
 
 <div class="main">
 <div class="content">
-<h1>Account Transactions</h1>
+<h1>Account Transactions for: <%=account.getId()%></h1>
 <form method="post" action="AccountDetails">
 <table border="0" cellpadding="1" cellspacing="0" width="100%">
 	<tbody>
 		<tr>
 			<td>
-			<p align="justify">Transactions sorted in order of occurence:</p>
+			<p align="justify">Transactions sorted in order of occurence (latest first):</p>
 			</td>
 		</tr>
 		<tr>
 			<td>
 			<table border="0" cellpadding="0" cellspacing="0" width="100%">
 				<tr bgcolor="#6098c8" valign="top">
-					<td align="center"><font color="white"><b>ID</b></font></td>
 					<td align="center"><font color="white"><b>Date</b></font></td>
-					<td align="center"><font color="white"><b>Type</b></font></td>
-					<td align="right"><font color="white"><b>Amount</b></font></td>
+					<td align="center"><font color="white"><b>Description</b></font></td>
+					<td align="center"><font color="white"><b>Credit</b></font></td>
+					<td align="center"><font color="white"><b>Debit</b></font></td>
 				</tr>
 				<%
+				    BigDecimal totalCredit = new BigDecimal(0.0D);
+				    BigDecimal totalDebit = new BigDecimal(0.0D);
 				    String[] colors = { "#eeeeee", "#dddddd" };
 				    
-				    for (int count = 0; count < transactionSet.size(); count++) {
-				        TransRecord transaction = (TransRecord) transactionSet
+				    if (transactionSet.size() == 0) {
+				%>
+				    <tr><td colspan="4">No transactions found</td></tr>
+				<%
+				        
+				    } else {
+				        for (int count = 0; count < transactionSet.size(); count++) {
+				            TransRecord transaction = (TransRecord) transactionSet
 				                .get(count);
 				%>
-				<tr bgcolor=<%=colors[count % 2]%>>
-					<td align="center"><a href="tbd.jsp"><%=count + 1%></a></td>
-					<td align="center"><%=transaction.getTimeStamp().toString()%></td>
-					<td align="center"><%=transaction.getTransType()%></td>
-					<td align="right"><%=currencySymbol%><%=transaction.getTransAmt()%></td>
-				</tr>
-				<%
-				    //count ++;
-				    }
-				%>
+				    <tr bgcolor=<%=colors[count % 2]%>>					
+					    <td align="center" style="padding-left:5px"><%=fmt.print(transaction.getTimeStamp())%></td>
+					    <td align="center"></td>
+					    <% if (transaction.getTransType().equals("C")) { 
+					           totalCredit = totalCredit.add(transaction.getTransAmt());
+					    %>
+					        <td align="right"><%=currencySymbol%><%=transaction.getTransAmt()%></td>
+					        <td></td>
+					    <% } else { 
+					        totalDebit = totalDebit.add(transaction.getTransAmt());
+					    %>
+					        <td></td>
+                            <td align="right" style="padding-right:5px"><%=currencySymbol%><%=transaction.getTransAmt()%></td>
+					    <% } %>
+				    </tr>
+				    <%
+				        }
+				    %>
+				    <tr bgcolor="white" valign="top">
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td align="right"><font color="black"><b><%=currencySymbol%><%=totalCredit%></b></font></td>
+                        <td align="right"><font color="black"><b><%=currencySymbol%><%=totalDebit%></b></font></td>
+                    </tr>
+                <%
+                    }
+                %>
 			</table>
 			</td>
 		</tr>
 		<tr>
-			<td colspan="3"><br />
-			<br />
+			<td colspan="3">
 			<input alt="Continue" type="submit" name="continue" value="Back"></td>
 		</tr>
 	</tbody>
@@ -81,7 +113,6 @@
 </form>
 </div>
 </div>
-<br class="clr">
 </div>
 <!-- end content -->
 

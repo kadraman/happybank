@@ -15,5 +15,7 @@
 			changing="true" rev="latest.integration" conf="compile->default;runtime->default" />
 		<dependency org="tomcat" name="servlet-api" rev="6.0.18"
 			conf="compile->default" />
+		<dependency org="json-simple" name="json-simple" rev="1.1"
+            conf="compile->default;runtime->default" />
 	</dependencies>
 </ivy-module>
