@@ -27,6 +27,8 @@
     
     <!-- define a classpath for use throughout the project, including ivy -->
     <path id="project.run.classpath">
+        <!-- include built classes -->
+        <pathelement location="${dir.build}" />
         <!-- include built jar -->
         <fileset dir="${dir.dist}">
             <include name="${ant.project.name}.jar"/>
@@ -45,13 +47,20 @@
         <!-- copy ibatis maps to src directory, hack because ibatis 
         does not work well with maps in .jar files -->
         <copy todir="${dir.build}">
-            <fileset dir="${dir.common.src}" includes="maps/*.xml" />
+            <fileset dir="${dir.common.src}" includes="maps/*.xml,sqlMapConfig.xml" />
+            <fileset dir="${dir.src}" includes="applicationContext.xml" />
         </copy>
     </target>
 
-    <!-- overide dist target - copy ibatis SQL maps -->
-    <target name="dist" depends="copy-config-files,common-targets.dist">
-    </target>
+    <!--override the run target -->
+    <target name="run"
+            depends="dist,copy-config-files"
+            description="run the application or test class">
+	    <java classname="${name.main.class}" dir="${dir.build}" fork="yes">
+                <classpath refid="project.run.classpath" />
+            <arg value="${name.run.args}" />
+        </java>
+    </target>   
 
 </project>
 

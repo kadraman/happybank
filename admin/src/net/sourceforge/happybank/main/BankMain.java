@@ -47,7 +47,6 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
 
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 import net.sourceforge.happybank.exception.AccountDoesNotExistException;
@@ -77,7 +76,7 @@ public class BankMain {
      */
     public BankMain() {
         // get context and facade
-        ApplicationContext ctx = new ClassPathXmlApplicationContext(
+        ApplicationContext ctx = new FileSystemXmlApplicationContext(
                 "applicationContext.xml");
         bank = (BankingFacade) ctx.getBean("bankManager");
         initComponents();

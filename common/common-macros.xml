@@ -25,6 +25,7 @@
     <include name="**/*.jsp"/>
     <include name="**/*.css"/>
     <include name="**/*.xmi"/>
+    <include name="**/*.js"/>
 </patternset>
 
 <!-- define a patternset for distribution sources -->

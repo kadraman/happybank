@@ -29,7 +29,6 @@ import javax.servlet.http.HttpSession;
 
 import org.json.simple.JSONObject;
 
-import net.sourceforge.happybank.exception.InvalidAmountException;
 import net.sourceforge.happybank.model.Account;
 
 /**
