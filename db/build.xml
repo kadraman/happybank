@@ -36,9 +36,9 @@
              destfile="${dir.build}/${ant.project.name}.jar" />
     </target>
 
-    <!-- bootstrap the development database -->
-    <target name="bootstrap"
-            depends="init,dbdeploy.bootstrap,dbdeploy.gen,dbdeploy.update"
+    <!-- populate the development database with sample data -->
+    <target name="db.reset"
+            depends="init,get-db-pass,dbdeploy.gen,dbdeploy.update"
             description="update database and load test data">
         <sql driver="${name.db.driver}"
              url="${name.db.connection}"
@@ -48,11 +48,18 @@
             <classpath>
                 <path refid="project.classpath" />
             </classpath>
+            <transaction src="${dir.sql}/testdata/empty-all-tables.sql" />
             <transaction src="${dir.sql}/testdata/customers.sql" />
             <transaction src="${dir.sql}/testdata/accounts.sql" />
             <transaction src="${dir.sql}/testdata/custaccts.sql" />
             <transaction src="${dir.sql}/testdata/transactions.sql" />
         </sql>
+    </target>
+        
+    <!-- bootstrap the development database -->
+    <target name="bootstrap"
+            depends="init,get-db-pass,dbdeploy.bootstrap,db.reset"
+            description="bootstrap development database">
     </target>
 
 </project>

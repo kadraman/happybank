@@ -12,7 +12,7 @@
         <conf name="default" extends="master, runtime" />
     </configurations>
     <dependencies>
-        <dependency org="dbdeploy" name="dbdeploy" rev="2.11"
+        <dependency org="dbdeploy" name="dbdeploy-ant" rev="3.0M1"
             conf="common->default" />
         <dependency org="hsqldb" name="hsqldb" rev="1.8.0.10"
             conf="common->default;compile->default;runtime->default" />
