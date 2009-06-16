@@ -121,6 +121,15 @@
         </checkstyle>
     </target>
 
+    <!-- prompt for database password -->
+    <target name="get-db-pass" unless="name.db.password"
+        description="prompt for database password">
+        <input addproperty="name.db.password"
+               message="Please enter the password for database user ${name.db.user}:">
+            <handler classname="org.apache.tools.ant.input.SecureInputHandler" />
+        </input>
+    </target>
+            
     <!-- target to start hsqldb -->
     <target name="hsqldb.start" depends="-ivy.init" description="start hsqldb">
         <java classpathref="ivy.internal.classpath"
@@ -168,7 +177,7 @@
     <target name="dbdeploy.gen"
             depends="-ivy.init"
             description="generate database update script">
-        <taskdef name="dbdeploy" classname="net.sf.dbdeploy.AntTarget">
+        <taskdef name="dbdeploy" classname="com.dbdeploy.AntTarget">
             <classpath>
                 <path refid="ivy.internal.classpath" />
             </classpath>
