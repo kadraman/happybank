@@ -157,10 +157,10 @@
         </sql>
     </target>
 
-    <!-- target to bootstrap a dbdeploy managed database -->
-    <target name="dbdeploy.bootstrap"
+    <!-- target to bootstrap a initialize a managed database -->
+    <target name="dbdeploy.init"
             depends="-ivy.init"
-            description="bootstrap a dbdeploy managed database">
+            description="initialize a dbdeploy managed database">
         <sql driver="${name.db.driver}"
              url="${name.db.connection}"
              userid="${name.db.user}"

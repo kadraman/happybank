@@ -58,7 +58,7 @@
         
     <!-- bootstrap the development database -->
     <target name="bootstrap"
-            depends="init,get-db-pass,dbdeploy.bootstrap,db.reset"
+            depends="init,get-db-pass,dbdeploy.init,db.reset"
             description="bootstrap development database">
     </target>
 
