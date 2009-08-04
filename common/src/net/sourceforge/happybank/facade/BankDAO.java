@@ -117,6 +117,7 @@ public class BankDAO extends SqlMapClientDaoSupport {
         ctmp.setLastName(last);
         ctmp.setTitle(title);
         ctmp.setUserName(first + "." + last);
+		ctmp.setPassword("password"); // default password
         getSqlMapClientTemplate().insert("addCustomer", ctmp);
         return ctmp;
     } // addCustomer

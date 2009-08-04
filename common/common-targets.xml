@@ -355,9 +355,17 @@
             description="publish this project in the ivy repository">
         <delete file="${dir.dist}/ivy.xml" />
         <ivy:publish artifactspattern="${dir.dist}/[artifact].[ext]"
-                     resolver="happybank.local"
+                     resolver="local"
                      settingsRef="happybank.common.ivy"
                      overwrite="true" />
+    </target>
+	
+	<!-- publish a project to the ivy repository -->
+    <target name="ivy.install"
+            description="install modules into the local ivy repository">
+			<ivy:install settingsRef="happybank.common.ivy" 
+				organisation="commons-cli" module="commons-cli" revision="1.0" 
+				overwrite="true" from="ibiblio" to="local" transitive="true" />
     </target>
 
     <!-- create a report on the project's dependencies -->

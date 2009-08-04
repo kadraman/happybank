@@ -36,8 +36,8 @@
     
     <insert id="addCustomer" parameterClass="Customer">
         INSERT INTO CUSTOMER
-        (customerid, title, firstname, lastname, userid)
-        VALUES (#id#, #title#, #firstName#, #lastName#, #userName#)
+        (customerid, title, firstname, lastname, userid, password)
+        VALUES (#id#, #title#, #firstName#, #lastName#, #userName#, #password#)
     </insert>
     
     <delete id="deleteCustomer" parameterClass="java.lang.String">
