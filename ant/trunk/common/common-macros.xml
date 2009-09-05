@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+<project name="common-macros" xmlns:ivy="antlib:org.apache.ivy.ant">
+
+<!-- define an internal classpath for -->
+<path id="internal.classpath">
+    <!-- include local libraries -->
+    <fileset dir="${dir.common}/lib"/>
+</path>
+
+<!-- define a patternset for Java classes -->
+<patternset id="java.sources">
+    <include name="**/*.java"/>
+    <exclude name="**/*Test*.java"/>
+</patternset>
+
+<!-- define a patternset for Test classes -->
+<patternset id="test.sources">
+    <include name="**/Test*.java"/>
+</patternset>
+
+<!-- define a patternset for Java Web sources -->
+<patternset id="web.sources">
+    <include name="**/*.html"/>
+    <include name="**/*.htm"/>
+    <include name="**/*.jsp"/>
+    <include name="**/*.css"/>
+    <include name="**/*.xmi"/>
+    <include name="**/*.js"/>
+</patternset>
+
+<!-- define a patternset for distribution sources -->
+<patternset id="dist.sources">
+    <include name="**/*.jar"/>
+    <include name="**/*.war"/>
+    <include name="**/*.ear"/>
+</patternset>
+
+<!-- macro for compiling a project -->
+<macrodef name="project-compile">
+    <attribute name="srcdir" default="${dir.src}"/>
+    <attribute name="destdir" default="${dir.build}"/>
+    <attribute name="excludes" default=""/>
+    <attribute name="classpathref"/>
+    <attribute name="sourcepathref"/>
+    <sequential>
+        <javac destdir="@{destdir}"
+         excludes="@{excludes}"
+         debug="${value.compile.debug}" 
+         fork="${value.compile.fork}"
+         compiler="${name.compile.compiler}">
+            <compilerarg line="-Xlint -Xlint:-unchecked"/>
+            <src path="@{srcdir}"/>
+            <classpath refid="@{classpathref}"/>
+            <sourcepath refid="@{sourcepathref}"/>            
+        </javac>
+    </sequential>
+</macrodef>
+
+<!-- macro for creating a projects javadocs -->
+<macrodef name="project-javadoc">
+    <attribute name="srcdir" default="${dir.src}"/>
+    <attribute name="destdir" default="${dir.doc}"/>
+    <attribute name="packagenames" default="${name.pkg.dirs}"/>
+    <attribute name="classpathref"/>
+    <sequential>
+        <javadoc destdir="@{destdir}" sourcepath="@{srcdir}"
+         access="public" author="true" nodeprecated="false"
+         nodeprecatedlist="false" noindex="false" nonavbar="false"
+         notree="false" splitindex="true" use="true" version="true"
+         packagenames="@{packagenames}">
+            <classpath refid="@{classpathref}"/>
+        </javadoc>
+    </sequential>
+</macrodef>
+
+<!-- macro for running a junit test suite -->
+<macrodef name="project-junit">
+    <attribute name="destdir" default="${dir.doc}"/>
+    <attribute name="packagenames" default="${name.pkg.dirs}"/>
+    <attribute name="classpathref"/>
+    <element name="testclasses"/>
+    <sequential>
+        <junit printsummary="on" fork="no"
+         haltonfailure="false"
+         failureproperty="tests.failed"
+         showoutput="true">
+            <classpath refid="@{classpathref}"/>
+            <formatter type="xml"/>
+            <batchtest todir="@{destdir}">
+                <testclasses/>
+            </batchtest>
+        </junit>
+        <junitreport todir="@{destdir}">
+            <fileset dir="@{destdir}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report format="noframes" todir="@{destdir}"/>
+        </junitreport>
+        <fail if="tests.failed">
+        One or more tests failed. Check the output...
+        </fail>
+    </sequential>
+</macrodef>
+
+</project>
