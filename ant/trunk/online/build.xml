@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+<project name="happybank-online"
+         default="help"
+         basedir="."
+         xmlns:ivy="antlib:org.apache.ivy.ant">
+
+    <property environment="env" />
+    <property name="dir.src" value="src" />
+    <property name="dir.lib" value="lib" />
+    <property name="dir.common" value="../common" />
+    <property name="dir.common.src" value="../common/src" />
+    <property name="dir.web" value="WebContent" />
+    <property name="dir.websrc" value="${dir.web}/WEB-INF/src" />
+    <property name="dir.weblib" value="${dir.web}/WEB-INF/lib" />
+
+    <property file="build.properties" />
+    <property file="default.properties" />
+    <property file="${dir.common}/default.properties" />
+
+    <import file="${dir.common}/common-macros.xml" optional="false" />
+    <import file="${dir.common}/common-targets.xml" optional="false" />
+
+    <!-- define a classpath for use throughout the project, including ivy -->
+    <path id="project.classpath">
+        <fileset dir="${dir.weblib}" />
+        <!-- include built classes -->
+        <pathelement location="${dir.build}" />
+        <!-- include ivy classpath -->
+        <path refid="ivy.compile.classpath" />
+    </path>
+
+    <!-- define any additional source directories -->
+    <path id="project.sourcepath">
+        <!-- none -->
+    </path>
+
+    <!-- overide of init target -->
+    <target name="init" depends="common-targets.init">
+        <mkdir dir="${dir.weblib}" />
+    </target>
+
+    <!-- overide of clean target -->
+    <target name="clean" depends="common-targets.clean">
+        <delete dir="${dir.weblib}" />
+    </target>
+
+    <!-- override of compile target -->
+    <target name="compile"
+            depends="common-targets.compile"
+            description="compile JSPs">
+        <!-- uncomment for jsp pre-compilation -->
+        <!-- reference the jasper JSP compiler - 
+        <taskdef classname="org.apache.jasper.JspC" name="jasper2" 
+            classpathref="project.classpath"/> 
+        <!- generate Java source code for the JSP -
+        <jasper2 validateXml="false" uriroot="${dir.web}"  
+            webXmlFragment="${dir.web}/WEB-INF/generated_web.xml" 
+            outputDir="${dir.websrc}"/> 
+        <!- compile the generated source code -
+            <project-compile classpathref="project.classpath" 
+            srcdir="${dir.websrc}"
+            destdir="${dir.build}"/>
+	    -->
+    </target>
+
+    <!-- create WAR file -->
+    <target name="war"
+            depends="compile,make-manifest"
+            description="create WAR file">
+        <!-- copy ivy dependencies to WEB-INF\lib -->
+        <copy todir="${dir.weblib}" flatten="true">
+            <path refid="ivy.runtime.classpath" />
+        </copy>
+        <!-- copy ibatis maps to src directory, hack because ibatis 
+        does not work well with maps in .jar files -->
+        <copy todir="${dir.build}">
+            <fileset dir="${dir.common.src}" includes="maps/*.xml" />
+        </copy>
+        <war warfile="${dir.dist}/${ant.project.name}.war"
+             webxml="WebContent/WEB-INF/web.xml"
+             manifest="${dir.build}/manifest.mf">
+            <fileset dir="WebContent">
+                <patternset refid="web.sources" />
+            </fileset>
+            <zipfileset dir="WebContent/theme" prefix="theme" />
+            <!-- jndi context -->
+            <zipfileset dir="WebContent/META-INF"
+                        includes="**/context.xml"
+                        prefix="META-INF" />
+            <!-- spring/ibatis configuration files -->
+            <zipfileset dir="WebContent/WEB-INF"
+                        includes="applicationContext.xml,sqlMapConfig.xml"
+                        prefix="WEB-INF" />
+            <classes dir="${dir.build}">
+                <include name="net/sourceforge/happybank/control/*.class" />
+                <!--include name="org/apache/jsp/**.class" /-->
+                <include name="maps/**.xml" />
+            </classes>
+            <lib dir="${dir.weblib}" />
+        </war>
+    </target>
+
+    <!-- overide dist target - create Web Archive -->
+    <target name="dist" depends="war">
+    </target>
+
+</project>
+
