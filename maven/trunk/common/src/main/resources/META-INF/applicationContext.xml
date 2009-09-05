@@ -33,7 +33,7 @@
 	<!-- SqlMap setup for iBATIS Database Layer -->
 	<bean id="bankSqlMapConfig" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
 		<property name="configLocation">
-			<value>build/sqlMapConfig.xml</value>
+			<value>sqlMapConfig.xml</value>
 		</property>
 	</bean>
 

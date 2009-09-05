@@ -58,7 +58,7 @@ public class TestBank extends TestCase {
     protected final void setUp() {
         // get context and facade
         ApplicationContext ctx = new FileSystemXmlApplicationContext(
-                "build/applicationContext.xml");
+                "applicationContext.xml");
         bank = (BankingFacade) ctx.getBean("bankManager");
         
         // create test accounts and customers

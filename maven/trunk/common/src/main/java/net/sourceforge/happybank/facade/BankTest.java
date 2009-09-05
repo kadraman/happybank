@@ -55,7 +55,7 @@ final class BankTest {
         try {
             // get context and facade
             ApplicationContext ctx = new FileSystemXmlApplicationContext(
-                    "build/applicationContext.xml");
+                    "applicationContext.xml");
             BankingFacade bank = (BankingFacade) ctx.getBean("bankManager");
             
             // get all customers
