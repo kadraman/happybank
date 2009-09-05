@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="customeraccount">
+
+	<typeAlias alias="CustomerAccount"
+		type="net.sourceforge.happybank.model.CustomerAccount" />
+
+	<resultMap id="customeraccountResult" class="CustomerAccount">
+		<result property="cid" column="customerid" />
+		<result property="aid" column="accid" />
+	</resultMap>
+	
+	<parameterMap id="customerAccountParam" class="CustomerAccount">
+        <parameter property="cid" />
+        <parameter property="aid" />
+    </parameterMap>
+
+    <select id="getAccountOwner" parameterClass="java.lang.String">
+        SELECT customerid
+        FROM CUSTACCT
+        WHERE accid = #value#
+    </select>
+
+    <insert id="addCustomerAccount" parameterClass="CustomerAccount"
+        parameterMap="customerAccountParam">
+        INSERT INTO CUSTACCT
+        (customerid, accid)
+        VALUES (?, ?)
+    </insert>
+    
+    <delete id="deleteCustomerAccount" parameterClass="java.lang.String">
+        DELETE 
+        FROM CUSTACCT
+        WHERE accid = #value#
+    </delete>
+    
+</sqlMap>
