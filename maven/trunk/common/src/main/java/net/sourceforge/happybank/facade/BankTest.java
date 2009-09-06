@@ -27,7 +27,7 @@ import net.sourceforge.happybank.model.Customer;
 import net.sourceforge.happybank.model.TransRecord;
 
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.FileSystemXmlApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 
 /**
@@ -54,8 +54,8 @@ final class BankTest {
                        
         try {
             // get context and facade
-            ApplicationContext ctx = new FileSystemXmlApplicationContext(
-                    "applicationContext.xml");
+            ApplicationContext ctx = new ClassPathXmlApplicationContext(
+                    "/META-INF/applicationContext.xml");
             BankingFacade bank = (BankingFacade) ctx.getBean("bankManager");
             
             // get all customers

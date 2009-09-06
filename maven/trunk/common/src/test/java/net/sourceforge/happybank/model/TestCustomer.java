@@ -9,7 +9,7 @@
  * governing permissions and limitations under the License.
  */
 
-package test.net.sourceforge.happybank.model;
+package net.sourceforge.happybank.model;
 
 import net.sourceforge.happybank.model.Customer;
 import junit.framework.TestCase;

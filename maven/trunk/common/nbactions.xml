@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+        <action>
+            <actionName>CUSTOM-Checkstyle</actionName>
+            <displayName>Checkstyle</displayName>
+            <goals>
+                <goal>checkstyle:checkstyle</goal>
+            </goals>
+        </action>
+    </actions>

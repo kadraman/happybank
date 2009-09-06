@@ -15,7 +15,7 @@
  *
  */
 
-package test.net.sourceforge.happybank.model;
+package net.sourceforge.happybank.model;
 
 import java.math.BigDecimal;
 

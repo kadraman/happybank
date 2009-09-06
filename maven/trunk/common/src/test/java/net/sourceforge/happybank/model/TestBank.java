@@ -15,7 +15,7 @@
  *
  */
 
-package test.net.sourceforge.happybank.model;
+package net.sourceforge.happybank.model;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -23,12 +23,9 @@ import java.util.List;
 import junit.framework.TestCase;
 import net.sourceforge.happybank.exception.BankException;
 import net.sourceforge.happybank.facade.BankingFacade;
-import net.sourceforge.happybank.model.Account;
-import net.sourceforge.happybank.model.Customer;
-import net.sourceforge.happybank.model.TransRecord;
 
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.FileSystemXmlApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  * JUnit test for Bank DAO.
@@ -57,8 +54,8 @@ public class TestBank extends TestCase {
      */
     protected final void setUp() {
         // get context and facade
-        ApplicationContext ctx = new FileSystemXmlApplicationContext(
-                "applicationContext.xml");
+        ApplicationContext ctx = new ClassPathXmlApplicationContext(
+                "/META-INF/applicationContext.xml");
         bank = (BankingFacade) ctx.getBean("bankManager");
         
         // create test accounts and customers
