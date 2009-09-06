@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" 
+    "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+
+	<!-- test data source bean -->
+	<bean id="testDataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName">
+			<value>org.hsqldb.jdbcDriver</value>
+		</property>
+		<property name="url">
+			<value>jdbc:hsqldb:hsql://localhost/xdb</value>
+		</property>
+		<property name="username">
+			<value>sa</value>
+		</property>
+		<property name="password">
+			<value></value>
+		</property>
+	</bean>
+
+    <!-- prod data source bean -->
+	<bean id="prodDataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<!--
+			INSERT CONFIG PROPERTIES FOR PRODUCTION DATABASE (Oracle, SQL Server,
+			MySQL etc.)
+		-->
+	</bean>
+
+	<!-- SqlMap setup for iBATIS Database Layer -->
+	<bean id="bankSqlMapConfig" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+		<property name="configLocation">
+			<value>sqlMapConfig.xml</value>
+		</property>
+	</bean>
+
+	<!-- Bank DAO Bean -->
+	<bean id="BankDAO" class="net.sourceforge.happybank.facade.BankDAO">
+		<property name="dataSource">
+			<ref local="testDataSource" />
+		</property>
+		<property name="sqlMapClient">
+			<ref local="bankSqlMapConfig" />
+		</property>
+	</bean>
+	
+	<!-- facade implementation -->
+    <bean id="bankManager" class="net.sourceforge.happybank.facade.BankingFacade">
+        <!-- dao member of facade-->
+        <constructor-arg>
+            <ref bean="BankDAO" />
+        </constructor-arg>
+    </bean>
+
+</beans>
