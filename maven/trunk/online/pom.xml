@@ -1,13 +1,15 @@
+
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>net.sourceforge.happybank.online</groupId>
-  <artifactId>happybank-online</artifactId>
-  <packaging>war</packaging>
-  <version>1.0-SNAPSHOT</version>
-  <name>happybank-online</name>
-  <url>http://maven.apache.org</url>
-  <build>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>net.sourceforge.happybank.online</groupId>
+    <artifactId>happybank-online</artifactId>
+    <packaging>war</packaging>
+    <version>1.0-SNAPSHOT</version>
+    <name>happybank-online</name>
+    <url>http://maven.apache.org</url>
+    <build>
+        <finalName>happybank</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -18,24 +20,24 @@
                     <target>1.6</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>tomcat-maven-plugin</artifactId>
+                <configuration>
+                    <url>http://localhost:8080/manager</url>
+                    <server>localhost</server>
+                    <path>/happybank</path>
+                </configuration>
+            </plugin>
+
         </plugins>
-  </build>
-  <dependencies>
-		<dependency>
+    </build>
+    <dependencies>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.5</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>hsqldb</groupId>
-            <artifactId>hsqldb</artifactId>
-            <version>1.8.0.7</version>
-        </dependency>
-        <dependency>
-            <groupId>joda-time</groupId>
-            <artifactId>joda-time</artifactId>
-            <version>1.6</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -52,5 +54,20 @@
             <artifactId>commons-dbcp</artifactId>
             <version>1.2.2</version>
         </dependency>
-	</dependencies>
+        <dependency>
+            <groupId>net.sourceforge.happybank.common</groupId>
+            <artifactId>happybank-common</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5</version>
+        </dependency>
+        <dependency>
+            <groupId>com.googlecode.json-simple</groupId>
+            <artifactId>json-simple</artifactId>
+            <version>1.1</version>
+        </dependency>
+    </dependencies>
 </project>
