@@ -10,32 +10,51 @@
     <url>http://maven.apache.org</url>
     <build>
         <plugins>
-         <plugin>
-          <groupId>org.liquibase</groupId>
-          <artifactId>liquibase-plugin</artifactId>
-          <version>1.6.1.0</version>
-          <executions>
-            <execution>
-              <phase>process-resources</phase>
-              <configuration>
-                <propertyFile>src/main/resources/liquibase.properties</propertyFile>
-              </configuration>
-              <goals>
-                <goal>update</goal>
-              </goals>
-            </execution>
-          </executions>
-        </plugin>
-
+            <plugin>
+                <groupId>org.liquibase</groupId>
+                <artifactId>liquibase-plugin</artifactId>
+                <version>1.6.1.0</version>
+                <executions>
+                    <execution>
+                        <phase>process-resources</phase>
+                        <configuration>
+                            <propertyFile>src/main/resources/liquibase.properties</propertyFile>
+                        </configuration>
+                        <goals>
+                            <goal>update</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.1.1</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <executable>java</executable>
+                    <arguments>
+                        <argument>-Dmyproperty=myvalue</argument>
+                        <argument>-classpath</argument>
+                        <classpath/>
+                        <argument>org.hsqldb.Server</argument>
+                    </arguments>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
-    <dependencies>       
+    <dependencies>
         <dependency>
             <groupId>hsqldb</groupId>
             <artifactId>hsqldb</artifactId>
-            <version>1.8.0.7</version>
+            <version>1.8.0.10</version>
         </dependency>
-      
     </dependencies>
 </project>
 
