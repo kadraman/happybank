@@ -122,9 +122,9 @@ public class TestBank extends TestCase {
         // get all customers
         try {
             List<Customer> customers = bank.getCustomers();
-            assertEquals(customers.size(), 8); // 6 are in default data set
-            assertEquals(customers.get(6).getId(), "120");
-            assertEquals(customers.get(7).getId(), "130");
+            assertEquals(customers.size(), 2); 
+            assertEquals(customers.get(0).getId(), "120");
+            assertEquals(customers.get(1).getId(), "130");
         } catch (BankException e) {
             e.printStackTrace();
         }
