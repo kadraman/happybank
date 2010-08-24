@@ -19,7 +19,7 @@
             <column name="LASTNAME" type="VARCHAR(30)">
                 <constraints nullable="false"/>
             </column>
-            <column name="USERID" type="CHAR(8)"/>
+            <column name="USERID" type="VARCHAR(20)"/>
             <column name="PASSWORD" type="VARCHAR(30)"/>
         </createTable>
     </changeSet>
@@ -112,5 +112,11 @@
         <modifyColumn tableName="CUSTOMER">
             <column name="TITLE" type="VARCHAR(8)"/>
         </modifyColumn>
-    </changeSet>  
+    </changeSet>
+    <changeSet id="6-1" author="klee">
+        <comment>Change length of CUSTOMER TITLE to 8</comment>
+        <modifyColumn tableName="TRANSRECORD">
+            <column name="TITLE" type="VARCHAR(8)"/>
+        </modifyColumn>
+    </changeSet>
 </databaseChangeLog>
