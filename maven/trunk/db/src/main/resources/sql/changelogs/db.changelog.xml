@@ -1,13 +1,12 @@
-
 <databaseChangeLog
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
     <changeSet id="1-1" author="klee">
-        <comment>Create CUSTOMER table</comment>
-        <createTable tableName="CUSTOMER">
-            <column name="CUSTOMERID" type="INTEGER">
+        <comment>Create CUSTOMERS table</comment>
+        <createTable tableName="CUSTOMERS">
+            <column name="ID" type="INTEGER">
                 <constraints nullable="false"/>
             </column>
             <column name="TITLE" type="VARCHAR(3)">
@@ -24,20 +23,20 @@
         </createTable>
     </changeSet>
     <changeSet id="1-2" author="klee">
-        <comment>Create primary key for CUSTOMERID on CUSTOMER</comment>
-        <addPrimaryKey columnNames="CUSTOMERID" constraintName="PK_CUSTOMER_CUSTOMERID"
-            tableName="CUSTOMER"/>
+        <comment>Create primary key for ID on CUSTOMER</comment>
+        <addPrimaryKey columnNames="ID" constraintName="PK_CUSTOMER_ID"
+            tableName="CUSTOMERS"/>
     </changeSet>
     <changeSet id="1-3" author="klee">
-        <comment>Create index for USERID on CUSTOMER</comment>
-        <createIndex indexName="IDX_CUSTOMER_USERID" tableName="CUSTOMER">
+        <comment>Create index for USERID on CUSTOMERS</comment>
+        <createIndex indexName="IDX_CUSTOMER_USERID" tableName="CUSTOMERS">
             <column name="USERID"/>
         </createIndex>
     </changeSet>
     <changeSet id="2-1" author="klee">
-        <comment>Create ACCOUNT table</comment>
-        <createTable tableName="ACCOUNT">
-            <column name="ACCID" type="CHAR(8)">
+        <comment>Create ACCOUNTS table</comment>
+        <createTable tableName="ACCOUNTS">
+            <column name="ID" type="CHAR(8)">
                 <constraints nullable="false"/>
             </column>
             <column name="BALANCE" type="CURRENCY" defaultValueNumeric="0.0"/>
@@ -49,37 +48,38 @@
         </createTable>
     </changeSet>
     <changeSet id="2-2" author="klee">
-        <comment>Create primary key for ACCID on ACCOUNT</comment>
-        <addPrimaryKey columnNames="ACCID" constraintName="PK_ACCOUNT_ACCID"
-            tableName="ACCOUNT"/>
+        <comment>Create primary key for ID on ACCOUNTS</comment>
+        <addPrimaryKey columnNames="ID" constraintName="PK_ACCOUNT_ID"
+            tableName="ACCOUNTS"/>
     </changeSet>
     <changeSet id="3-1" author="klee">
-        <comment>Create TRANSRECORD table</comment>
-        <createTable tableName="TRANSRECORD">
-            <column name="TRANSID" type="TIMESTAMP">
-                <constraints nullable="false"/>
+        <comment>Create TRANSRECORDS table</comment>
+        <createTable tableName="TRANSRECORDS">
+            <column name="ID" type="INTEGER">
+                <constraints autoIncrement="true" nullable="false"/>
             </column>
             <column name="ACCID" type="CHAR(8)">
                 <constraints nullable="false"/>
             </column>
+            <column name="TRANSDATE" type="TIMESTAMP"/>
             <column name="TRANSTYPE" type="CHAR(1)" defaultValue="C"/>
             <column name="TRANSAMT" type="CURRENCY" defaultValue="0.0"/>
         </createTable>
     </changeSet>
     <changeSet id="3-2" author="klee">
-        <comment>Create primary key for TRANSID on TRANSRECORD</comment>
-        <addPrimaryKey columnNames="TRANSID" constraintName="PK_TRANSRECORD_TRANSID"
-            tableName="TRANSRECORD"/>
+        <comment>Create primary key for TRANSID on TRANSRECORDS</comment>
+        <addPrimaryKey columnNames="ID" constraintName="PK_TRANSRECORDS_ID"
+            tableName="TRANSRECORDS"/>
     </changeSet>
     <changeSet id="3-3" author="klee">
-        <comment>Create foreign key for ACCID on TRANSRECORD</comment>
+        <comment>Create foreign key for ACCID on TRANSRECORDS</comment>
         <addForeignKeyConstraint baseColumnNames="ACCID"
-            baseTableName="TRANSRECORD" constraintName="FK_TRANSRECORD_ACCID"
-            referencedColumnNames="ACCID" referencedTableName="ACCOUNT"/>
+            baseTableName="TRANSRECORDS" constraintName="FK_TRANSRECORDS_ID"
+            referencedColumnNames="ID" referencedTableName="ACCOUNTS"/>
     </changeSet>
     <changeSet id="4-1" author="klee">
-        <comment>Create CUSTACCT table</comment>
-        <createTable tableName="CUSTACCT">
+        <comment>Create CUSTACCTS table</comment>
+        <createTable tableName="CUSTACCTS">
             <column name="CUSTOMERID" type="INTEGER">
                 <constraints nullable="false"/>
             </column>
@@ -89,34 +89,22 @@
         </createTable>
     </changeSet>
     <changeSet id="4-2" author="klee">
-        <comment>Create primary key for CUSTOMERID and ACCID on CUSTACCT</comment>
+        <comment>Create primary key for CUSTOMERID and ACCID on CUSTACCTS</comment>
         <addPrimaryKey columnNames="CUSTOMERID,ACCID" constraintName="PK_CUSTACCT"
-            tableName="CUSTACCT"/>
+            tableName="CUSTACCTS"/>
     </changeSet>
     <changeSet id="4-3" author="klee">
-        <comment>Create foreign key for CUSTOMERID on CUSTACCT</comment>
+        <comment>Create foreign key for CUSTOMERID on CUSTACCTS</comment>
         <addForeignKeyConstraint baseColumnNames="CUSTOMERID"
-            baseTableName="CUSTACCT" constraintName="FK_CUSTACCT_CUSTOMERID"
-            referencedColumnNames="CUSTOMERID" referencedTableName="CUSTOMER"
+            baseTableName="CUSTACCTS" constraintName="FK_CUSTACCTS_ID"
+            referencedColumnNames="ID" referencedTableName="CUSTOMERS"
             deleteCascade="true"/>
     </changeSet>
     <changeSet id="4-4" author="klee">
-        <comment>Create foreign key for ACCID on CUSTACCT</comment>
+        <comment>Create foreign key for ACCID on CUSTACCTS</comment>
         <addForeignKeyConstraint baseColumnNames="ACCID"
-            baseTableName="CUSTACCT" constraintName="FK_CUSTACCT_ACCID"
-            referencedColumnNames="ACCID" referencedTableName="ACCOUNT"
+            baseTableName="CUSTACCTS" constraintName="FK_CUSTACCTS_ACCID"
+            referencedColumnNames="ID" referencedTableName="ACCOUNTS"
             deleteCascade="true"/>
-    </changeSet>
-    <changeSet id="5-1" author="klee">
-        <comment>Change length of CUSTOMER TITLE to 8</comment>
-        <modifyColumn tableName="CUSTOMER">
-            <column name="TITLE" type="VARCHAR(8)"/>
-        </modifyColumn>
-    </changeSet>
-    <changeSet id="6-1" author="klee">
-        <comment>Change length of CUSTOMER TITLE to 8</comment>
-        <modifyColumn tableName="TRANSRECORD">
-            <column name="TITLE" type="VARCHAR(8)"/>
-        </modifyColumn>
     </changeSet>
 </databaseChangeLog>
