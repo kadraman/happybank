@@ -3,43 +3,43 @@
 
 <sqlMap namespace="transrecord">
 
-	<typeAlias alias="TransRecord"
+    <typeAlias alias="TransRecord"
 		type="net.sourceforge.happybank.model.TransRecord" />
 
-	<parameterMap id="transRecordParam" class="TransRecord">
-		<parameter property="timeStamp" javaType="org.joda.time.DateTime"
+    <parameterMap id="transRecordParam" class="TransRecord">
+        <parameter property="transDate" javaType="org.joda.time.DateTime"
 			typeHandler="net.sourceforge.happybank.util.DateTimeTypeHandler" />
-		<parameter property="accid" />
-		<parameter property="transType" />
-		<parameter property="transAmt" />
-	</parameterMap>
+        <parameter property="accid" />
+        <parameter property="transType" />
+        <parameter property="transAmt" />
+    </parameterMap>
 
-	<resultMap id="transRecordResult" class="TransRecord">
-		<result property="timeStamp" column="transid" javaType="org.joda.time.DateTime"
+    <resultMap id="transRecordResult" class="TransRecord">
+        <result property="transDate" column="transid" javaType="org.joda.time.DateTime"
             typeHandler="net.sourceforge.happybank.util.DateTimeTypeHandler" />
-		<result property="accid" column="accid" />
-		<result property="transType" column="transtype" />
-		<result property="transAmt" column="transamt" />
-	</resultMap>
+        <result property="accid" column="accid" />
+        <result property="transType" column="transtype" />
+        <result property="transAmt" column="transamt" />
+    </resultMap>
 
-	<select id="getTransactions" parameterClass="java.lang.String"
+    <select id="getTransactions" parameterClass="java.lang.String"
 		resultMap="transRecordResult">
 		SELECT *
 		FROM TRANSRECORD
 		WHERE accid = #value#
 		ORDER BY
-		transid DESC
-	</select>
+		id DESC
+    </select>
 
-	<insert id="addTransaction" parameterMap="transRecordParam"
+    <insert id="addTransaction" parameterMap="transRecordParam"
 		parameterClass="TransRecord">
 		INSERT INTO
-		TRANSRECORD (transid, accid, transtype,
+		TRANSRECORD (transdate, accid, transtype,
 		transamt)
 		VALUES (?, ?, ?, ?)
-	</insert>
+    </insert>
 	
-	<delete id="deleteTransactions" parameterClass="java.lang.String">
+    <delete id="deleteTransactions" parameterClass="java.lang.String">
         DELETE 
         FROM TRANSRECORD
         WHERE accid = #value#

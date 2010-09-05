@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2009 Kevin A. Lee
+ * Copyright 2005-2010 Kevin A. Lee
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ import org.joda.time.DateTime;
  * Java bean representing an account transaction.
  * 
  * @author Kevin A. Lee
- * @email kevin.lee@buildmeister.com
+ * @email me@kevinalee.com
  */
 
 public class TransRecord implements Comparable, Serializable {
@@ -36,9 +36,13 @@ public class TransRecord implements Comparable, Serializable {
      */
     private static final long    serialVersionUID = 1L;
     /**
+     * Transaction id
+     */
+    private Integer              id;
+    /**
      * Timestamp of the transaction.
      */
-    private DateTime             timeStamp;
+    private DateTime             transDate;
     /**
      * The account the transaction is being applied to.
      */
@@ -66,19 +70,26 @@ public class TransRecord implements Comparable, Serializable {
      * @param amount amount of transaction
      */
     public TransRecord(final String type, final BigDecimal amount) {
-        setTimeStamp(new DateTime());
+        setTransDate(new DateTime());
         setTransType(type);
         setTransAmt(amount);
     } // TransRecord
-    
+
+    /**
+     * Get id of transaction
+     */
+    public final Integer getId() {
+        return id;
+    } // getId
+
     /**
      * Get time stamp of transaction.
      * 
      * @return time stamp of transaction
      */
-    public final DateTime getTimeStamp() {
-        return timeStamp;
-    } // getTimeStamp
+    public final DateTime getTransDate() {
+        return transDate;
+    } // getTransDate
     
     /**
      * Get the account the transaction has been applied to.
@@ -112,8 +123,8 @@ public class TransRecord implements Comparable, Serializable {
      * 
      * @param aTimeStamp time stamp of transaction
      */
-    public final void setTimeStamp(final DateTime aTimeStamp) {
-        this.timeStamp = aTimeStamp;
+    public final void setTransDate(final DateTime aTimeStamp) {
+        this.transDate = aTimeStamp;
     } // setTimeStamp
     
     /**
@@ -149,9 +160,10 @@ public class TransRecord implements Comparable, Serializable {
      * @param anObject transaction to compare with
      * @return 1 if transaction records are equal else -1
      */
+    @Override
     public final int compareTo(final Object anObject) {
         TransRecord other = (TransRecord) anObject;
-        if (getTimeStamp().isEqual(other.getTimeStamp())) {
+        if (getTransDate().isEqual(other.getTransDate())) {
             return 1;
         } else {
             return -1;
@@ -163,8 +175,9 @@ public class TransRecord implements Comparable, Serializable {
      * 
      * @return formatted output
      */
+    @Override
     public final String toString() {
-        return "TransRect " + timeStamp + " " + transType + " " + transAmt;
+        return "TransRect " + id + " : " + transDate + " " + transType + " " + transAmt;
     } // toString
     
 } // TransRecord

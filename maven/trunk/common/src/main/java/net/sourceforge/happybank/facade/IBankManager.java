@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2009 Kevin A. Lee
+ * Copyright 2005-2010 Kevin A. Lee
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ import net.sourceforge.happybank.model.TransRecord;
  * Bank Interface.
  *
  * @author Kevin A. Lee
- * @email kevin.lee@buildmeister.com
+ * @email me@kevinalee.com
  */
 public interface IBankManager {
 
