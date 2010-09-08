@@ -1,6 +1,6 @@
-INSERT INTO PUBLIC.TRANSRECORDS(accid,transdate,transtype,transamt) VALUES ('101-1001','2009-01-01 10:20:00.000000000','C',100.50);
-INSERT INTO PUBLIC.TRANSRECORDS(accid,transdate,transtype,transamt) VALUES ('101-1001','2009-01-01 12:12:00.000000000','C',90.45);
-INSERT INTO PUBLIC.TRANSRECORDS(accid,transdate,transtype,transamt) VALUES ('101-1001','2009-01-02 23:12:23.000000000','D',10.00);
-INSERT INTO PUBLIC.TRANSRECORDS(accid,transdate,transtype,transamt) VALUES ('101-1001','2009-01-03 08:20:00.000000000','C',2310.23);
-INSERT INTO PUBLIC.TRANSRECORDS(accid,transdate,transtype,transamt) VALUES ('101-1001','2009-01-09 10:12:23.000000000','D',1202.55);
-INSERT INTO PUBLIC.TRANSRECORDS(accid,transdate,transtype,transamt) VALUES ('101-1001','2009-01-10 10:12:00.000000000','C',500.23);
+INSERT INTO TRANSRECORD(accid,transdate,transtype,transamt) VALUES ('101-1001',NOW(),'C',100.50);
+INSERT INTO TRANSRECORD(accid,transdate,transtype,transamt) VALUES ('101-1001',NOW(),'C',90.45);
+INSERT INTO TRANSRECORD(accid,transdate,transtype,transamt) VALUES ('101-1001',NOW(),'D',10.00);
+INSERT INTO TRANSRECORD(accid,transdate,transtype,transamt) VALUES ('101-1001',NOW(),'C',2310.23);
+INSERT INTO TRANSRECORD(accid,transdate,transtype,transamt) VALUES ('101-1001',NOW(),'D',1202.55);
+INSERT INTO TRANSRECORD(accid,transdate,transtype,transamt) VALUES ('101-1001',NOW(),'C',500.23);
