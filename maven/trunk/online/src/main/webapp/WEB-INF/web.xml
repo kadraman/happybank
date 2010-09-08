@@ -2,17 +2,17 @@
 <web-app id="WebApp_ID" version="2.4"
 	xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
-	<display-name>HappyBank</display-name>
-	<distributable />
+    <display-name>HappyBank</display-name>
+    <distributable />
 
 	<!--
 		Location of the XML file that defines the root application context -
 		Applied by ContextLoaderListener.
 	-->
-	<context-param>
-		<param-name>contextConfigLocation</param-name>
-		<param-value>/WEB-INF/applicationContext.xml</param-value>
-	</context-param>
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>/META-INF/applicationContext.xml</param-value>
+    </context-param>
 
 	<!--
 		Loads the root application context of this web app at startup. - Use
@@ -20,84 +20,84 @@
 		to access it anywhere in the web application, outside of the
 		framework.
 	-->
-	<servlet>
-		<servlet-name>SpringContextServlet</servlet-name>
-		<servlet-class>org.springframework.web.context.ContextLoaderServlet</servlet-class>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
+    <servlet>
+        <servlet-name>SpringContextServlet</servlet-name>
+        <servlet-class>org.springframework.web.context.ContextLoaderServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
 
-	<servlet>
-		<servlet-name>AccountDetails</servlet-name>
-		<servlet-class>net.sourceforge.happybank.control.AccountDetails</servlet-class>
-		<load-on-startup>-1</load-on-startup>
-	</servlet>
-	<servlet>
-		<servlet-name>PerformTransaction</servlet-name>
-		<servlet-class>net.sourceforge.happybank.control.PerformTransaction</servlet-class>
-	</servlet>
-	<servlet>
-		<servlet-name>LogoutSession</servlet-name>
-		<servlet-class>net.sourceforge.happybank.control.LogoutSession</servlet-class>
-	</servlet>
-	<servlet>
-		<servlet-name>ListAccounts</servlet-name>
-		<servlet-class>net.sourceforge.happybank.control.ListAccounts</servlet-class>
-	</servlet>
-	<servlet>
+    <servlet>
+        <servlet-name>AccountDetails</servlet-name>
+        <servlet-class>net.sourceforge.happybank.control.AccountDetails</servlet-class>
+        <load-on-startup>-1</load-on-startup>
+    </servlet>
+    <servlet>
+        <servlet-name>PerformTransaction</servlet-name>
+        <servlet-class>net.sourceforge.happybank.control.PerformTransaction</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>LogoutSession</servlet-name>
+        <servlet-class>net.sourceforge.happybank.control.LogoutSession</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ListAccounts</servlet-name>
+        <servlet-class>net.sourceforge.happybank.control.ListAccounts</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>ListTransactions</servlet-name>
         <servlet-class>net.sourceforge.happybank.control.ListTransactions</servlet-class>
     </servlet>
-	<servlet>
-		<servlet-name>ValidateLogin</servlet-name>
-		<servlet-class>net.sourceforge.happybank.control.ValidateLogin</servlet-class>
-	</servlet>
-	<servlet>
+    <servlet>
+        <servlet-name>ValidateLogin</servlet-name>
+        <servlet-class>net.sourceforge.happybank.control.ValidateLogin</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>TransferFunds</servlet-name>
         <servlet-class>net.sourceforge.happybank.control.TransferFunds</servlet-class>
     </servlet>
 
-	<servlet-mapping>
-		<servlet-name>AccountDetails</servlet-name>
-		<url-pattern>/AccountDetails</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>PerformTransaction</servlet-name>
-		<url-pattern>/PerformTransaction</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>LogoutSession</servlet-name>
-		<url-pattern>/LogoutSession</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>ListAccounts</servlet-name>
-		<url-pattern>/ListAccounts</url-pattern>
-	</servlet-mapping>
-	   <servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AccountDetails</servlet-name>
+        <url-pattern>/AccountDetails</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PerformTransaction</servlet-name>
+        <url-pattern>/PerformTransaction</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LogoutSession</servlet-name>
+        <url-pattern>/LogoutSession</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ListAccounts</servlet-name>
+        <url-pattern>/ListAccounts</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
         <servlet-name>ListTransactions</servlet-name>
         <url-pattern>/ListTransactions</url-pattern>
     </servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>ValidateLogin</servlet-name>
-		<url-pattern>/ValidateLogin</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ValidateLogin</servlet-name>
+        <url-pattern>/ValidateLogin</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
         <servlet-name>TransferFunds</servlet-name>
         <url-pattern>/TransferFunds</url-pattern>
     </servlet-mapping>
 
-	<resource-ref>
-		<description>HappyBank data source</description>
-		<res-ref-name>jdbc/hbdb</res-ref-name>
-		<res-type>javax.sql.Datasource</res-type>
-		<res-auth>Container</res-auth>
-	</resource-ref>
+    <resource-ref>
+        <description>HappyBank data source</description>
+        <res-ref-name>jdbc/hbdb</res-ref-name>
+        <res-type>javax.sql.Datasource</res-type>
+        <res-auth>Container</res-auth>
+    </resource-ref>
 
-	<welcome-file-list>
-		<welcome-file>index.html</welcome-file>
-		<welcome-file>index.htm</welcome-file>
-		<welcome-file>index.jsp</welcome-file>
-		<welcome-file>default.html</welcome-file>
-		<welcome-file>default.htm</welcome-file>
-		<welcome-file>default.jsp</welcome-file>
-	</welcome-file-list>
+    <welcome-file-list>
+        <welcome-file>index.html</welcome-file>
+        <welcome-file>index.htm</welcome-file>
+        <welcome-file>index.jsp</welcome-file>
+        <welcome-file>default.html</welcome-file>
+        <welcome-file>default.htm</welcome-file>
+        <welcome-file>default.jsp</welcome-file>
+    </welcome-file-list>
 </web-app>
