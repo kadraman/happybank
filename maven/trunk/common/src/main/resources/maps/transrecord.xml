@@ -15,7 +15,7 @@
     </parameterMap>
 
     <resultMap id="transRecordResult" class="TransRecord">
-        <result property="transDate" column="transid" javaType="org.joda.time.DateTime"
+        <result property="transDate" column="transdate" javaType="org.joda.time.DateTime"
             typeHandler="net.sourceforge.happybank.util.DateTimeTypeHandler" />
         <result property="accid" column="accid" />
         <result property="transType" column="transtype" />

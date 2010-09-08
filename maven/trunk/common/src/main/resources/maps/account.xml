@@ -16,7 +16,7 @@
 		resultMap="accountResult">
 		SELECT id, acctype, balance, discriminator
 		FROM ACCOUNT A, CUSTACCT C
-		WHERE C.id = #value# AND C.id = A.id
+		WHERE C.customerid = #value# AND C.customerid = A.id
 		ORDER BY A.id
 	</select>
 

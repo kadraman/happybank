@@ -20,7 +20,6 @@ package net.sourceforge.happybank.model;
 import java.math.BigDecimal;
 
 import junit.framework.TestCase;
-import net.sourceforge.happybank.model.TransRecord;
 
 import org.joda.time.DateTime;
 
@@ -51,7 +50,7 @@ public class TestTransRecord extends TestCase {
     protected final void setUp() {
         // create a transaction record
         t1 = new TransRecord("C", new BigDecimal("50.25"));
-        t1.setTimeStamp(new DateTime());
+        t1.setTransDate(new DateTime());
     } // setUp
 
     /**
@@ -65,8 +64,8 @@ public class TestTransRecord extends TestCase {
         t1.setTransType("D");
         assertEquals(t1.getTransType(), "D");
         DateTime d1 = new DateTime();
-        t1.setTimeStamp(d1);
-        assertEquals(t1.getTimeStamp(), d1);
+        t1.setTransDate(d1);
+        assertEquals(t1.getTransDate(), d1);
     } // testGetters
 
     /**
@@ -76,11 +75,11 @@ public class TestTransRecord extends TestCase {
         DateTime d1 = new DateTime();
         DateTime d2 = new DateTime();
         d2.plusMinutes(5);
-        t1.setTimeStamp(d1);
+        t1.setTransDate(d1);
         TransRecord t2 = new TransRecord("C", new BigDecimal("50"));
-        t2.setTimeStamp(d2);
+        t2.setTransDate(d2);
         TransRecord t3 = new TransRecord("D", new BigDecimal("100"));
-        t3.setTimeStamp(d2);
+        t3.setTransDate(d2);
         assertEquals(t2.compareTo(t1), 1);
         assertEquals(t2.compareTo(t3), 1);
     } // testCompare
