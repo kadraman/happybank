@@ -1,0 +1,384 @@
+<?xml version="1.0"?>
+<project name="common-targets" xmlns:ivy="antlib:org.apache.ivy.ant">
+
+    <!-- reference Ivy Ant tasks library -->
+    <path id="ivy.lib.path">
+        <fileset dir="${dir.common}/lib" includes="ivy*.jar" />
+    </path>
+    <taskdef resource="org/apache/ivy/ant/antlib.xml"
+             uri="antlib:org.apache.ivy.ant"
+             classpathref="ivy.lib.path" />
+
+    <!-- set ivy default settings -->
+    <ivy:settings file="${dir.common}/ivysettings.xml"
+                  id="happybank.common.ivy" />
+
+    <!-- create output directories -->
+    <target name="init"
+            depends="ivy.project.init"
+            description="create directory structure">
+        <mkdir dir="${dir.build}" />
+        <mkdir dir="${dir.dist}" />
+        <mkdir dir="${dir.doc}" />
+    </target>
+
+    <!-- remove generated files, project only -->
+    <target name="clean" description="remove generated project files">
+        <delete dir="${dir.build}" />
+        <delete dir="${dir.dist}" />
+        <delete dir="${dir.doc}" />
+    </target>
+
+    <!-- compile source code -->
+    <target name="compile"
+            depends="checkstyle"
+            description="compile source code">
+        <project-compile classpathref="project.classpath"
+                         sourcepathref="project.sourcepath"
+                         srcdir="${dir.src}"
+                         destdir="${dir.build}" />
+    </target>
+
+    <!-- create manifest file -->
+    <target name="make-manifest" description="create the jar manifest file">
+        <manifest file="${dir.build}/manifest.mf">
+            <attribute name="Built-By" value="${user.name}" />
+            <attribute name="Main-Class" value="${name.main.class}" />
+        </manifest>
+    </target>
+
+    <!-- run the application -->
+    <target name="run"
+            depends="dist"
+            description="run the application or test class">
+        <java classname="${name.main.class}" dir="${dir.build}" fork="yes">
+            <classpath refid="project.run.classpath" />
+            <arg value="${name.run.args}" />
+        </java>
+    </target>
+
+    <!-- generate the javadoc files -->
+    <target name="javadoc" depends="init" description="generate javadoc files">
+        <project-javadoc classpathref="project.classpath"
+                         destdir="${dir.doc}"
+                         packagenames="${name.pkg.dirs}"
+                         srcdir="${dir.src}" />
+    </target>
+
+    <!-- create distribution jar file -->
+    <target name="dist"
+            depends="compile,make-manifest"
+            description="create distribution jar file">
+        <jar jarfile="${dir.dist}/${ant.project.name}.jar"
+             basedir="${dir.build}"
+             manifest="${dir.build}/manifest.mf"
+             includes="**/*.class"
+             excludes="**/Test*.class" />
+    </target>
+
+    <!-- run all junit tests -->
+    <target name="junit.all"
+            depends="compile"
+            description="run all junit tests">
+        <project-junit classpathref="project.test.classpath"
+                       destdir="${dir.build}"
+                       packagenames="${name.pkg.dirs}">
+            <testclasses>
+                <fileset dir="${dir.src}">
+                    <patternset refid="test.sources" />
+                </fileset>
+            </testclasses>
+        </project-junit>
+    </target>
+
+    <!-- run individual junit test -->
+    <target name="junit.single" description="run single junit test">
+        <!-- you may override this with ant -Dtestcase=net/sourceforge/happybank... -->
+        <property name="testcase"
+                  value="test/net/sourceforge/happybank/model/TestCustomer" />
+        <junit fork="no">
+            <classpath refid="project.classpath" />
+            <formatter type="plain" usefile="false" />
+            <test name="${testcase}" />
+        </junit>
+    </target>
+
+    <!-- run checkstyle on code -->
+    <target name="checkstyle"
+            depends="-ivy.init,init"
+            description="run CheckStyle on code">
+        <taskdef resource="checkstyletask.properties">
+            <classpath>
+                <path refid="ivy.internal.classpath" />
+            </classpath>
+        </taskdef>
+        <checkstyle config="${basedir}/checkstyle.xml"
+                    failOnViolation="${value.checkstyle.fail}">
+            <formatter type="plain" />
+            <formatter type="plain"
+                       tofile="${dir.build}/checkstyleResults.txt" />
+            <fileset dir="${dir.src}" includes="**/*.java" />
+        </checkstyle>
+    </target>
+
+    <!-- prompt for database password -->
+    <target name="get-db-pass" unless="name.db.password"
+        description="prompt for database password">
+        <input addproperty="name.db.password"
+               message="Please enter the password for database user ${name.db.user}:">
+            <handler classname="org.apache.tools.ant.input.SecureInputHandler" />
+        </input>
+    </target>
+            
+    <!-- target to start hsqldb -->
+    <target name="hsqldb.start" depends="-ivy.init" description="start hsqldb">
+        <java classpathref="ivy.internal.classpath"
+              classname="org.hsqldb.Server"
+              spawn="true"
+              fork="true">
+            <arg value="-database.0" />
+            <arg value="file:${dir.db}/${name.db}" />
+            <arg value="-dbname.0" />
+            <arg value="xdb" />
+        </java>
+    </target>
+
+    <!-- target to stop hsqldb -->
+    <target name="hsqldb.stop" depends="-ivy.init" description="stop hsqldb">
+        <sql driver="${name.db.driver}"
+             url="${name.db.connection}"
+             userid="${name.db.user}"
+             password="${name.db.password}"
+             src="${dir.sql}/shutdown.hsql.sql"
+             onerror="continue">
+            <classpath>
+                <path refid="ivy.internal.classpath" />
+            </classpath>
+        </sql>
+    </target>
+
+    <!-- target to bootstrap a initialize a managed database -->
+    <target name="dbdeploy.init"
+            depends="-ivy.init"
+            description="initialize a dbdeploy managed database">
+        <sql driver="${name.db.driver}"
+             url="${name.db.connection}"
+             userid="${name.db.user}"
+             password="${name.db.password}"
+             src="${dir.sql}/${name.dbdeploy.schema}"
+             onerror="continue">
+            <classpath>
+                <path refid="ivy.internal.classpath" />
+            </classpath>
+        </sql>
+    </target>
+
+    <!-- run dbdeploy to generate database update script -->
+    <target name="dbdeploy.gen"
+            depends="-ivy.init"
+            description="generate database update script">
+        <taskdef name="dbdeploy" classname="com.dbdeploy.AntTarget">
+            <classpath>
+                <path refid="ivy.internal.classpath" />
+            </classpath>
+        </taskdef>
+        <dbdeploy driver="${name.db.driver}"
+                  url="${name.db.connection}"
+                  userid="${name.db.user}"
+                  password="${name.db.password}"
+                  dir="${dir.sql}\deltas"
+                  outputfile="${dir.build}\all-deltas.sql"
+                  dbms="${name.dbms}"
+                  undoOutputfile="${dir.build}\undo-all-deltas.sql" />
+    </target>
+
+    <!-- update a database based on output of dbdeploy -->
+    <target name="dbdeploy.update" depends="dbdeploy.gen">
+        <sql driver="${name.db.driver}"
+             url="${name.db.connection}"
+             userid="${name.db.user}"
+             password="${name.db.password}"
+             src="${dir.build}/all-deltas.sql"
+             onerror="abort">
+            <classpath>
+                <path refid="ivy.internal.classpath" />
+            </classpath>
+        </sql>
+    </target>
+
+    <!-- undo the last dbdeploy changes -->
+    <target name="dbdeploy.undo" depends="-ivy.init">
+        <sql driver="${name.db.driver}"
+             url="${name.db.connection}"
+             userid="${name.db.user}"
+             password="${name.db.password}"
+             src="${dir.build}/undo-all-deltas.sql"
+             onerror="abort">
+            <classpath>
+                <path refid="ivy.internal.classpath" />
+            </classpath>
+        </sql>
+    </target>
+
+    <!-- initialise tomcat - internal target -->
+    <target name="-tomcat.init"
+            depends="-ivy.init"
+            description="initialise tomcat">
+        <!-- setup taskdef for Tomcat Ant tasks, saves re-calling -->
+        <taskdef file="${dir.common}/tomcatTasks.properties">
+            <classpath>
+                <path refid="ivy.internal.classpath" />
+            </classpath>
+        </taskdef>
+    </target>
+
+    <!-- check if tomcat environment exists -->
+    <target name="tomcat.checkenv" description="check tomcat environment">
+        <fail message="The environment variable TOMCAT_HOME has not been set"
+              unless="env.TOMCAT_HOME" />
+    </target>
+
+    <!-- deploy the application -->
+    <target name="tomcat.deploy"
+            depends="-tomcat.init"
+            description="deploy a new application">
+        <!-- convert the project relative path into fully qualified path -->
+        <pathconvert dirsep="/" property="fullWarDir">
+            <path>
+                <pathelement location="${dir.dist}/${ant.project.name}.war" />
+            </path>
+        </pathconvert>
+        <!-- deploy the app -->
+        <deploy url="${name.url.manager}"
+                username="${name.user.manager}"
+                password="${name.password.manager}"
+                path="${name.web.context}"
+                war="${basedir}/${dir.dist}/${ant.project.name}.war" />
+    </target>
+
+    <!-- remove the deployed application -->
+    <target name="tomcat.undeploy"
+            depends="-tomcat.init"
+            description="remove a deployed application">
+        <!-- remove the app -->
+        <remove url="${name.url.manager}"
+                username="${name.user.manager}"
+                password="${name.password.manager}"
+                path="${name.web.context}" />
+    </target>
+
+    <!-- reload the application -->
+    <target name="tomcat.reload"
+            depends="-tomcat.init"
+            description="reload the application">
+        <reload url="${name.url.manager}"
+                username="${name.user.manager}"
+                password="${name.password.manager}"
+                path="${name.web.context}" />
+    </target>
+
+    <!-- start the application -->
+    <target name="tomcat.start"
+            depends="-tomcat.init"
+            description="start the application">
+        <start url="${name.url.manager}"
+               username="${name.user.manager}"
+               password="${name.password.manager}"
+               path="${name.web.context}" />
+    </target>
+
+    <!-- stop the application -->
+    <target name="tomcat.stop"
+            depends="-tomcat.init"
+            description="stop the application">
+        <stop url="${name.url.manager}"
+              username="${name.user.manager}"
+              password="${name.password.manager}"
+              path="${name.web.context}" />
+    </target>
+
+    <!-- list the applications -->
+    <target name="tomcat.list"
+            depends="-tomcat.init"
+            description="list the applications">
+        <list url="${name.url.manager}"
+              username="${name.user.manager}"
+              password="${name.password.manager}" />
+    </target>
+
+    <!-- initialise ivy - internal target -->
+    <target name="-ivy.init" description="initialise ivy">
+        <!-- define and resolve internal (build) library dependencies -->
+        <ivy:resolve file="${dir.common}/ivy.xml"
+                     conf="common"
+                     settingsRef="happybank.common.ivy" />
+        <ivy:cachepath pathid="ivy.internal.classpath"
+                       conf="common"
+                       settingsRef="happybank.common.ivy" />
+    </target>
+
+    <!-- cleanup local ivy repository -->
+    <target name="ivy.repo.clean" description="cleanup local ivy repository">
+        <delete dir="${dir.common}/repository" />
+    </target>
+
+    <!-- define and resolve project library dependencies, override this target 
+    if you want to setup project libraries differently; assumes ivy.xml exists
+    in project's root directory -->
+    <target name="ivy.project.init"
+            description="initialise classpath for project">
+        <ivy:resolve file="ivy.xml" settingsRef="happybank.common.ivy" />
+        <ivy:cachepath pathid="ivy.compile.classpath"
+                       conf="compile"
+                       type="jar"
+                       settingsRef="happybank.common.ivy" />
+        <ivy:cachepath pathid="ivy.test.classpath"
+                       conf="test"
+                       type="jar"
+                       settingsRef="happybank.common.ivy" />        
+        <ivy:cachepath pathid="ivy.runtime.classpath"
+                       conf="runtime"
+                       type="jar"
+                       settingsRef="happybank.common.ivy" />
+    </target>
+
+    <!-- remove files from ivy cache -->
+    <target name="ivy.clean"
+            depends="-ivy.init"
+            description="remove cached library files">
+        <ivy:cleancache settingsRef="happybank.common.ivy" />
+    </target>
+
+    <!-- publish a project to the ivy repository -->
+    <target name="ivy.publish"
+            depends="-ivy.init,ivy.project.init"
+            description="publish this project in the ivy repository">
+        <delete file="${dir.dist}/ivy.xml" />
+        <ivy:publish artifactspattern="${dir.dist}/[artifact].[ext]"
+                     resolver="local"
+                     settingsRef="happybank.common.ivy"
+                     overwrite="true" />
+    </target>
+	
+	<!-- publish a project to the ivy repository -->
+    <target name="ivy.install"
+            description="install modules into the local ivy repository">
+			<ivy:install settingsRef="happybank.common.ivy" 
+				organisation="commons-cli" module="commons-cli" revision="1.0" 
+				overwrite="true" from="ibiblio" to="local" transitive="true" />
+    </target>
+
+    <!-- create a report on the project's dependencies -->
+    <target name="ivy.report"
+            depends="-ivy.init,ivy.project.init"
+            description="generates a report of dependencies">
+        <ivy:report todir="${dir.build}" settingsRef="happybank.common.ivy" />
+    </target>
+
+    <!-- help -->
+    <target name="help" description="display help">
+        <echo>build file for ${ant.project.name}</echo>
+        <echo>please type ant -p for description of all targets</echo>
+    </target>
+
+</project>

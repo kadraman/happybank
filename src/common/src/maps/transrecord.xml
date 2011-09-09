@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="transrecord">
+
+	<typeAlias alias="TransRecord"
+		type="net.sourceforge.happybank.model.TransRecord" />
+
+	<parameterMap id="transRecordParam" class="TransRecord">
+		<parameter property="timeStamp" javaType="org.joda.time.DateTime"
+			typeHandler="net.sourceforge.happybank.util.DateTimeTypeHandler" />
+		<parameter property="accid" />
+		<parameter property="transType" />
+		<parameter property="transAmt" />
+	</parameterMap>
+
+	<resultMap id="transRecordResult" class="TransRecord">
+		<result property="timeStamp" column="transid" javaType="org.joda.time.DateTime"
+            typeHandler="net.sourceforge.happybank.util.DateTimeTypeHandler" />
+		<result property="accid" column="accid" />
+		<result property="transType" column="transtype" />
+		<result property="transAmt" column="transamt" />
+	</resultMap>
+
+	<select id="getTransactions" parameterClass="java.lang.String"
+		resultMap="transRecordResult">
+		SELECT *
+		FROM TRANSRECORD
+		WHERE accid = #value#
+		ORDER BY
+		transid DESC
+	</select>
+
+	<insert id="addTransaction" parameterMap="transRecordParam"
+		parameterClass="TransRecord">
+		INSERT INTO
+		TRANSRECORD (transid, accid, transtype,
+		transamt)
+		VALUES (?, ?, ?, ?)
+	</insert>
+	
+	<delete id="deleteTransactions" parameterClass="java.lang.String">
+        DELETE 
+        FROM TRANSRECORD
+        WHERE accid = #value#
+    </delete>
+
+</sqlMap>
