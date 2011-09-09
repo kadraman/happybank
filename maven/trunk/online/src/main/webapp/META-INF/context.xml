@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Context debug="1" docBase="${catalina.home}/server/webapps/HappyBank" path="/happybank" reloadable="true">
-  <Resource auth="Container" driverClassName="org.hsqldb.jdbcDriver" maxActive="20" minEvictableIdleTimeMillis="4000" name="jdbc/hbdb" password="" timeBetweenEvictionRunsMillis="5000" type="javax.sql.DataSource" url="jdbc:hsqldb:hsql://localhost/xdb" username="sa"/>
-</Context>
